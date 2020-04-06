@@ -7,53 +7,68 @@ The unofficial learning management system for Thaddeus Stevens College of Techno
 
 ## Installation
 
-Create a virtual environment then install the project:
+Fork this repo and use `git clone` to get a copy of your fork on your local machine, then create and activate a virtual environment to install the dependencies.
 
-```bash
+```sh
+$ cd tsct-portal
 $ python3 -m venv venv
 $ source venv/bin/activate
-(venv) $ pip install -e .
+$ pip install -r requirements.txt
 ```
 
-Developer dependencies can be installed with:
+Then you can run the shell script provided to create the database for the application:
 
-```bash
-(venv) $ pip install -e '.[test]'
+```sh
+$ sh bin/create-db.sh
 ```
 
-Flask commands require the following environment variables to be set:
+You need to set environment variables in your terminal session to use any of the following `flask` commands:
 
-```bash
-(venv) $ export FLASK_APP=portal
-(venv) $ export FLASK_ENV=development
+```sh
+$ export FLASK_APP=portal
+$ export FLASK_ENV=development
 ```
 
+To create the tables, you can run the following command. You'll need to run this again for any changes to `schema.sql`.
 
-## Database Setup
-
-To run the application locally, you need a running instance of PostgreSQL. Create a database and user according to the configuration settings in `portal/__init__.py`. Then you can run the following command to create the necessary tables:
-
-```bash
-(venv) $ flask init-db
+```sh
+$ flask init-db
 ```
 
-If you want to run tests, you'll have to create a second database according to the configuration in `tests/conftest.py`.
+Mock data is stored in `tests/data.sql` and will be inserted into the test database for every test. If you would like to use the same data when developing, you can run this command to insert it into the development database.
 
-
-## Running The App
-
-```bash
-(venv) $ flask run
+```sh
+$ flask mock-db
 ```
 
 
-## Tests and Coverage
+## Running the Application Locally
 
-```bash
-(venv) $ pytest
-(venv) $ pytest -v
-(venv) $ coverage run -m pytest
+```sh
+$ flask run
 ```
 
-The first command will run the test functions defined in the `tests/` directory. The second gives a more detailed output. Run the third command to generate a report of the code covered by the tests. You can view this report in the terminal with `coverage report` or with more detail in the browser with `coverage html`.
+You should be able to view the app at [http://localhost:5000]().
+
+
+## Run the Tests
+
+```sh
+$ coverage run -m pytest
+$ coverage report
+```
+
+The first command runs your tests, while the second will show you a report of your total test coverage across all your modules. To generate a more detailed interactive report, run this command and view the result in your browser, which allows you to click on each module and see which lines need to be tested.
+
+```sh
+$ coverage html
+$ open htmlcov/index.html
+```
+
+
+## Deploy to Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+If you've forked this repo, you can deploy your code by clicking the button above. On the following screen, leave the name blank and it will be generated for you.
 

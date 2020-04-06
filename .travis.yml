@@ -1,14 +1,12 @@
 language: python
 python:
-  - "3.6"
+  - "3.7"
 env:
   - FLASK_APP=portal
 install:
-  - pip install -e .
-  - pip install -e '.[test]'
+  - pip install -r requirements.txt
 script: pytest
 services:
   - postgresql
 before_script:
-  - psql -c 'CREATE DATABASE portal_test;' -U postgres
-  - psql -c 'CREATE USER portal_user;' -U postgres
+  - bash bin/create-db.sh test
