@@ -3,37 +3,35 @@ import os
 import pytest
 
 from portal import create_app
-from portal.db import get_db, init_db
+from portal import db
 
 
 @pytest.fixture
 def app():
+    """Create an app configured for tests."""
+
     app = create_app({
         'TESTING': True,
-        'DB_NAME': 'portal_test',
-        'DB_USER': 'portal_user',
+        'DB_URL': "postgresql://portal_user@localhost/portal_test"
     })
 
     with app.app_context():
-        init_db()
-
-        with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
-            con = get_db()
-            cur = con.cursor()
-            cur.execute(f.read())
-            cur.close()
-            con.commit()
-            con.close()
+        db.init_db()
+        db.mock_db()
 
     yield app
 
 
 @pytest.fixture
 def client(app):
+    """Using test app, create and return a client object."""
+
     return app.test_client()
 
 
 @pytest.fixture
 def runner(app):
+    """Using test app, create and return a CLI runner object."""
+
     return app.test_cli_runner()
 
