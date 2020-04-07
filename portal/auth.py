@@ -22,7 +22,9 @@ def login():
 
     if user is None:
         error = 'Incorrect email.'
-    elif not user['password']:
+        print("Email")
+    elif not check_password_hash(user['password'], password):
+        print("Password")
         error = 'Incorrect password.'
 
     if error is None:
