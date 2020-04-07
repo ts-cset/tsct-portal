@@ -1,4 +1,5 @@
 from portal import create_app
+import pytest
 
 
 def test_config(monkeypatch):
@@ -14,8 +15,24 @@ def test_config(monkeypatch):
     assert "require" in create_app().config['DB_SSLMODE']
 
 
-def test_index(client):
+def test_index(client, auth):
     response = client.get('/')
     assert b'<h1>TSCT Portal</h1>' in response.data
-    assert b'<form>' in response.data
+    assert b'<form method="post">' in response.data
 
+
+def test_login(client, auth):
+    assert client.get('/').status_code == 200
+    response = auth.login()
+    assert response.headers['Location'] == 'http://localhost/home'
+    response = client.get('/home')
+    assert b'student' in response.data
+
+
+@pytest.mark.parametrize(('username', 'password', 'message'), (
+    ('a', 'test', b'Incorrect email or password.'),
+    ('test', 'a', b'Incorrect email or password.'),
+))
+def test_login_validate_input(auth, username, password, message):
+    response = auth.login(username, password)
+    assert message in response.data

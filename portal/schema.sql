@@ -17,6 +17,8 @@ CREATE TABLE users (
     role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student'))
 );
 
+
+
 -- Courses
 CREATE TABLE courses (
   id bigserial PRIMARY KEY,
@@ -27,3 +29,4 @@ CREATE TABLE courses (
   credits integer NOT NULL,
   teacher_id integer REFERENCES users (id)
 )
+

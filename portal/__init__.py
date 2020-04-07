@@ -1,6 +1,9 @@
 import os
 
-from flask import Flask, render_template
+from flask import (
+    Flask, Blueprint, flash, g, redirect, render_template, request, url_for, session
+)
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 def create_app(test_config=None):
@@ -44,10 +47,7 @@ def create_app(test_config=None):
 
     # Register Routes
     # ---------------
-    @app.route('/')
-    def index():
-        return render_template('index.html')
-
+    from . import auth
+    app.register_blueprint(auth.bp)
     # Return application object to be used by a WSGI server, like gunicorn
     return app
-
