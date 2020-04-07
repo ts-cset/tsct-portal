@@ -19,3 +19,9 @@ def test_index(client):
     assert b'<h1>TSCT Portal</h1>' in response.data
     assert b'<form>' in response.data
 
+
+def test_login(client):
+    assert client.get('/').status_code == 200
+    response = client.post(
+        '/', data={'email': "student@stevenscollege.edu", 'password': "pbkdf2:sha256:150000$bhcUxUAk$b08d717a84c93c4d09afe712f0d781b216e5b77a27b9becbf4d535fde22d0e97"})
+    assert response.headers['Location'] == 'http://localhost/home'
