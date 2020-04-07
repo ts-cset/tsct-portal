@@ -1,7 +1,8 @@
 import psycopg2
 import pytest
 
-from portal.db import get_db
+import portal
+from portal.db import get_db, register_command
 
 
 def test_get_db_then_close(app):
@@ -42,3 +43,14 @@ def test_cli_commands(runner, monkeypatch, function, command, output):
     assert output in result.output
     assert Recorder.called
 
+def test_register_command(runner, monkeypatch):
+    class Recorder(object):
+        called = False
+
+    def cli_stub(a, b, c, d, e, f):
+        Recorder.called = True
+
+    monkeypatch.setattr('portal.db.register', cli_stub)
+    result = runner.invoke(args='register', input='a\nb\nc\nd\ne\nf\n')
+    assert 'Successfully registered a user' in result.output
+    assert Recorder.called

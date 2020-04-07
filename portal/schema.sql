@@ -5,9 +5,9 @@
 -- command in your terminal.
 
 -- Drop existing tables
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS courses;
-DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS courses CASCADE;
+DROP TABLE IF EXISTS sessions CASCADE;
 DROP TABLE IF EXISTS roster;
 
 -- Users
@@ -45,7 +45,7 @@ CREATE TABLE sessions (
 -- Create a many-to-many relationship between student users and course sessions
 CREATE TABLE roster (
   -- Create a one-to-many relationship between student users and course sessions they belong to
-  student_id REFERENCES users(id) NOT NULL,
+  student_id bigint REFERENCES users(id) NOT NULL,
   -- Create a one-to-many relationship between course sessions and the students that belong to it
-  session_id REFERENCES sessions(id) NOT NULL
+  session_id bigint REFERENCES sessions(id) NOT NULL
 );
