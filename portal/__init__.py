@@ -42,7 +42,17 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
-    # Register Routes
+    # Login Users
+    # ---------------
+    from . import auth
+    app.register_blueprint(auth.bp)
+
+    # Portal
+    # ---------------
+    from . import portal
+    app.register_blueprint(portal.bp)
+
+    # Home Page
     # ---------------
     @app.route('/')
     def index():
@@ -50,4 +60,3 @@ def create_app(test_config=None):
 
     # Return application object to be used by a WSGI server, like gunicorn
     return app
-
