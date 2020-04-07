@@ -42,6 +42,9 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
+    from . import portal
+    app.register_blueprint(portal.bp)
+
     # Register Routes
     # ---------------
     @app.route('/')
@@ -50,4 +53,3 @@ def create_app(test_config=None):
 
     # Return application object to be used by a WSGI server, like gunicorn
     return app
-

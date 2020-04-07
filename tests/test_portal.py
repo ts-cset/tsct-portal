@@ -1,4 +1,5 @@
 from portal import create_app
+import pytest
 
 
 def test_config(monkeypatch):
@@ -32,3 +33,9 @@ def test_create_course(client):
     response = client.get('/courseCreate')
     assert b'+' in response.data
     assert response.status_code() == 200 in response.data
+
+
+def test_info_course(client):
+    response = client.get('/courseInfo<ID>')
+    assert b'Course Information on' in response.data
+    assert b'Back' in response.data
