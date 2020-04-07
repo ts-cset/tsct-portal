@@ -32,7 +32,6 @@ def test_login(client):
     assert b'Log Out' in response.data
     assert b'User Page' in response.data
     response = client.get('/auth/logout')
-    response = client.get('/')
     response = client.get('/auth/login')
     response = client.get('/auth/login?email=student%40stevenscollege.edu&password=asdfgh')
     response = client.get('/portal/userpage')
