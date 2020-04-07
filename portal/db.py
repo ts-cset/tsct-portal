@@ -6,6 +6,7 @@ import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
+from werkzeug.security import generate_password_hash
 
 def get_db():
     """Get a PostgreSQL database connection object."""
@@ -79,9 +80,32 @@ def mock_db_command():
     mock_db()
     click.echo("Inserted mock data.")
 
+def register(email, password, role, last, first, major):
+    """Register new users from the command line"""
+    with get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("""
+                INSERT INTO users (email, password, role, last_name, first_name, major)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (email, password, role, last, first, major))
+
+@click.command("register")
+@click.option('--email', prompt='Email', help='Email address of user')
+@click.option('--password', prompt='Password', help='Password for the user account')
+@click.option('--role', prompt='Role (teacher or student)', help="User's role")
+@click.option('--last', prompt='Last Name', help="User's last name")
+@click.option('--first', prompt='First Name', help="User's first name")
+@click.option('--major', prompt='Major', help="User's major")
+@with_appcontext
+def register_command(email, password, role, last, first, major):
+    """CLI command to register new users"""
+    register(email, generate_password_hash(password), role, last, first, major)
+    click.echo("Successfully registered a user")
+
 
 def init_app(app):
     """Register database functions with app."""
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
     app.cli.add_command(mock_db_command)
+    app.cli.add_command(register_command)
