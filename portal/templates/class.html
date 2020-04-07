@@ -1,0 +1,75 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Course Selection {% endblock %}
+
+{% block content %}
+<body>
+  <section>
+<form>
+  {% for course in courses %}
+    <!-- If subject is Math then display in Math box -->
+  {% if course['subject'] == 'Mathematics' %}
+    <ul>
+      <li>
+      <h2>Mathematics</h2>
+    <h2>{{ course['name'] }}</h2>
+    <input type="checkbox" value="{{ course['id'] }}"/>
+    </li>
+    </ul>
+    {% endif %}
+    <!-- If subject is reading then display in reading box -->
+    {% if course['subject'] == 'English' %}
+      <ul>
+        <li>
+        <h2>English</h2>
+      <h2>{{ course['name'] }}</h2>
+      <input type="checkbox" value="{{ course['id'] }}"/>
+      </li>
+      </ul>
+      {% endif %}
+      <!-- If subject is Humanities then display in Huamnities box -->
+      {% if course['subject'] == 'Humanities' %}
+        <ul>
+          <li>
+        <h2>Huamnities</h2>
+        <h2>{{ course['name'] }}</h2>
+        <input type="checkbox" value="{{ course['id'] }}"/>
+        </li>
+        </ul>
+        {% endif %}
+        <!-- If subject is Health then display in Health box -->
+        {% if course['subject'] == 'Health' %}
+          <ul>
+            <li>
+            <h2>Health</h2>
+          <h2>{{ course['name'] }}</h2>
+          <input type="checkbox" value="{{ course['id'] }}"/>
+          </li>
+          </ul>
+          {% endif %}
+          <!-- If subject is Science then display in Science box -->
+          {% if course['subject'] == 'Science' %}
+            <ul>
+              <li>
+            <h2>Science</h2>
+            <h2>{{ course['name'] }}</h2>
+            <input type="checkbox" value="{{ course['id'] }}"/>
+            </li>
+            </ul>
+            {% endif %}
+            <!-- If subject is Health then display in Health box -->
+            {% if course['subject'] == 'Health' %}
+              <ul>
+                <li>
+              <h2>Health</h2>
+              <h2>{{ course['name'] }}</h2>
+              <input type="checkbox" value="{{ course['id'] }}"/>
+              </li>
+              </ul>
+              {% endif %}
+    {% endfor %}
+    <button type="submit" name="submit-class"></button>
+  </form>
+  </section>
+  </body>
+{% endblock %}
