@@ -24,17 +24,21 @@ def index():
         )
         user = cur.fetchone()
         if user is None:
-            print('incorrect email')
-            error = 'Incorrect email.'
+            error = 'Incorrect email or password.'
         elif not check_password_hash(user['password'], password):
-            print('incorrect password')
-            error = 'Incorrect password.'
+            error = 'Incorrect email or password.'
         if error is None:
             session.clear()
             session['user'] = user
             print(session['user']['role'])
-            return render_template('portal/home.html')
+            return redirect(url_for('auth.home'))
 
         flash(error)
 
     return render_template('index.html')
+
+
+@bp.route('/home', methods=('GET', 'POST'))
+def home():
+    print(session['user'][3])
+    return render_template('portal/home.html')
