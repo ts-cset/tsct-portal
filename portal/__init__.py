@@ -48,6 +48,8 @@ def create_app(test_config=None):
     def index():
         return render_template('index.html')
 
+    from . import auth
+    app.register_blueprint(auth.bp)
+
     # Return application object to be used by a WSGI server, like gunicorn
     return app
-
