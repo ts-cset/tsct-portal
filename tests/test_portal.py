@@ -19,3 +19,16 @@ def test_index(client):
     assert b'<h1>TSCT Portal</h1>' in response.data
     assert b'<form>' in response.data
 
+
+def test_edit(client):
+    response = client.get('/courseManagement')
+    assert b'<h2>Course Management<h2>' in response.data
+    assert b'Edit' in response.data
+    assert b'Info' in response.data
+    assert b'+' in response.data
+
+
+def test_create_course(client):
+    response = client.get('/courseCreate')
+    assert b'+' in response.data
+    assert response.status_code() == 200 in response.data
