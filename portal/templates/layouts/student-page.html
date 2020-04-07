@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT student{% endblock %}
+<!-- This page is the first page a student user sees when they login -->
+
+{% block content %}
+
+<!-- Displays classes -->
+{% for course in courses %} <!-- This will loop and see how many classes the user has
+and then put them in a list element -->
+  <li<!-- The list element should be an anchor to the course page  -->>
+    {{ course['name'] }}
+  </li>
+{% endfor %}
+
+{% endblock %}
+
+<!-- The list elements and everything in the for loop is blocked right now
+because of the database not being completely set up -->
