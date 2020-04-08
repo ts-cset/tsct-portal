@@ -11,28 +11,26 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
-    email = request.args.get('email')
-    password = request.args.get('password')
-    error = None
-    cur = db.get_db().cursor()
-    cur.execute(
-        'SELECT * FROM users WHERE email = %s', (email,)
-    )
-    user = cur.fetchone()
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        error = None
+        cur = db.get_db().cursor()
+        cur.execute(
+            'SELECT * FROM users WHERE email = %s', (email,)
+        )
+        user = cur.fetchone()
+        cur.close()
 
-    if user is None:
-        error = 'Incorrect email.'
-        print("Email")
-    elif not check_password_hash(user['password'], password):
-        print("Password")
-        error = 'Incorrect password.'
+        if user is None:
+            error = 'Incorrect email or password.'
+        elif not check_password_hash(user['password'], password):
+            error = 'Incorrect email or password.'
 
-    if error is None:
-        session.clear()
-        session['users_id'] = user['id']
-        return redirect(url_for('portal.userpage'))
-
-    cur.close()
+        if error is None:
+            session.clear()
+            session['users_id'] = user['id']
+            return redirect(url_for('portal.userpage'))
 
     return render_template('account/login.html')
 
