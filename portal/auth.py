@@ -23,19 +23,15 @@ def index():
         )
         user = cur.fetchone()
         cur.close()
-        print(user)
 
         if user is None:
             error = 'Incorrect username or password.'
-            print(error)
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect username or password.'
-            print(error)
 
         #If no error occurs then a user has logged in
         if error is None:
             session.clear()
-            print(user)
             session['user_id'] = user['id']
             session['user_role'] = user['role']
             #Return different views for a teacher vs student
