@@ -1,0 +1,45 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Course Selection {% endblock %}
+
+{% block content %}
+<body>
+  <section>
+<form>
+  {% for course in courses %}
+    <!-- If subject is Math then display in Math box -->
+  {% if course['major'] == 'CSET' %}
+    <ul>
+      <li>
+      <h2>CSET</h2>
+    <h2>{{ course['course_name'] }}</h2>
+    <input type="checkbox" value="{{ course['id'] }}"/>
+    </li>
+    </ul>
+    {% endif %}
+    <!-- If subject is reading then display in reading box -->
+    {% if course['major'] == 'Masonry' %}
+      <ul>
+        <li>
+        <h2>Masonry</h2>
+      <h2>{{ course['course_name'] }}</h2>
+      <input type="checkbox" value="{{ course['id'] }}"/>
+      </li>
+      </ul>
+      {% endif %}
+      <!-- If subject is Humanities then display in Huamnities box -->
+      {% if course['major'] == 'GEN-ED' %}
+        <ul>
+          <li>
+        <h2>Gen-Ed</h2>
+        <h2>{{ course['course_name'] }}</h2>
+        <input type="checkbox" value="{{ course['id'] }}"/>
+        </li>
+        </ul>
+      {% endif %}
+    {% endfor %}
+    <button type="submit" name="submit-class"></button>
+  </form>
+  </section>
+  </body>
+{% endblock %}
