@@ -3,10 +3,10 @@ import functools
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db
 bp = Blueprint("auth", __name__)
+
 
 @bp.route('/', methods=('GET', 'POST'))
 def login():
@@ -22,18 +22,25 @@ def login():
         user = cur.fetchone()
 
         if user is None:
-            error = 'Incorrect email.'
-        elif not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
+            error = 'Incorrect credentials.'
+        elif not user['password'] == password:
+            error = 'Incorrect wrong.'
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
-            return redirect(url_for('college.home'))
-            cur.close()
+            if session['user_id'] == user['id'] and user['role'] == 'student':
+                print('STUDENT')
+                return redirect(url_for('college.home'))
+            elif session['user_id'] == user['id'] and user['role'] == 'teacher':
+                print('TEACHER')
+                return redirect(url_for('college2.home'))
+
+        cur.close()
         flash(error)
 
     return render_template('index.html')
+
+
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
