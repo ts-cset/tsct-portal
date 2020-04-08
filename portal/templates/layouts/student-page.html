@@ -1,19 +1,23 @@
 {% extends "layouts/base.html" %}
-
-{% block title %}TSCT student{% endblock %}
 <!-- This page is the first page a student user sees when they login -->
+{% block title %}TSCT student{% endblock %}
 
 {% block content %}
-
-<!-- Displays classes -->
-{% for course in courses %} <!-- This will loop and see how many classes the user has
-and then put them in a list element -->
-  <li<!-- The list element should be an anchor to the course page  -->>
-    {{ course['name'] }}
-  </li>
-{% endfor %}
+  <!-- Greets user -->
+  <section>
+    <h2>Hello <span class="greetingname">{{ g.user['first_name']}}!</span></h2>
+  </section>
+  <!-- g.user looks for information in user table -->
+  {% if g.user %}
+    <!-- This will loop and see how many classes the user has
+    and then put them in a list element -->
+    <ul>
+      {% for session in course_sessions %}
+        <li>{{ session['session_name'] }}</li>
+        <!-- The content in the list element should be an anchor to the course page  -->
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <!-- Displays classes -->
 
 {% endblock %}
-
-<!-- The list elements and everything in the for loop is blocked right now
-because of the database not being completely set up -->
