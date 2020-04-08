@@ -3,24 +3,35 @@
 {% block content %}
 <h2>Course Management</h2>
 
-<section course='teacherCourses'>
+<section course='teacherCourses'><!--Start of teacher edit section-->
 <h3>Courses</h3>
 
-{% for course in courses %}
+<ul>
 
-<h4>{{ courses['name'] }}</h4>
+  {% for courses in course %}<!--Start of courses loop-->
 
-<form class="" action="index.html" method="post">
-<button type="submit" name="editCourseButton">Edit</button>
+  <h4>{{ courses['course_title'] }}</h4><!--Name of each course from database-->
+  <li></li>
+  <form class="edit" action="/courseEdit" method="post">
+  <input type="text" name="editDescription" value="{{ course['description'] }}" required>
+  <input type="text" name="editTitle" value="{{ course['course_title'] }}" required>
+  <button type="submit" name="editCourseButton" value="{{ course['id'] }}">Edit</button>
+  </form>
+
+  <form class="info" action="/courseInfo" method="post">
+    <button type="submit" name="infoCourseButton" value="{{ course['id'] }}">Info</button>
+  </form>
+
+  <hr>
+
+  {% endfor %}<!--End of courses loop-->
+
+</ul>
+
+
+<form class="create" action="/courseCreate" method="post">
+<button type="submit" name="createCourseButton">+</button>
 </form>
 
-<form class="" action="index.html" method="post">
-  <button type="submit" name="infoCourseButton">Info</button>
-</form>
-
-<hr>
-
-{% endfor %}
-
-</section>
+</section><!-- end of teacher edit section-->
 {% endblock %}

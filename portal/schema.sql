@@ -6,42 +6,47 @@
 -- command in your terminal.
 
 -- Drop existing tables
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS courses;
-DROP TABLE IF EXISTS sessions;
-DROP TABLE IF EXISTS majors;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS majors CASCADE;
+DROP TABLE IF EXISTS sessions CASCADE;
+DROP TABLE IF EXISTS courses CASCADE;
+
+
+
+
+
+-- Majors
+CREATE TABLE majors (
+name text NOT NULL UNIQUE,
+id bigserial PRIMARY KEY
+);
 
 -- Users
 CREATE TABLE users (
     id bigserial PRIMARY KEY,
     email text UNIQUE NOT NULL,
     password text NOT NULL,
-    name text NOT NULL,
-    major REFERENCES majors(id)
+    full_name text NOT NULL UNIQUE,
+    major_name text REFERENCES majors(name),
     role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student'))
 );
 
 --Courses
 CREATE TABLE courses (
  course_num bigserial PRIMARY KEY,
- course_title text NOT NULL
- description text
- credits integer NOT NULL
- teacher REFERENCES users(id)
- major_Id REFERENCES majors(id)
-)
+ course_title text NOT NULL UNIQUE,
+ description text,
+ credits integer NOT NULL,
+ teacher_name text REFERENCES users(full_name),
+ major_name text REFERENCES majors(name)
+);
 
 --Sessions
 CREATE TABLE sessions (
-id PRIMARY KEY,
+id bigserial PRIMARY KEY,
 times text NOT NULL,
 name text NOT NULL,
-room_number NOT NULL,
-location NOT NULL,
-course_id REFERENCES courses(id)
-)
--- Majors
-CREATE TABLE majors (
-name NOT NULL
-id PRIMARY KEY
-)
+room_number integer NOT NULL,
+location text NOT NULL,
+course_name text REFERENCES courses(course_title)
+);
