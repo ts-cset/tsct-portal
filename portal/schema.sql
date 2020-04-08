@@ -27,9 +27,9 @@ CREATE TABLE courses (
   course_code varchar(10) NOT NULL,
   course_name text NOT NULL,
   major text NOT NULL,
-  description text NOT NULL,
+  description text NOT NULL
   -- Create a one-to-many relationship between teacher users and courses they own
-  teacher_id bigint REFERENCES users(id) NOT NULL
+  -- teacher_id bigint REFERENCES users(id) NOT NULL
 );
 
 -- Course Sessions

@@ -1,7 +1,8 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, Blueprint, request, redirect, url_for, g, flash, session
 
+from . import db
 
 def create_app(test_config=None):
     """Factory to configure and return a Flask application.
@@ -44,9 +45,31 @@ def create_app(test_config=None):
 
     # Register Routes
     # ---------------
+<<<<<<< HEAD
     from . import auth
     app.register_blueprint(auth.bp)
 
+=======
+    @app.route('/')
+    def index():
+        return render_template('index.html')
+    @app.route('/ClassCreation', methods=('GET', 'POST'))
+    def classCreation():
+        if request.method == "POST":
+            className = request.form['Class-Name']
+            classSubject = request.form['Class-Major']
+            classDescription = request.form['description']
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("INSERT INTO courses(course_code, course_name, major, description) VALUES(%s, %s, %s, %s)",
+                    (50, className, classSubject, classDescription)
+                    )
+            cur = db.get_db().cursor()
+            cur.execute("SELECT * FROM courses")
+            courses = cur.fetchall()
+            cur.close()
+            return render_template("class.html", courses=courses)
+        return render_template("CourseCreation.html")
+>>>>>>> Added a Class creation feature
     # Return application object to be used by a WSGI server, like gunicorn
     return app
-
