@@ -24,7 +24,9 @@ def test_login(client):
     assert b'Log In' in response.data
     assert b'Log Out' not in response.data
     response = client.get('/auth/login')
-    response = client.get('/auth/login?email=teacher%40stevenscollege.edu&password=qwerty')
+    response = client.post(
+        '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
+    )
     response = client.get('/portal/userpage')
     assert b'<p>You are logged in</p>' in response.data
     assert b'teacher@stevenscollege.edu' in response.data
@@ -33,7 +35,9 @@ def test_login(client):
     assert b'User Page' in response.data
     response = client.get('/auth/logout')
     response = client.get('/auth/login')
-    response = client.get('/auth/login?email=student%40stevenscollege.edu&password=asdfgh')
+    response = client.post(
+        '/auth/login', data={'email': 'student@stevenscollege.edu', 'password':'asdfgh'}
+    )
     response = client.get('/portal/userpage')
     assert b'<p>You are logged in</p>' in response.data
     assert b'student@stevenscollege.edu' in response.data
@@ -46,19 +50,25 @@ def test_login_fail(client):
     assert b'Log In' in response.data
     assert b'Log Out' not in response.data
     response = client.get('/auth/login')
-    response = client.get('/auth/login?email=teacher%40stevenscollege.edu&password=yes')
+    response = client.post(
+        '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'yes'}
+    )
     assert b'Log In' in response.data
     assert b'Log Out' not in response.data
     assert b'User Page' not in response.data
     response = client.get('/auth/login')
-    response = client.get('/auth/login?email=student%40stevenscollege.edu&password=yes')
+    response = client.post(
+        '/auth/login', data={'email': 'student@stevenscollege.edu', 'password':'yes'}
+    )
     assert b'Log In' in response.data
     assert b'Log Out' not in response.data
     assert b'User Page' not in response.data
 
 def test_logout(client):
     response = client.get('/auth/login')
-    response = client.get('/auth/login?email=teacher%40stevenscollege.edu&password=qwerty')
+    response = client.post(
+        '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
+    )
     response = client.get('/portal/userpage')
     response = client.get('/auth/logout')
     response = client.get('/')
