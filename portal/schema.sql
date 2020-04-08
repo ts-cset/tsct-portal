@@ -9,9 +9,11 @@ DROP TABLE IF EXISTS users;
 
 -- Users
 CREATE TABLE users (
-    id bigserial PRIMARY KEY,
+    id bigint PRIMARY KEY,
     email text UNIQUE NOT NULL,
     password text NOT NULL,
-    role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student'))
+    name text NOT NULL,
+    role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student')),
+    major text NOT NULL
 );
 
