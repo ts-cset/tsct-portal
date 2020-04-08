@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'layouts/base.html' %}
 
 {% block content %}
 <h2>Course Management</h2>
@@ -6,8 +6,10 @@
 <section course='teacherCourses'>
 <h3>Courses</h3>
 
-{% for courses in course %}
+{% for course in courses %}
+
 <h4>{{ courses['name'] }}</h4>
+
 <form class="" action="index.html" method="post">
 <button type="submit" name="editCourseButton">Edit</button>
 </form>
@@ -15,6 +17,8 @@
 <form class="" action="index.html" method="post">
   <button type="submit" name="infoCourseButton">Info</button>
 </form>
+
+<hr>
 
 {% endfor %}
 

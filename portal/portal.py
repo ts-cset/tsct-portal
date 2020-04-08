@@ -9,7 +9,7 @@ bp = Blueprint("portal", __name__)
 def course_manage():
     """Allows teachers to have a page which allows
     them to edit and create courses"""
-    pass
+    return render_template("layouts/courseMan.html")
 
 
 @bp.route("/courseCreate", methods=('GET', 'POST'))
