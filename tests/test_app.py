@@ -33,6 +33,8 @@ def test_login(client):
     assert b'Log In' not in response.data
     assert b'Log Out' in response.data
     assert b'User Page' in response.data
+    assert b'Create a course' in response.data
+    assert b'You are a teacher' in response.data
     response = client.get('/auth/logout')
     response = client.get('/auth/login')
     response = client.post(
@@ -44,6 +46,8 @@ def test_login(client):
     assert b'Log In' not in response.data
     assert b'Log Out' in response.data
     assert b'User Page' in response.data
+    assert b'Create a course' not in response.data
+    assert b'You are a teacher' not in response.data
 
 def test_login_fail(client):
     response = client.get('/')
@@ -75,3 +79,44 @@ def test_logout(client):
     assert b'Log In' in response.data
     assert b'Log Out' not in response.data
     assert b'User Page' not in response.data
+
+def test_create_course(client):
+    response = client.get('/auth/login')
+    response = client.post(
+        '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
+    )
+    response = client.get('/portal/userpage')
+    respones = client.get('/portal/create-course')
+    response = client.post(
+        '/portal/create-course', data={'course_number': '101', 'name':'CSET1', 'description':'class', 'credits':'9'}
+    )
+    response = client.get('/portal/userpage')
+    assert b'101' in response.data
+    assert b'CSET1' in response.data
+    assert b'CSET' in response.data
+
+
+def test_update_course(client):
+    response = client.get('/auth/login')
+    response = client.post(
+        '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
+    )
+    response = client.get('/portal/userpage')
+    respones = client.get('/portal/create-course')
+    response = client.post(
+        '/portal/create-course', data={'course_number': '102', 'name':'CSET2', 'description':'class', 'credits':'10'}
+    )
+    response = client.get('/portal/userpage')
+    assert b'102' in response.data
+    assert b'CSET2' in response.data
+    assert b'CSET' in response.data
+    respones = client.get('/portal/update-course')
+    response = client.post(
+        '/portal/update-course/1', data={'course_number': '103', 'name':'CSET3', 'description':'class', 'credits':'11'}
+    )
+    response = client.get('/portal/userpage')
+    assert b'102' not in response.data
+    assert b'CSET2' not in response.data
+    assert b'103' in response.data
+    assert b'CSET3' in response.data
+    assert b'CSET' in response.data

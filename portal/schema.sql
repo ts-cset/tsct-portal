@@ -5,6 +5,7 @@
 -- command in your terminal.
 
 -- Drop existing tables
+DROP TABLE IF EXISTS courses;
 DROP TABLE IF EXISTS users;
 
 -- Users
@@ -17,3 +18,13 @@ CREATE TABLE users (
     major text NOT NULL
 );
 
+-- Courses
+CREATE TABLE courses (
+    id bigserial PRIMARY KEY,
+    course_number text UNIQUE NOT NULL,
+    major text NOT NULL,
+    name text NOT NULL,
+    description text,
+    credits bigint NOT NULL,
+    teacher bigint NOT NULL REFERENCES users (id)
+);
