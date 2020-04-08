@@ -24,16 +24,15 @@ def login():
         if user is None:
             error = 'Incorrect credentials.'
         elif not user['password'] == password:
-            error = 'Incorrect wrong.'
+            error = 'Incorrect credentials.'
 
         if error is None:
             session.clear()
+            session['user_id'] = user['id']
             if session['user_id'] == user['id'] and user['role'] == 'student':
-                print('STUDENT')
-                return redirect(url_for('college.home'))
+                return redirect(url_for('college.student'))
             elif session['user_id'] == user['id'] and user['role'] == 'teacher':
-                print('TEACHER')
-                return redirect(url_for('college2.home'))
+                return redirect(url_for('college.home'))
 
         cur.close()
         flash(error)
