@@ -1,0 +1,22 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+<h2>Create a Course</h2>
+<form method="post">
+  <label for="course_number">Course Number
+    <input name="course_number" required/>
+  </label>
+  <label for="name">Name
+    <input name="name" required/>
+  </label>
+  <label for="description">Description
+    <input name="description" />
+  </label>
+  <label for="credits">Credits
+    <input name="credits" required/>
+  </label>
+  <input type="submit" value="Create Course" />
+</form>
+{% endblock %}
