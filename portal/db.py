@@ -1,4 +1,5 @@
 import os
+import csv
 import psycopg2
 import psycopg2.extras
 
@@ -28,6 +29,7 @@ def get_db():
         )
 
     return g.db
+
 
 def close_db(e=None):
     """Close the current PostgreSQL connection"""
@@ -64,7 +66,8 @@ def init_db_command():
 def mock_db():
     """Seed the database with mock data."""
 
-    data_filepath = os.path.join(os.path.dirname(__file__), os.pardir, "tests", "data.sql")
+    data_filepath = os.path.join(os.path.dirname(
+        __file__), os.pardir, "tests", "data.sql")
     # open the mock data file and close when done
     with open(data_filepath, "rb") as f:
         with get_db() as con:
@@ -85,4 +88,31 @@ def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
     app.cli.add_command(mock_db_command)
+    app.cli.add_command(import_csv_command)
 
+
+def import_csv():
+    """Seed the database with mock data."""
+
+    data_filepath = os.path.join(os.path.dirname(
+        __file__), os.pardir, "import_data", "portal_users.csv")
+    # open the mock data file and close when done
+    with open(data_filepath, "r") as f:
+        with get_db() as con:
+            with con.cursor() as cur:
+                reader = csv.reader(f)
+                next(reader)  # Skip the header row.
+                for row in reader:
+                    cur.execute(
+                        "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)",
+                        row
+                    )
+                    con.commit()
+
+
+@click.command("import-csv")
+@with_appcontext
+def import_csv_command():
+    """CLI command to seed the database with mock data."""
+    import_csv()
+    click.echo("Inserted csv data.")
