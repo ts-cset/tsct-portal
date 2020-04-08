@@ -32,11 +32,13 @@ def index():
             error = 'Incorrect username or password.'
             print(error)
 
+        #If no error occurs then a user has logged in
         if error is None:
             session.clear()
             print(user)
             session['user_id'] = user['id']
             session['user_role'] = user['role']
+            #Return different views for a teacher vs student
             if user['role'] == 'teacher':
                 return "Hello teacher"
                 #return redirect(url_for('portal.teacher_page'))
@@ -68,6 +70,7 @@ def logout():
     session.clear()
     return redirect(url_for('auth.index'))
 
+#add this to a bp to make login required before going to a view
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):

@@ -39,6 +39,7 @@ class AuthActions(object):
     def __init__(self, client):
         self._client= client
 
+    # Two seperate posts to login a teacher and a student
     def teacher_login(self, email='teacher@stevenscollege.edu', password='qwerty'):
         return self._client.post(
             '/',
@@ -54,6 +55,7 @@ class AuthActions(object):
     def logout(self):
         return self._client.get('/logout')
 
+# When auth is called itmakes both logins and the logout available
 @pytest.fixture
 def auth(client):
     return AuthActions(client)
