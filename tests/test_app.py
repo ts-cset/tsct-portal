@@ -17,5 +17,3 @@ def test_config(monkeypatch):
 def test_index(client):
     response = client.get('/')
     assert b'<h1>TSCT Portal</h1>' in response.data
-    assert b'<form>' in response.data
-

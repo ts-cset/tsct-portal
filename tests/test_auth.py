@@ -10,19 +10,21 @@ def test_login(client):
 
     assert response.headers['Location'] == 'http://localhost/'
 
-    with client.get('/'):
-
+    with client:
+        client.get('/')
         assert session['user_id'] == 1
         assert g.user['email'] == 'teacher@stevenscollege.edu'
 
 
-@pytest.mark.parametrize(('email', 'password'), (
-    ('student@stevenscollege.edu', 'qwerty'),
-    ('teacher@stevens.college.edu', 'asdfgh'),
-    ('nonsense', 'not_a_correct_password')
+@pytest.mark.parametrize(('email', 'password', 'error'), (
+    ('student@stevenscollege.edu', 'qwerty', b'Incorrect email or password'),
+    ('teacher@stevens.college.edu', 'asdfgh', b'Incorrect email or password'),
+    ('nonsense', 'not_a_correct_password', b'Incorrect email or password'),
+    ('student@stevenscollege.edu', '', b'Enter a password'),
+    ('', 'asdfgh', b'Enter an email')
 ))
-def test_login_validation(client, email, password):
+def test_login_validation(client, email, password, error):
 
     response = client.post('/login', data={'email': email, 'password': password})
 
-    assert b'Incorrect email or password' in response.data
+    assert error in response.data
