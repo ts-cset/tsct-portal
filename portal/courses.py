@@ -8,7 +8,18 @@ bp = Blueprint('courses', __name__)
 
 @bp.route('/courses')
 def courses():
-    return render_template('portal/courses.html')
+    if session['user'][3] == 'teacher':
+    # get the id of the teacher
+        teacher = session['user'][0]
+        print(teacher)
+    # display the courses they own with a query
+        cur = get_db().cursor()
+
+        cur.execute("SELECT * FROM courses WHERE teacher_id = %s;", (teacher,))
+        teacher_courses = cur.fetchall()
+        print(teacher_courses)
+
+    return render_template('portal/courses.html', teacher_courses=teacher_courses)
 
 @bp.route('/courses/createcourse', methods=("POST",))
 def courses_create():
