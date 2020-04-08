@@ -12,3 +12,7 @@ def index():
 @bp.route("/home")
 def home():
     return render_template("home.html")
+
+@bp.route("/student")
+def student():
+    return render_template("student-home.html")
