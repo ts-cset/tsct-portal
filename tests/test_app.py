@@ -131,3 +131,14 @@ def test_update_course(client):
     assert b'103' in response.data
     assert b'CSET3' in response.data
     assert b'CSET' in response.data
+
+
+def test_create_session(client):
+    response = client.get('/auth/login')
+    response = client.post(
+        '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
+    )
+    response = client.get('/portal/userpage')
+    response = client.post(
+        '/portal/1/create-session', data={'name': 'A', 'times':'Monday', 'students':1}
+    )
