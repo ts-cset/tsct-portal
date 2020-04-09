@@ -77,3 +77,13 @@ def login_required(view):
 
     return wrapped_view
 
+#Add to bp to check admin role
+def admin(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user['role'] != 'teacher':
+            return redirect(url_for('auth.index'))
+
+        return view(**kwargs)
+
+    return wrapped_view
