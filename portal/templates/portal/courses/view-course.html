@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+{% if g.users['role'] == 'teacher' %}
+<p>You are a teacher</p>
+{% for course in courses %}
+<a href="{{ url_for('portal.create_session', course_id=course['id']) }}"><input type="button" value="Create a session"></a>
+{% endfor %}
+<ul>
+  {% for course in courses %}
+  <li>
+  {{ course['course_number'], course['name'], course['major'] }}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
