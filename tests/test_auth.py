@@ -17,7 +17,7 @@ def test_teacher_login(client, auth):
 def test_student_login(client, auth):
     assert client.get('/').status_code == 200
     response = auth.student_login()
-    assert b'hello student' in response.data
+    assert 'http://localhost/student/home' == response.headers['Location']
 
     #with client:
         #client.get('/teacher-page')
