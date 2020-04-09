@@ -20,6 +20,21 @@ def courses():
     cur.close()
     return render_template('portal/courses/index.html', courses=courses)
 
+@bp.route('/view-session/<session_id>', methods=('GET', 'POST'))
+@login_required
+def view_session(session_id):
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT * FROM session
+                   WHERE id = %s;""",
+                   (session_id,))
+    sessions = cur.fetchall()
+    cur.execute("""SELECT * FROM roster
+                   WHERE session_id = %s;""",
+                   (session_id,))
+    rosters = cur.fetchall()
+    cur.close()
+    return render_template('portal/courses/sessions/view-session.html', sessions=sessions, rosters=rosters)
+
 @bp.route('/view-course/<course_id>', methods=('GET', 'POST'))
 @login_required
 def view_course(course_id):
@@ -28,8 +43,12 @@ def view_course(course_id):
                    WHERE id = %s;""",
                    (course_id,))
     courses = cur.fetchall()
+    cur.execute("""SELECT * FROM session
+                   WHERE courses_id = %s;""",
+                   (course_id,))
+    sessions = cur.fetchall()
     cur.close()
-    return render_template('portal/courses/view-course.html', courses=courses)
+    return render_template('portal/courses/view-course.html', courses=courses, sessions=sessions)
 
 @bp.route('/create-course', methods=('GET', 'POST'))
 @login_required

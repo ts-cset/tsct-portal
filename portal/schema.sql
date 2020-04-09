@@ -30,6 +30,7 @@ CREATE TABLE courses (
     credits bigint NOT NULL,
     teacher bigint NOT NULL REFERENCES users (id)
 );
+
 --session
 CREATE TABLE session (
   id bigserial PRIMARY KEY,
@@ -37,6 +38,7 @@ CREATE TABLE session (
   times text NOT NULL,
   name varchar(1) NOT NULL
 );
+
 --roster
 CREATE TABLE roster (
   id bigserial PRIMARY KEY,
