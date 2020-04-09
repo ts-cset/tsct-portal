@@ -103,8 +103,9 @@ def import_csv():
                 reader = csv.reader(f)
                 next(reader)  # Skip the header row.
                 for row in reader:
-                    cur.execute(
-                        "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)",
+                    cur.execute("""
+                        INSERT INTO users (id, email, password, name, role, major)
+                        VALUES (%s, %s, %s, %s, %s, %s) """,
                         row
                     )
                     con.commit()
