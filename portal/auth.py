@@ -39,8 +39,8 @@ def index():
                 return "Hello teacher"
                 #return redirect(url_for('portal.teacher_page'))
             elif user['role'] == 'student':
-                return "hello student"
-                #return redirect(url_for('portal.student_page'))
+                # return "hello student"
+                return redirect(url_for('student.home'))
 
         flash(error)
 
@@ -76,4 +76,3 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
-
