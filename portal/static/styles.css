@@ -108,7 +108,10 @@ address p a:hover {
  * Forms
  */
 form {
+  background-color: #8B1E41;
   border: 1px solid black;
+  box-shadow: 2px 2px 5px black;
+  color: white;
   margin: 0 auto;
   padding: 1rem;
   width: 35vw;
@@ -121,4 +124,26 @@ label {
 
 label input {
   width: 100%;
+}
+
+/**
+* Error Messages
+*/
+p.flash {
+  align-items: center;
+  border: 1px solid black;
+  box-shadow: 2px 2px 5px black;
+  color: red;
+  display: flex;
+  font-weight: bold;
+  height: 3rem;
+  justify-content: center;
+  margin: 2rem auto 0;
+  width: 265px;
+}
+
+@media (min-width: 760px) {
+  p.flash {
+    width: 35vw;
+  }
 }
