@@ -8,6 +8,8 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS majors CASCADE;
 DROP TABLE IF EXISTS courses CASCADE;
+DROP TABLE IF EXISTS sessions CASCADE;
+DROP TABLE IF EXISTS roster CASCADE;
 
 -- Users
 CREATE TABLE users (
@@ -30,7 +32,19 @@ CREATE TABLE courses (
   name varchar(50),
   major bigint NOT NULL,
   description text,
-  teacherId bigint NOT NULL
+  teacherid bigint NOT NULL
+);
+
+CREATE TABLE sessions (
+  id bigserial PRIMARY KEY,
+  course bigint NOT NULL,
+  days varchar(20),
+  class_time time NOT NULL
+);
+
+CREATE TABLE roster (
+  student_id bigint PRIMARY KEY,
+  session_id bigint
 );
 
 ALTER TABLE courses
@@ -40,7 +54,25 @@ ALTER TABLE courses
     ON DELETE CASCADE;
 
 ALTER TABLE courses
-  ADD CONSTRAINT course_teacher FOREIGN KEY (teacherId)
+  ADD CONSTRAINT course_teacher FOREIGN KEY (teacherid)
     REFERENCES users(id)
     ON UPDATE CASCADE
-    ON DELETE cascade;
+    ON DELETE CASCADE;
+
+ALTER TABLE sessions
+  ADD CONSTRAINT session_course FOREIGN KEY (course)
+    REFERENCES courses(course_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
+
+ALTER TABLE roster
+  ADD CONSTRAINT student_id FOREIGN KEY (student_id)
+    REFERENCES users(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
+
+ALTER TABLE roster
+  ADD CONSTRAINT session_id FOREIGN KEY (session_id)
+    REFERENCES sessions(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
