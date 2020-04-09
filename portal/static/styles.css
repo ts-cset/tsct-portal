@@ -60,4 +60,22 @@ label input {
   width: 100%;
 }
 
+.teacher_forms {
+  display: flex;
+  flex-direction: column;
+  font-size: 22px;
+  text-align: center;
+}
 
+.teacher_home_form{
+  border: 1px solid black;
+  text-align: center;
+  font-size: 18px;
+  font-family: sans-serif;
+  width: 75%;
+}
+
+.course-description {
+  width: 100%;
+  height: 400px;
+}
