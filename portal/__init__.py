@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, Blueprint, request, redirect, url_for, g, flash, session
+from flask import Flask, render_template
 
 from . import db
 
@@ -49,9 +49,6 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
     from . import CourseCreation
     app.register_blueprint(CourseCreation.bp)
-    @app.route('/')
-    def index():
-        return render_template('index.html')
 
     # Return application object to be used by a WSGI server, like gunicorn
     return app
