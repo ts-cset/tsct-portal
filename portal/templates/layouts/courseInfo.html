@@ -1,4 +1,26 @@
+
 {% extends 'layouts/base.html' %}
 
 {% block content %}
+<section class='edit'>
+
+  <header>
+    <h1>{{ course['course_title']}}</h1>
+    <a href="/courseManagement">Back</a>
+    <!--<a class='action' href="{{ url_for(courseInfo.update), id=course['course_num']}}">Edit</a>-->
+  </header>
+
+  <p class='title'>{{ course['course_title'] }}</p>
+
+  <p class='desc'>{{ course['description'] }}</p>
+
+  <p class='credits'>{{ course['credits'] }}</p>
+
+  <p class='teacher'>{{ course['teacher_name'] }}</p>
+
+  <p class='major'>{{ course['major_name'] }}</p>
+
+
+
+</section>
 {% endblock%}

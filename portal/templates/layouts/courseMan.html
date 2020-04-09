@@ -10,28 +10,35 @@
 
   {% for courses in course %}<!--Start of courses loop-->
 
-  <h4>{{ courses['course_title'] }}</h4><!--Name of each course from database-->
-  <li></li>
-  <form class="edit" action="/courseEdit" method="post">
-  <input type="text" name="editDescription" value="{{ course['description'] }}" required>
-  <input type="text" name="editTitle" value="{{ course['course_title'] }}" required>
-  <button type="submit" name="editCourseButton" value="{{ course['id'] }}">Edit</button>
-  </form>
 
-  <form class="info" action="/courseInfo" method="post">
-    <button type="submit" name="infoCourseButton" value="{{ course['id'] }}">Info</button>
-  </form>
+  <li>
 
-  <hr>
+    <h4>{{ courses['course_title'] }}</h4><!--Name of each course from database-->
 
+    <!-- <form class="edit" action="/courseEdit" method="post">
+    <input type="text" name="editDescription" value="{{ course['description'] }}" required>
+    <input type="text" name="editTitle" value="{{ course['course_title'] }}" required>
+    <button type="submit" name="editCourseButton" value="{{ course['id'] }}">Edit</button>
+    </form> -->
+
+    <a href="{{ url_for('portal.course_edit', id=courses['course_num']) }}">Edit</a>
+
+    <form class="sessions" action="index.html" method="post">
+      <button type="submit" name="showSessionsButton">Sessions</button>
+    </form>
+
+  </li>
+
+
+
+    {% if not loop.last %}
+    <hr>
+    {% endif %}
   {% endfor %}<!--End of courses loop-->
 
 </ul>
 
-
-<form class="create" action="/courseCreate" method="post">
-<button type="submit" name="createCourseButton">+</button>
-</form>
+<a href="/courseCreate">+</a>
 
 </section><!-- end of teacher edit section-->
 {% endblock %}
