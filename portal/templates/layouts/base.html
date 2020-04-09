@@ -16,10 +16,10 @@
     <header>
       <h1>{{ self.title() }}</h1>
 
-      {% if user %}
+      {% if g.user %}
         <div class="logout">
-          <p>Logged in as {{ user['name'] }}</p>
-          <a href="/logout">Log Out</a>
+          <p>Logged in as {{ g.user['name'] }}</p>
+          <a href="{{ url_for('auth.logout') }}">Log Out</a>
         </div>
       {% endif %}
     </header>
