@@ -8,4 +8,4 @@ VALUES ('89563', 'teacher@stevenscollege.edu', 'pbkdf2:sha256:150000$uGAR1DGg$09
 
 INSERT INTO courses (course_number, major, name, description, credits, teacher)
 VALUES ('101', 'CSET', 'Web Design', 'We learn and develop code to deploy on the internet', 4, 89563),
-       ('301', 'GENEDS', 'Public Speaking', 'In this class you will learn how to plan a speech and speak publically', 4, 53114 )
+       ('301', 'GENEDS', 'Public Speaking', 'In this class you will learn how to plan a speech and speak publically', 4, 53114 );

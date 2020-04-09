@@ -88,7 +88,7 @@ def update_course(course_id):
          UPDATE courses SET course_number = %s, major = %s, name = %s, description = %s, credits = %s, teacher = %s
          WHERE id = %s;
          """,
-         (course_number, g.users['major'], name, description, credits, g.users['id'], id))
+         (course_number, g.users['major'], name, description, credits, g.users['id'], course_id))
         db.get_db().commit()
         cur.close()
 
