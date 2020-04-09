@@ -4,10 +4,28 @@
 
 {% block content %}
 <h1>Edit course</h1>
-<form class="" method="post">
-  <label for="new">Update Course</label>
-  <input type="text" name="new" value="" required>
-  <input type="submit" name="update" value="Update">
-</form>
 
+<form method="post">
+  <label for="cour_name">Course Name
+  <input type="text" id="cour_name" name="cour_name" value="{{ name }}" required>
+  </label>
+
+  <label for="cour_num">Course Number
+  <input type="number" id="cour_num" name="cour_num" min="100" max="999" value="{{ num }}" required>
+  </label>
+
+  <label for="cour_maj">Major
+  <input type="text" id="cour_maj" name="cour_maj" value="{{ major }}" required>
+  </label>
+
+  <label for="cour_cred">Credits
+  <input type="number" id="cour_cred" name="cour_cred" min="1" max="4" value="{{ credits }}" required>
+  </label>
+
+  <label for="cour_desc">description
+  <input type="text" id="cour_desc" name="cour_desc" value="{{ description }}" required>
+  </label>
+
+  <input type="submit" value="Submit">
+</form>
 {% endblock %}

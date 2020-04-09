@@ -38,6 +38,7 @@ def courses_create():
         cur.execute("""INSERT INTO courses (major, name, num, credits, teacher_id)
                         VALUES (%s, %s, %s, %s, %s);""", (cour_maj, cour_name, cour_num, cour_cred, teacher))
         get_db().commit()
+        cur.close()
 
         return redirect(url_for('courses.courses'))
 
@@ -47,22 +48,21 @@ def courses_create():
 def courses_edit():
     """Edits the course name/info"""
     cur = get_db().cursor()
+    cour_id = request.args.get('id')
     if request.method == "POST":
-        new = request.form['new']
+        cour_name = request.form['cour_name']
+        cour_num = request.form['cour_num']
+        cour_maj = request.form['cour_maj']
+        cour_cred = request.form['cour_cred']
+        cour_desc = request.form['cour_desc']
 
-        if not new:
-
-
-            return render_template('portal/editcourse.html')
             # Update the task
-        else:
-            cur.execute(
-                'UPDATE course SET description = %s'
-                'WHERE id = %s ',
-                (new, id)
+        cur.execute(
+                """UPDATE courses SET (major, name, num, credits, description) = (%s, %s, %s, %s, %s)
+                WHERE id = %s;""", (cour_maj, cour_name, cour_num, cour_cred, cour_desc ,cour_id)
             )
-            get_db().commit()
-            cur.close()
+        get_db().commit()
+        cur.close()
 
-        return redirect(url_for('editcourse.course'))
-    return render_template("portal/editcourse.html")
+        return redirect(url_for('courses.courses'))
+    return render_template("portal/editcourse.html", id=cour_id)
