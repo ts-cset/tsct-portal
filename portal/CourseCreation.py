@@ -28,5 +28,5 @@ def classCreation():
         cur.execute("SELECT * FROM courses")
         courses = cur.fetchall()
         cur.close()
-        return render_template("Class.html", courses=courses)
+        return render_template("class.html", courses=courses)
     return render_template("CourseCreation.html")
