@@ -1,4 +1,5 @@
 import functools
+import bcrypt
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -7,6 +8,10 @@ from flask import (
 from . import db
 bp = Blueprint("auth", __name__)
 
+
+def hash_pass(password):
+    hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+    return hashed
 
 @bp.route('/', methods=('GET', 'POST'))
 def login():
@@ -21,10 +26,8 @@ def login():
         )
         user = cur.fetchone()
 
-        if user is None:
-            error = 'Incorrect credentials.'
-        elif not user['password'] == password:
-            error = 'Incorrect credentials.'
+        if user is None or not bcrypt.checkpw(password.encode('utf8'), user['password'].tobytes()):
+            error = 'Incorrect email or password!'
 
         if error is None:
             session.clear()
@@ -38,7 +41,6 @@ def login():
         flash(error)
 
     return render_template('index.html')
-
 
 @bp.before_app_request
 def load_logged_in_user():
