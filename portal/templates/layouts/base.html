@@ -20,10 +20,9 @@
     <main>
       {% block content %}{% endblock %}
     </main>
-    {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-    {% endfor %}
-
+      {% for message in get_flashed_messages() %}
+      <p class="flash">{{ message }}</p>
+      {% endfor %}
     <footer>
       <h2>Thaddeus Stevens College of Technology</h2>
       <address>
