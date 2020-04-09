@@ -1,10 +1,6 @@
 from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
-
 from . import db
-
-import datetime
-
-bp = Blueprint("college", __name__)
+bp = Blueprint("portal", __name__)
 
 
 def new_course():
