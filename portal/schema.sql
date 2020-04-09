@@ -45,6 +45,7 @@ ALTER TABLE courses
   ADD CONSTRAINT course_teacher FOREIGN KEY (teacherid)
     REFERENCES users(id)
     ON UPDATE CASCADE
+
     ON DELETE CASCADE;
 
 CREATE TABLE sessions (
@@ -76,3 +77,7 @@ ALTER TABLE roster
     REFERENCES sessions(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE;
+
+INSERT INTO majors (name, description)
+  VALUES ('CSET', 'computer shit'),
+          ('MSON', 'bricks');
