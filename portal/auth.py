@@ -8,6 +8,8 @@ bp = Blueprint("auth", __name__)
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+    """Renders the login page.
+    Starts a new session if a login attempt is successful."""
 
     if request.method == 'POST':
 
@@ -22,17 +24,21 @@ def login():
 
         error = None
 
+        #Check for empty email form
         if not email:
             print('no email')
             error = 'Enter an email'
 
+        #Check for empty password form
         elif not password:
             print('no password')
             error = 'Enter a password'
 
+        #Check if entered password matches the password in the database
         elif not user or user['password'] != password:
             error = 'Incorrect email or password'
 
+        #If no errors occured, start a new session
         if error == None:
 
             session.clear()
@@ -48,23 +54,28 @@ def login():
 
         flash(error)
 
-    return render_template('login.html')
+    return render_template('login.html', user=g.user)
 
 
 @bp.route('/logout')
 def logout():
+    """Clears the current session"""
     session.clear()
     return redirect('/')
 
 
 @bp.before_app_request
 def load_user():
+    """Checks if the user is logged in before every request to the server.
+    If they are, pull their data out of the database and put it in g.user"""
 
     user_id = session.get('user_id')
 
+    #Check if the user has an active session
     if user_id is None:
         g.user = None
     else:
+        #Pull the user's data out of the database and assign it to g
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
@@ -72,6 +83,7 @@ def load_user():
 
 
 def login_required(view):
+    """Checks if the user is logged in, and if not, redirects them to the login page"""
     @functools.wraps(view)
     def wrapped(**kwargs):
         if g.user is None:

@@ -13,8 +13,11 @@ html {
 }
 
 h1, h2, h3, h4, h5, h6 {
+  color: white;
   font-family: 'Crimson Text', serif;
   font-weight: 400;
+  margin: 1rem auto;
+  text-align: center;
 }
 
 
@@ -29,14 +32,74 @@ body {
   padding: 1rem;
 }
 
+header {
+  background-color: #8B1E41;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+div.logout {
+  align-items: center;
+  color: white;
+  display: flex;
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+div.logout a {
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  color: #8B1E41;
+  margin-left: 2rem;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+
+div.logout a:active {
+  box-shadow: inset 2px 2px 2px black;
+}
+
+footer {
+  background-color: #8B1E41;
+}
+
+address p {
+  color: white;
+  text-align: center;
+}
+
+address p a {
+  color: white;
+}
+
+address p a:hover {
+  color: blue;
+}
+
 @media (min-width: 760px) {
+  h1, h2, h3, h4, h5, h6 {
+    margin-left: 1rem;
+    text-align: left;
+  }
+
+  header {
+    flex-direction: row;
+  }
+
   footer {
     display: flex;
     justify-content: space-between;
   }
+
   footer h2,
   footer address {
     width: 40%;
+  }
+
+  address p {
+    text-align: left;
   }
 }
 
@@ -59,5 +122,3 @@ label {
 label input {
   width: 100%;
 }
-
-

@@ -29,6 +29,7 @@ def test_login_validation(client, email, password, error):
 
     assert error in response.data
 
+
 def test_logout(client):
 
     client.post('/login', data={'email': 'teacher@stevenscollege.edu', 'password': 'qwerty'})
