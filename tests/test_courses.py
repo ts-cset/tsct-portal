@@ -24,10 +24,20 @@ def test_create_course(app, client):
         db = get_db()
 
         cur = db.cursor()
+
+        cur.execute(
+            "SELECT * FROM users WHERE email = 'teacher@stevenscollege.edu';"
+            )
+        user = cur.fetchone()
+        with client.session_transaction() as sess: # stores teacher on the session
+            sess['user'] = user
+
         # post it
-        response = client.post('/courses/createcourse', data={'coursenumber': 100, 'major': 'CSET', 'coursename': 'test'})
+        response = client.post('/createcourse', data={'cour_maj': 'CSET', 'cour_name': 'test', 'cour_num': 100, 'cour_cred': 3})
         # check the db and see if that course exists now
-        check = cur.execute("SELECT * FROM courses WHERE name = 'test';").fetchone()
+        cur.execute("SELECT * FROM courses WHERE name = 'test';")
+
+        check = cur.fetchone()
 
         assert check
 

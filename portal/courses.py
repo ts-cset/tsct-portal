@@ -22,9 +22,26 @@ def courses():
 
     return render_template('portal/courses.html', teacher_courses=teacher_courses)
 
-@bp.route('/courses/createcourse', methods=("POST",))
+@bp.route('/createcourse', methods=("GET", "POST"))
 def courses_create():
-    return redirect(url_for('courses.courses'))
+    """View for creating a course"""
+    if request.method == "POST":
+        teacher = session['user'][0]
+        cour_name = request.form['cour_name']
+        cour_num = request.form['cour_num']
+        cour_maj = request.form['cour_maj']
+        cour_cred = request.form['cour_cred']
+
+        # make a query that inserts into courses table with this info and teacher id
+        cur = get_db().cursor()
+
+        cur.execute("""INSERT INTO courses (major, name, num, credits, teacher_id)
+                        VALUES (%s, %s, %s, %s, %s);""", (cour_maj, cour_name, cour_num, cour_cred, teacher))
+        get_db().commit()
+
+        return redirect(url_for('courses.courses'))
+
+    return render_template('portal/createcourse.html')
 
 @bp.route('/editcourse', methods=("GET", "POST"))
 def courses_edit():
