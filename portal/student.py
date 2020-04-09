@@ -14,4 +14,4 @@ def home():
     # course_sessions is test data
     course_sessions = [{'session_name':'CSET'},
                        {'session_name':'brickZ'}]
-    return render_template('layouts/student-page.html', course_sessions=course_sessions)
+    return render_template('student-page.html', course_sessions=course_sessions)
