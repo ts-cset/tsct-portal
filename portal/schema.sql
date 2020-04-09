@@ -44,3 +44,7 @@ ALTER TABLE courses
     REFERENCES users(id)
     ON UPDATE CASCADE
     ON DELETE cascade;
+
+INSERT INTO majors (name, description)
+  VALUES ('CSET', 'computer shit'),
+          ('MSON', 'bricks');
