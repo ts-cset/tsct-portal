@@ -12,8 +12,3 @@ def test_config(monkeypatch):
     monkeypatch.setenv('DATABASE_URL', "pretend this is on heroku...")
     assert "heroku" in create_app().config['DB_URL']
     assert "require" in create_app().config['DB_SSLMODE']
-
-
-def test_index(client):
-    response = client.get('/')
-    assert b'<h1>TSCT Portal</h1>' in response.data

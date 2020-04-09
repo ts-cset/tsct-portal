@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-
+import functools
 from . import db
 
 bp = Blueprint("auth", __name__)
@@ -50,6 +50,13 @@ def login():
 
     return render_template('login.html')
 
+
+@bp.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
+
 @bp.before_app_request
 def load_user():
 
@@ -62,3 +69,14 @@ def load_user():
             with con.cursor() as cur:
                 cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
                 g.user = cur.fetchone()
+
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped(**kwargs):
+        if g.user is None:
+            return redirect('/login')
+
+        return view(**kwargs)
+
+    return wrapped

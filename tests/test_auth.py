@@ -4,7 +4,7 @@ from flask import g, session
 
 def test_login(client):
 
-    assert client.get('/login').status_code == 200
+    assert client.get('/').status_code == 302
 
     response = client.post('/login', data={'email': 'teacher@stevenscollege.edu', 'password': 'qwerty'})
 
@@ -28,3 +28,13 @@ def test_login_validation(client, email, password, error):
     response = client.post('/login', data={'email': email, 'password': password})
 
     assert error in response.data
+
+def test_logout(client):
+
+    client.post('/login', data={'email': 'teacher@stevenscollege.edu', 'password': 'qwerty'})
+
+    with client:
+        client.get('/logout')
+        client.get('/')
+        assert 'user_id' not in session
+        assert g.user is None
