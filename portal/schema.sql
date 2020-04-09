@@ -46,5 +46,12 @@ ALTER TABLE courses
     ON DELETE cascade;
 
 INSERT INTO majors (name, description)
-  VALUES ('CSET', 'computer shit'),
-          ('MSON', 'bricks');
+  VALUES ('ARCH', 'Architectural Technology'),
+          ('AUTO', 'Automotive Technology'),
+          ('BUSA', 'Buisiness Administration')
+          ('CSET', 'Computer Software Engineering Technology')
+          ('CARP', 'Carpentry Technology')
+          ('CNSA', 'Computer and Network Systems Administration')
+          ('ELEC', 'Electrical Technology')
+          ('MSON', 'Masonry Technology')
+          ('WELD', 'Welding Technology');
