@@ -5,7 +5,7 @@
   <h1>welcome to teacher home page</h1>
 <div class="teacher_forms">
   <h2>create new course</h2>
-  <form class="teacher_home_form" method="POST">
+  <form class="teacher_home_form" method="POST" action="{{url_for('college.home', id = session['user_id'])}}">
   <label for="major">What Major does the new course belong to?
     <input type="major" name="major" />
   </label>
