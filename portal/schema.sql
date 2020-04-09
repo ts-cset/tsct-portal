@@ -5,6 +5,8 @@
 -- command in your terminal.
 
 -- Drop existing tables
+DROP TABLE IF EXISTS roster;
+DROP TABLE IF EXISTS session;
 DROP TABLE IF EXISTS courses;
 DROP TABLE IF EXISTS users;
 
@@ -27,4 +29,17 @@ CREATE TABLE courses (
     description text,
     credits bigint NOT NULL,
     teacher bigint NOT NULL REFERENCES users (id)
+);
+--session
+CREATE TABLE session (
+  id bigint PRIMARY KEY,
+  courses_id bigint NOT NULL REFERENCES courses (id),
+  times text NOT NULL,
+  name varchar(1) NOT NULL
+);
+--roster
+CREATE TABLE roster (
+  id bigserial PRIMARY KEY,
+  users_id bigint NOT NULL REFERENCES users (id),
+  session_id bigint NOT NULL REFERENCES session (id)
 );
