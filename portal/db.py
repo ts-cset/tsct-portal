@@ -54,7 +54,7 @@ def init_db():
             with con.cursor() as cur:
                 # use the file's text to execute the SQL queries within
                 cur.execute(f.read())
-
+    real_csv()
 
 @click.command("init-db")
 @with_appcontext
@@ -73,7 +73,7 @@ def mock_db():
         with get_db() as con:
             with con.cursor() as cur:
                 cur.execute(f.read())
-    mock_csv()  
+    
 
 @click.command("mock-db")
 @with_appcontext
@@ -90,7 +90,7 @@ def init_app(app):
     app.cli.add_command(mock_db_command)
 
 
-def mock_csv():
+def real_csv():
     data_filepath = os.path.join(os.path.dirname(__file__), os.pardir, "tests", "portal_users.csv")
 
     with open(data_filepath, "rb") as f:
@@ -111,10 +111,7 @@ def mock_csv():
                         'UPDATE users SET password = %s WHERE id = %s',
                         (generate_password_hash(record['password']), record['id'])
                         )
-                
-            
-                
-                
+
                     con.commit()
 
     
