@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, g
 
 
 def create_app(test_config=None):
@@ -44,10 +44,13 @@ def create_app(test_config=None):
 
     # Register Routes
     # ---------------
+    from . import auth
+    app.register_blueprint(auth.bp)
+
     @app.route('/')
+    @auth.login_required
     def index():
         return render_template('index.html')
 
     # Return application object to be used by a WSGI server, like gunicorn
     return app
-
