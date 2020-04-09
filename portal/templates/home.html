@@ -1,5 +1,39 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
+
   <h1>welcome to teacher home page</h1>
+<section class="teacher_forms">
+
+  <h2>create new course</h2>
+
+  <form class="teacher_home_form" method="post">
+    <label for="major">What Major does the new course belong to?
+    <input type="major" name="major" />
+    </label>
+    <label for="new_course">What will be the new course's name?
+      <input type="new_course" name="new_course" />
+      <span>Course Description:</span>
+      <textarea class="course-description" name="course_description">Enter description here</textarea>
+
+      <input type="submit" value="Create New Course" />
+    </form>
+
+  </section>
+
+  <section class="teacher_forms">
+  <h2>create new assignment for course<h2>
+
+    <form class="teacher_home_form">
+      <label for="course">What course does the assignment belong to?
+        <input type="email" name="email" />
+      </label>
+      <label for="new_assignment">What is the new assignment's name?
+        <input type="new_assignment" name="new_assignment" />
+        <span>Assignment Description:</span>
+        <textarea class="course-description" name="course_description">Enter description here</textarea>
+        <input type="submit" value="Create New Assignment" />
+    </form>
+    </section>
+
 {% endblock %}
