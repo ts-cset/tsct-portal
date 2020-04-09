@@ -35,18 +35,6 @@ CREATE TABLE courses (
   teacherid bigint NOT NULL
 );
 
-CREATE TABLE sessions (
-  id bigserial PRIMARY KEY,
-  course bigint NOT NULL,
-  days varchar(20),
-  class_time time NOT NULL
-);
-
-CREATE TABLE roster (
-  student_id bigint PRIMARY KEY,
-  session_id bigint
-);
-
 ALTER TABLE courses
   ADD CONSTRAINT major_course FOREIGN KEY (major)
     REFERENCES majors(major_id)
@@ -59,11 +47,23 @@ ALTER TABLE courses
     ON UPDATE CASCADE
     ON DELETE CASCADE;
 
+CREATE TABLE sessions (
+  id bigserial PRIMARY KEY,
+  course bigint NOT NULL,
+  days varchar(20),
+  class_time time NOT NULL
+);
+
 ALTER TABLE sessions
   ADD CONSTRAINT session_course FOREIGN KEY (course)
     REFERENCES courses(course_id)
     ON UPDATE CASCADE
     ON DELETE CASCADE;
+
+CREATE TABLE roster (
+  student_id bigint PRIMARY KEY,
+  session_id bigint
+);
 
 ALTER TABLE roster
   ADD CONSTRAINT student_id FOREIGN KEY (student_id)
