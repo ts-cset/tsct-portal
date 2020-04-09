@@ -5,14 +5,14 @@
 {% block content %}
 <body>
   <section>
-<form>
+<form method="post">
   {% for course in courses %}
     <!-- If subject is Math then display in Math box -->
   {% if course['major'] == 'CSET' %}
     <ul>
       <li>
-      <h2>CSET</h2>
-    <h2>{{ course['course_name'] }}</h2>
+      <label>CSET</label>
+    <label>{{ course['course_name'] }}</label>
     <input type="checkbox" value="{{ course['id'] }}"/>
     </li>
     </ul>
@@ -21,8 +21,8 @@
     {% if course['major'] == 'Masonry' %}
       <ul>
         <li>
-        <h2>Masonry</h2>
-      <h2>{{ course['course_name'] }}</h2>
+        <label>Masonry</label>
+      <label>{{ course['course_name'] }}</label>
       <input type="checkbox" value="{{ course['id'] }}"/>
       </li>
       </ul>
@@ -31,8 +31,8 @@
       {% if course['major'] == 'GEN-ED' %}
         <ul>
           <li>
-        <h2>Gen-Ed</h2>
-        <h2>{{ course['course_name'] }}</h2>
+        <label>Gen-Ed</label>
+        <label>{{ course['course_name'] }}</label>
         <input type="checkbox" value="{{ course['id'] }}"/>
         </li>
         </ul>
