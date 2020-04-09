@@ -2,6 +2,8 @@ import os
 import csv
 import psycopg2
 import psycopg2.extras
+import bcrypt
+from . import auth
 
 import click
 from flask import current_app, g
@@ -107,6 +109,21 @@ def import_csv():
                         "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)",
                         row
                     )
+                    con.commit()
+
+                cur.execute(
+                    "SELECT id, password FROM users"
+                )
+                passwords = cur.fetchall()
+
+                for password in passwords:
+
+                    hashed = auth.hash_pass(password[1].tobytes())
+
+                    cur.execute(
+                    'UPDATE users SET password = %s WHERE id = %s',
+                    (hashed, password[0]))
+
                     con.commit()
 
 
