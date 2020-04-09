@@ -86,7 +86,7 @@ def test_create_course(client):
         '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
     )
     response = client.get('/portal/userpage')
-    respones = client.get('/portal/create-course')
+    response = client.get('/portal/create-course')
     response = client.post(
         '/portal/create-course', data={'course_number': '101', 'name':'CSET1', 'description':'class', 'credits':'9'}
     )
@@ -102,7 +102,7 @@ def test_update_course(client):
         '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
     )
     response = client.get('/portal/userpage')
-    respones = client.get('/portal/create-course')
+    response = client.get('/portal/create-course')
     response = client.post(
         '/portal/create-course', data={'course_number': '102', 'name':'CSET2', 'description':'class', 'credits':'10'}
     )
@@ -110,7 +110,7 @@ def test_update_course(client):
     assert b'102' in response.data
     assert b'CSET2' in response.data
     assert b'CSET' in response.data
-    respones = client.get('/portal/update-course')
+    response = client.get('/portal/update-course')
     response = client.post(
         '/portal/update-course/1', data={'course_number': '103', 'name':'CSET3', 'description':'class', 'credits':'11'}
     )
