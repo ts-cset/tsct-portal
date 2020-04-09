@@ -11,9 +11,12 @@
   <label for="times">Times
     <input name="times" />
   </label>
-  <label for="students">Students
-    <input name="students" />
+<label for="students">Students
   </label>
+{% for student in students %}
+<input type="checkbox" id='students' name='students' value="{{ student['id'] }}">
+<label for="students">{{ student['name'] }}</label>
+{% endfor %}
   <input type="submit" value="Create Session" />
 </form>
 {% endblock %}

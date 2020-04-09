@@ -32,7 +32,7 @@ CREATE TABLE courses (
 );
 --session
 CREATE TABLE session (
-  id bigint PRIMARY KEY,
+  id bigserial PRIMARY KEY,
   courses_id bigint NOT NULL REFERENCES courses (id),
   times text NOT NULL,
   name varchar(1) NOT NULL
