@@ -1,11 +1,23 @@
 import pytest
 
+from flask import session
 from portal.db import get_db
 
 def test_course_page(app, client):
-    response = client.get('/courses')
+    with app.app_context():
+        cur = get_db().cursor()
 
-    assert response
+        cur.execute(
+            "SELECT * FROM users WHERE email = 'teacher@stevenscollege.edu';"
+            )
+        user = cur.fetchone()
+        with client.session_transaction() as sess: # stores teacher on the session
+            sess['user'] = user
+
+        response = client.get('/courses')
+
+        assert response
+        assert b'Software Project II' in response.data
 
 def test_create_course(app, client):
     with app.app_context(): # allows DB queries to happen

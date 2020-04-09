@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, g, render_template, redirect, url_for, session
+    Blueprint, g, render_template, redirect, url_for, session, request
 )
 
 from portal.db import get_db
@@ -8,16 +8,17 @@ bp = Blueprint('courses', __name__)
 
 @bp.route('/courses')
 def courses():
+    """View for the courses"""
     if session['user'][3] == 'teacher':
     # get the id of the teacher
         teacher = session['user'][0]
-        print(teacher)
     # display the courses they own with a query
         cur = get_db().cursor()
 
         cur.execute("SELECT * FROM courses WHERE teacher_id = %s;", (teacher,))
         teacher_courses = cur.fetchall()
-        print(teacher_courses)
+    else:
+        return render_template('portal/home.html')
 
     return render_template('portal/courses.html', teacher_courses=teacher_courses)
 

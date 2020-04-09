@@ -7,7 +7,9 @@
 
 <ul>
 {% for course in teacher_courses %}
-  <li>{{ course['name'] }}</li>
+  <li>{{ course['name'] }}
+  <a href="{{ url_for('courses.courses_edit') }}">Edit</a>
+  </li>
 {% endfor %}
 </ul>
 {% endblock %}
