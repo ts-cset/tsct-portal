@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g, redirect, url_for, Blueprint, request
+from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
 
 from . import db
 
@@ -14,11 +14,11 @@ def new_course():
     course_description = request.form['course_description']
     cur = db.get_db().cursor()
     cur.execute("""
-        INSERT INTO courses (name, major, description, teacherId),
+        INSERT INTO courses (name, major, description, teacherId)
         VALUES (%s, %s, %s, %s)""",
                 (course_name, major, course_description, teacherId,))
+    g.db.commit()
     cur.close()
-    cur.commit()
 
 
 @bp.route('/')
@@ -28,7 +28,6 @@ def index():
 
 @bp.route("/home", methods=['GET', 'POST'])
 def home():
-    return render_template("home.html")
 
     if request.method == 'POST':
 
@@ -37,6 +36,8 @@ def home():
         print("new course added")
 
         return render_template("home.html")
+
+    return render_template("home.html")
 
 
 @bp.route("/student")
