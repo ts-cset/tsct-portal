@@ -25,7 +25,7 @@ def login():
             'SELECT * FROM users WHERE email = %s', (email,)
         )
         user = cur.fetchone()
-
+        cur.close()
         if user is None or not bcrypt.checkpw(password.encode('utf8'), user['password'].tobytes()):
             error = 'Incorrect email or password!'
 
@@ -35,9 +35,9 @@ def login():
             if session['user_id'] == user['id'] and user['role'] == 'student':
                 return redirect(url_for('college.student'))
             elif session['user_id'] == user['id'] and user['role'] == 'teacher':
-                return redirect(url_for('college.home'))
+                return redirect(url_for('portal.home'))
 
-        cur.close()
+
         flash(error)
 
     return render_template('index.html')
