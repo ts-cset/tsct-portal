@@ -1,6 +1,9 @@
 -- Mock Data For Tests
 
-INSERT INTO users (email, password, role)
-VALUES ('teacher@stevenscollege.edu', 'qwerty', 'teacher'),
-       ('student@stevenscollege.edu', 'asdfgh', 'student');
+INSERT INTO majors (name)
+VALUES ('CSET'),
+        ('MATH');
 
+INSERT INTO users (email, password, role, name, major)
+VALUES ('teacher@stevenscollege.edu', 'qwerty', 'teacher', 'Teacher', 1),
+       ('student@stevenscollege.edu', 'asdfgh', 'student', 'Student', 1);

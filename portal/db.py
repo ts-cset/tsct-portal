@@ -3,6 +3,7 @@ import psycopg2
 import psycopg2.extras
 
 import click
+import csv
 from flask import current_app, g
 from flask.cli import with_appcontext
 
@@ -52,13 +53,53 @@ def init_db():
                 # use the file's text to execute the SQL queries within
                 cur.execute(f.read())
 
-
 @click.command("init-db")
 @with_appcontext
 def init_db_command():
     """CLI command to clear any existing data and create all tables."""
     init_db()
     click.echo("Initialized the database.")
+
+
+def insert_users():
+    """Insert created users from csv file into database"""
+    # connect to the database
+    con = get_db()
+    cur = con.cursor()
+    # empty the tables, otherwise duplicate key errors are thrown
+    cur.execute("DELETE FROM users")
+    cur.execute("DELETE FROM majors")
+    # open majors.csv
+    with open('./portal/data/majors.csv', 'r') as f:
+        reader = csv.reader(f)
+        next(reader)
+        # insert data into "majors" database
+        for row in reader:
+            cur.execute(
+            "INSERT INTO majors VALUES (%s, %s)",
+            row
+            )
+        con.commit()
+    # open users.csv
+    with open('./portal/data/users.csv', 'r') as f:
+        reader = csv.reader(f)
+        next(reader)
+        # insert data into "users" database
+        for row in reader:
+            cur.execute(
+            "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)",
+            row
+            )
+        con.commit()
+        # note: I have to create the "majors" database before "users" because
+        # users contains a reference to the majors database
+
+@click.command("insert-users")
+@with_appcontext
+def insert_users_command():
+    """Command to insert user data from a csv file"""
+    insert_users()
+    click.echo("Inserted users into the database.")
 
 
 def mock_db():
@@ -70,7 +111,6 @@ def mock_db():
         with get_db() as con:
             with con.cursor() as cur:
                 cur.execute(f.read())
-
 
 @click.command("mock-db")
 @with_appcontext
@@ -85,4 +125,4 @@ def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
     app.cli.add_command(mock_db_command)
-
+    app.cli.add_command(insert_users_command)

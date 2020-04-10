@@ -1,3 +1,4 @@
+import portal
 import psycopg2
 import pytest
 
@@ -22,6 +23,7 @@ def test_get_db_then_close(app):
 @pytest.mark.parametrize(('function', 'command', 'output'), [
     ('portal.db.init_db', 'init-db', 'Initialized the database.'),
     ('portal.db.mock_db', 'mock-db', 'Inserted mock data.'),
+    ('portal.db.insert_users', 'insert-users', 'Inserted users into the database.'),
 ])
 def test_cli_commands(runner, monkeypatch, function, command, output):
     # Create class to safely track state of function calls
@@ -41,4 +43,3 @@ def test_cli_commands(runner, monkeypatch, function, command, output):
     # Check CLI output and verify the stub was called
     assert output in result.output
     assert Recorder.called
-
