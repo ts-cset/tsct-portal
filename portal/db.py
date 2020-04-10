@@ -94,7 +94,7 @@ def init_app(app):
 
 
 def import_csv():
-    """Seed the database with mock data."""
+    """Seed the database with user data."""
 
     data_filepath = os.path.join(os.path.dirname(
         __file__), os.pardir, "import_data", "portal_users.csv")
@@ -108,8 +108,8 @@ def import_csv():
                     cur.execute("""
                         INSERT INTO users (id, email, password, name, role, major)
                         VALUES (%s, %s, %s, %s, %s, %s) """,
-                        row
-                    )
+                                row
+                                )
                     con.commit()
 
                 cur.execute(
@@ -122,8 +122,8 @@ def import_csv():
                     hashed = auth.hash_pass(password[1].tobytes())
 
                     cur.execute(
-                    'UPDATE users SET password = %s WHERE id = %s',
-                    (hashed, password[0]))
+                        'UPDATE users SET password = %s WHERE id = %s',
+                        (hashed, password[0]))
 
                     con.commit()
 
@@ -131,6 +131,6 @@ def import_csv():
 @click.command("import-csv")
 @with_appcontext
 def import_csv_command():
-    """CLI command to seed the database with mock data."""
+    """CLI command to seed the database with user data."""
     import_csv()
     click.echo("Inserted csv data.")
