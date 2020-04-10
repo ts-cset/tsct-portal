@@ -6,10 +6,11 @@
 -- command in your terminal.
 
 -- Drop existing tables
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS majors;
-DROP TABLE IF EXISTS sessions;
-DROP TABLE IF EXISTS courses;
+
+DROP TABLE IF EXISTS courses CASCADE;
+DROP TABLE IF EXISTS sessions CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS majors CASCADE;
 
 
 
@@ -27,7 +28,7 @@ CREATE TABLE users (
     email text UNIQUE NOT NULL,
     password text NOT NULL,
     name text NOT NULL,
-    FOREIGN KEY major_id REFERENCES majors (id),
+    major_id bigint REFERENCES majors (id),
     role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student'))
 );
 
@@ -37,8 +38,8 @@ CREATE TABLE courses (
  course_title text NOT NULL,
  description text,
  credits integer NOT NULL,
- FOREIGN KEY teacher_id REFERENCES users (id)
- FOREIGN KEY major_id REFERENCES majors (id)
+ teacher_id bigint REFERENCES users (id),
+ major_id bigint REFERENCES majors (id)
 );
 
 --Sessions
@@ -48,5 +49,5 @@ times text NOT NULL,
 name text NOT NULL,
 room_number integer NOT NULL,
 location text NOT NULL,
-FOREIGN KEY course_id REFERENCES courses (course_num)
+course_id bigint REFERENCES courses (course_num)
 );

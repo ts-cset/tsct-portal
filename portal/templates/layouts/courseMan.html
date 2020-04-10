@@ -21,7 +21,7 @@
     <button type="submit" name="editCourseButton" value="{{ course['id'] }}">Edit</button>
     </form> -->
 
-    <a href="{{ url_for('portal.course_edit', id=courses['course_num']) }}">Edit</a>
+    <a href="{{ url_for('courseEditor.course_edit', id=courses['course_num']) }}">Edit</a>
 
     <form class="sessions" action="index.html" method="post">
       <button type="submit" name="showSessionsButton">Sessions</button>
@@ -33,12 +33,13 @@
 
     {% if not loop.last %}
     <hr>
+
     {% endif %}
   {% endfor %}<!--End of courses loop-->
 
 </ul>
 
-<a href="/courseCreate">+</a>
+<a href="{{ url_for('courseEditor.course_create')}}">+</a>
 
 </section><!-- end of teacher edit section-->
 {% endblock %}

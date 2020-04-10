@@ -14,16 +14,21 @@
 <input type="text" name="courseTitle" value="{{ request.form['courseTitle'] }}" required>
 
 <label for="description">Description</label>
-<textarea name="description" id=description >{{ request.form['description'] }}</textarea>
+<textarea name="description" id=description value="{{ request.form['description'] }}"></textarea>
 
 <label for="credits">Credits</label>
-<input type="text" name="courseCredits" value="{{ request.form['courseCredits'] }}">
+<input type="text" name="courseCredits" value="{{ request.form['courseCredits'] }}" required>
 
-<label for="teacher_name">Teacher</label>
-<input type="text" name="teacher_name" value="{{ request.form['teacher_name']}}">
 
 <label for="major_name">Major</label>
-<input type="text" name="major_name" value="{{ request.form['major_name'] }}">
+<select class="majorNames" name="major_name" value="{{ request.form['major_name'] }}" required>
+  <!--They have a choice of
+  majors to choose from-->
+  {% for name in majorChoices %}
+<option></option>
+  {% endfor %}
+</select>
+
 
 <input type="submit" name="SaveCourseButton" value="Save">
 </form>
