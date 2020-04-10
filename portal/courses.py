@@ -44,11 +44,10 @@ def courses_create():
 
     return render_template('portal/createcourse.html')
 
-@bp.route('/editcourse', methods=("GET", "POST"))
-def courses_edit():
+@bp.route('/<int:cour_id>/editcourse', methods=("GET", "POST"))
+def courses_edit(cour_id):
     """Edits the course name/info"""
     cur = get_db().cursor()
-    cour_id = request.args.get('id')
     if request.method == "POST":
         cour_name = request.form['cour_name']
         cour_num = request.form['cour_num']
@@ -59,10 +58,10 @@ def courses_edit():
             # Update the task
         cur.execute(
                 """UPDATE courses SET (major, name, num, credits, description) = (%s, %s, %s, %s, %s)
-                WHERE id = %s;""", (cour_maj, cour_name, cour_num, cour_cred, cour_desc ,cour_id)
+                WHERE id = %s;""", (cour_maj, cour_name, cour_num, cour_cred, cour_desc , cour_id)
             )
         get_db().commit()
         cur.close()
 
         return redirect(url_for('courses.courses'))
-    return render_template("portal/editcourse.html", id=cour_id)
+    return render_template("portal/editcourse.html")

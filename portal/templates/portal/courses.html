@@ -9,7 +9,7 @@
 <ul>
 {% for course in teacher_courses %}
   <li>{{ course['name'] }}
-  <a href="{{ url_for('courses.courses_edit', id=course.id, name=course.name, num=course.num, major=course.major, credits=course.credits, description=course.description) }}">Edit</a>
+  <a href="{{ url_for('courses.courses_edit', cour_id=course.id) }}">Edit</a>
 {% endfor %}
 </ul>
 {% endblock %}

@@ -47,8 +47,9 @@ def test_edit_course(app, client):
 
         cur = db.cursor()
         # post it again
-        response = client.post('/editcourse', data={'credits': 14})
+        response = client.post('/1/editcourse', data={'cour_name': 'This is a test', 'cour_num': 111, 'cour_maj': 'CSET', 'cour_cred': 1, 'cour_desc': 'test'})
         # check if it's been updated
-        check = cur.execute("SELECT * FROM courses WHERE credits = 14")
+        cur.execute("SELECT * FROM courses WHERE credits = 1")
+        check = cur.fetchone()
 
         assert check
