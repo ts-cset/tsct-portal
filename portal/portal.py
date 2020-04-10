@@ -56,7 +56,7 @@ def edit(id):
         major = request.form['major']
         course_name = request.form['new_course']
         course_description = request.form['course_description']
-        
+
         cur = db.get_db().cursor()
         cur.execute(
                 'UPDATE courses SET name = %s, major = %s, description = %s, teacherId = %s'

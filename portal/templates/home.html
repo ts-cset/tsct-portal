@@ -4,6 +4,9 @@
 
   <h1>welcome to teacher home page</h1>
   {% for course in courses %}
+  <ol>
+    <li>{{ course['major'], course['name'], course['description'] }}</li>
+  </ol>
   <li>{{ course['major'], course['name'], course['description'] }}</li>
   <form class="edit" action="{{ url_for('portal.edit', id=course[0]) }}" method="get">
     <button type="Submit" name="edit">Edit</button>
