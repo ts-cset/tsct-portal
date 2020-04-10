@@ -11,6 +11,9 @@
   <form class="edit" action="{{ url_for('portal.edit', id=course[0]) }}" method="get">
     <button type="Submit" name="edit">Edit</button>
   </form>
+  <form class="edit" action="{{ url_for('portal.delete', id=course[0]) }}" method="post">
+    <button type="Submit" name="edit">delete</button>
+  </form>
   {% endfor %}
 <section class="teacher_forms">
 
