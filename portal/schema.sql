@@ -86,4 +86,5 @@ INSERT INTO majors (name, description)
           ('CNSA', 'Computer and Network Systems Administration'),
           ('ELEC', 'Electrical Technology'),
           ('MSON', 'Masonry Technology'),
-          ('WELD', 'Welding Technology');
+          ('WELD', 'Welding Technology'),
+          ('GEND', 'General Education');
