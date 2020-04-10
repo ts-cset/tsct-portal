@@ -9,7 +9,7 @@ bp = Blueprint('courses', __name__)
 @bp.route('/courses')
 def courses():
     """View for the courses"""
-    if session['user'][3] == 'teacher':
+    if session['user'][4] == 'teacher':
     # get the id of the teacher
         teacher = session['user'][0]
     # display the courses they own with a query
