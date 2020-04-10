@@ -1,0 +1,27 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal - {{ course['name'] + session['name'] }} Roster{% endblock %}
+
+{% block content %}
+
+<h2>{{ course['name'] + ' ' + session['name'] }} Roster</h2>
+
+<ul>
+  {% for student in students %}
+
+    <li>{{ student['name'] }}<span class="email">{{ student['email'] }}</span></li>
+
+  {% endfor %}
+</ul>
+
+<form class="addStudent" action="{{ url_for('roster.display_roster') }}" method="post">
+
+  <label for="email">Enter student email:
+
+    <input type="text" name="email">
+  </label>
+
+  <input type="submit" value="Add Student">
+</form>
+
+{% endblock %}

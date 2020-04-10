@@ -4,7 +4,7 @@ def test_roster_page(client):
 
     response = client.get('/roster')
     assert response.status_code == 200
-    assert b'CSET 180 Roster' in response.data
+    assert b'CSET 180 A Roster' in response.data
 
 def test_edit_roster(client):
 

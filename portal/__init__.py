@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, g
+from flask import Flask, render_template
 
 
 def create_app(test_config=None):
@@ -46,6 +46,9 @@ def create_app(test_config=None):
     # ---------------
     from . import auth
     app.register_blueprint(auth.bp)
+
+    from . import roster
+    app.register_blueprint(roster.bp)
 
     @app.route('/')
     @auth.login_required
