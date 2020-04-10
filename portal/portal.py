@@ -28,6 +28,13 @@ def home():
     cur.close()
 
 
+    cur = db.get_db().cursor()
+    cur.execute("""
+        SELECT major_id, name FROM majors""",
+                )
+    majors = cur.fetchall()
+    cur.close()
+
     if request.method == 'POST':
 
         new_course()
@@ -36,9 +43,10 @@ def home():
         courses = cur.fetchall()
         cur.close()
 
-        return render_template("home.html", courses=courses)
+        return render_template("home.html", courses=courses, majors=majors)
 
-    return render_template("home.html", courses=courses)
+    return render_template("home.html", courses=courses, majors=majors)
+
 
 @bp.route("/<int:id>/edit", methods=('GET','POST'))
 def edit(id):
