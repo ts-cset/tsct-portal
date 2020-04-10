@@ -35,8 +35,8 @@ CREATE TABLE courses (
 -- Course Sessions
 CREATE TABLE sessions (
   id bigserial PRIMARY KEY,
-  session_name varchar(1) NOT NULL,
-  meeting_days TEXT NOT NULL,
+  session_name varchar(1),
+  meeting_days TEXT,
   -- Create a one-to-many relationship between courses and sessions of those courses
   course_id bigint REFERENCES courses(id) NOT NULL
 );

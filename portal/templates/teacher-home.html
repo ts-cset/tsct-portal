@@ -1,0 +1,7 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Welcome, Teacher{% endblock %}
+
+{% block content %}
+  <a href="{{ url_for('teacher.courses') }}">Manage Courses</a>
+{% endblock %}

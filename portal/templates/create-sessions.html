@@ -4,7 +4,7 @@
 
 {% block content %}
   <!-- Create a list of students that can be added to the session about to be created -->
-  <form method="post">
+  <form action="{{ url_for('teacher.session_add') }}" method="post">
     <ul class="add-students">
       {% for student in students %}
         <li>
@@ -13,10 +13,10 @@
         </li>
       {% endfor %}
     </ul>
-    <button type="submit" name="add">Add to Session</button>
+    <button type="submit">Add to Session</button>
   </form>
   <!-- Show a list of students already added to the session about to be created -->
-  <form action="{{ url_for(placeholder) }}" method="post">
+  <form action="{{ url_for('teacher.home') }}" method="post">
     <ul class="roster">
       {% for student in roster %}
         <li>
@@ -28,10 +28,11 @@
     <button type="submit" name="remove">Remove from Session</button>
   </form>
 
-  <form action="{{ url_for(placeholder) }}" method="post">
+  <form action="{{ url_for('teacher.session_submit') }}" method="post">
     <!-- Set dates and times for the session -->
-
+    <!-- Set a name for the session -->
+    <input type="text" name="session_name" maxlength="1" size="2">
     <!-- Create the session -->
-    <button type="submit" name="create-session">Create Session</button>
+    <button type="submit">Create Session</button>
   </form>
 {% endblock %}

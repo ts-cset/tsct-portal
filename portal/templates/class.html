@@ -12,6 +12,7 @@
               <label>{{ course['course_name'] }}</label>
               <label>{{ course['description'] }}</label>
               <input type="checkbox" value="{{ course['id'] }}" name="{{ course['id'] }}"/>
+              <button formaction="{{ url_for('teacher.make_session') }}" type="submit" name="session" value="{{ course['id'] }}">Create Session</button>
             </li>
           {% endfor  %}
         </ul>
