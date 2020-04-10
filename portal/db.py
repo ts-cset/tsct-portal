@@ -5,6 +5,7 @@ import psycopg2.extras
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
+from werkzeug.security import generate_password_hash
 
 
 def get_db():
@@ -71,6 +72,29 @@ def mock_db():
             with con.cursor() as cur:
                 cur.execute(f.read())
 
+def import_csv():
+    """ import csv """
+    file = os.path.join(os.path.dirname(__file__), os.pardir, "portal_users.csv")
+    with open(file) as sql:
+        with get_db() as con:
+            with con.cursor() as cur:
+
+                cur.copy_from(sql, 'users', sep=",")
+
+                cur.execute("SELECT password FROM users")
+                passwords = cur.fetchall()
+                for password in passwords:
+                    cur.execute("UPDATE users SET password = %s WHERE password = %s", (generate_password_hash(password[0]), password[0]))
+
+                sql.close()
+
+@click.command("import-csv")
+@with_appcontext
+def import_csv_command():
+    """CLI command to seed the database with mock data."""
+    import_csv()
+    click.echo("Inserted csv data.")
+
 
 @click.command("mock-db")
 @with_appcontext
@@ -85,4 +109,4 @@ def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
     app.cli.add_command(mock_db_command)
-
+    app.cli.add_command(import_csv_command)

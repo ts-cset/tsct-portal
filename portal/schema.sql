@@ -14,7 +14,9 @@ CREATE TABLE users (
     id bigserial PRIMARY KEY,
     email text UNIQUE NOT NULL,
     password text NOT NULL,
-    role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student'))
+    name text,
+    role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student')),
+    major text
 );
 
 
@@ -27,6 +29,5 @@ CREATE TABLE courses (
   num integer UNIQUE NOT NULL,
   description text,
   credits integer NOT NULL,
-  teacher_id integer REFERENCES users (id)
-)
-
+  teacher_id bigint REFERENCES users (id)
+);
