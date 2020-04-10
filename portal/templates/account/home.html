@@ -9,5 +9,5 @@
 {% elif g.users['role'] == 'student' %}
 <p>You are a student</p>
 {% endif %}
-<a href="{{ url_for('portal.courses') }}"><input type="button" value="Courses"></a>
+<a href="{{ url_for('courses.courses') }}"><input type="button" value="Courses"></a>
 {% endblock %}

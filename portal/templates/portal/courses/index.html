@@ -5,14 +5,14 @@
 {% block content %}
 {% if g.users['role'] == 'teacher' %}
 <p>You are a teacher</p>
-<a href="{{ url_for('portal.create_course') }}"><input type="button" value="Create a course"></a>
+<a href="{{ url_for('courses.create_course') }}"><input type="button" value="Create a course"></a>
 <ul>
   {% for course in courses %}
   <li>
   {{ course['course_number'], course['name'], course['major'] }}
-  <a href="{{ url_for('portal.view_course', course_id=course['id']) }}"><input type="button" value="View Course"></a>
+  <a href="{{ url_for('courses.view_course', course_id=course['id']) }}"><input type="button" value="View Course"></a>
   {% if g.users['id'] == course['teacher'] %}
-  <a href="{{ url_for('portal.update_course', course_id=course['id']) }}"><input type="button" value="Update a course"></a>
+  <a href="{{ url_for('courses.update_course', course_id=course['id']) }}"><input type="button" value="Update a course"></a>
   {% endif %}
   </li>
   {% endfor %}

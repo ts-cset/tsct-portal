@@ -6,7 +6,7 @@
 {% if g.users['role'] == 'teacher' %}
 <p>You are a teacher</p>
 {% for course in courses %}
-<a href="{{ url_for('portal.create_session', course_id=course['id']) }}"><input type="button" value="Create a session"></a>
+<a href="{{ url_for('sessions.create_session', course_id=course['id']) }}"><input type="button" value="Create a session"></a>
 {% endfor %}
 <p>Course</p>
 <ul>
@@ -21,7 +21,7 @@
   {% for session in sessions %}
   <li>
   {{ session['times'], session['name']}}
-  <a href="{{ url_for('portal.view_session', session_id=session['id']) }}"><input type="button" value="View Session"></a>
+  <a href="{{ url_for('sessions.view_session', session_id=session['id']) }}"><input type="button" value="View Session"></a>
   </li>
   {% endfor %}
 </ul>
