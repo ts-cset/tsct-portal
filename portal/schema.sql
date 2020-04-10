@@ -31,14 +31,14 @@ CREATE TABLE courses (
   num integer UNIQUE NOT NULL,
   description varchar(1000),
   credits integer NOT NULL,
-  teacher_id bigint REFERENCES users (id)
+  teacher_id bigint REFERENCES users (id) -- One teacher owns many courses
 );
 
 -- Session
 CREATE TABLE sessions (
   id bigserial PRIMARY KEY,
-  course_id bigint REFERENCES courses (id),
-  teacher_id bigint REFERENCES users (id),
+  course_id bigint REFERENCES courses (id), -- One course owns many sessions
+  teacher_id bigint REFERENCES users (id), -- One teacher owns many sessions
   section varchar(1) NOT NULL,
   meeting_time timestamptz NOT NULL,
   location varchar(200)
@@ -47,6 +47,6 @@ CREATE TABLE sessions (
 -- Students sessions
 CREATE TABLE student_sessions (
   id bigserial PRIMARY KEY,
-  session_id bigint REFERENCES sessions (id),
-  student_id bigint REFERENCES users (id)
+  session_id bigint REFERENCES sessions (id), -- One session owns many student sessions
+  student_id bigint REFERENCES users (id) -- One User has many student sessions
 )

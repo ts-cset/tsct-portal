@@ -9,13 +9,13 @@ INSERT INTO courses (major, name, num, description, credits, teacher_id)
 VALUES ('CSET', 'Software Project II', 180, 'blaaah', 3, 1),
        ('CSET', 'Web Development', 160, 'web dev lol', 3, 1);
 
-
+-- sessions
 INSERT INTO sessions (course_id, teacher_id, section, meeting_time, location)
 VALUES (1, 1, 'A', 'now', 'here'),
        (1, 1, 'B', 'now', 'place st'),
        (2, 1, 'A', 'now', 'road st ave');
 
-
+-- student sessions
 INSERT INTO student_sessions (session_id, student_id)
 VALUES (1, 2),
        (2, 2),
