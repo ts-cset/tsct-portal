@@ -8,7 +8,6 @@ def test_course_page(client, auth):
 
     response = client.get('/courses')
 
-    assert response
     assert b'Software Project II' in response.data
 
 def test_create_course(app, client, auth):
