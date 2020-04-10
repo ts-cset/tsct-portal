@@ -9,8 +9,12 @@
 
   <form class="teacher_home_form" method="post">
     <label for="major">What Major does the new course belong to?
-    <input type="major" name="major" />
-    </label>
+
+    <select name="majors" class="major-dropdown">
+    {% for major in majors %}
+    <option value="{{ major['major_id'] }}">{{ major['name'] }}</option>
+    {% endfor %}
+    </select>
     <label for="new_course">What will be the new course's name?
       <input type="new_course" name="new_course" />
       <span>Course Description:</span>

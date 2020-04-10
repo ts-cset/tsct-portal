@@ -25,15 +25,22 @@ def index():
 @bp.route("/home", methods=['GET', 'POST'])
 def home():
 
+    cur = db.get_db().cursor()
+    cur.execute("""
+        SELECT major_id, name FROM majors""",
+                )
+    majors = cur.fetchall()
+    cur.close()
+
     if request.method == 'POST':
 
         new_course()
 
         print("new course added")
 
-        return render_template("home.html")
+        return render_template("home.html", majors=majors)
 
-    return render_template("home.html")
+    return render_template("home.html", majors=majors)
 
 
 @bp.route("/student")
