@@ -3,16 +3,22 @@
 {% block content %}
 
   <h1>welcome to teacher home page</h1>
+  {% for course in courses %}
+  <li>{{ course['major'], course['name'], course['description'] }}</li>
+  <form class="edit" action="{{ url_for('portal.edit', id=course[0]) }}" method="get">
+    <button type="Submit" name="edit">Edit</button>
+  </form>
+  {% endfor %}
 <section class="teacher_forms">
 
   <h2>create new course</h2>
 
   <form class="teacher_home_form" method="post">
     <label for="major">What Major does the new course belong to?
-    <input type="major" name="major" />
+    <input type="major" name="major" required/>
     </label>
     <label for="new_course">What will be the new course's name?
-      <input type="new_course" name="new_course" />
+      <input type="new_course" name="new_course" required/>
       <span>Course Description:</span>
       <textarea class="course-description" name="course_description">Enter description here</textarea>
 
