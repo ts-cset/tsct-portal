@@ -78,6 +78,33 @@ address p a:hover {
   color: blue;
 }
 
+article.roster {
+  border: 1px solid #8B1E41;
+  margin-bottom: 2rem;
+}
+
+article.roster h2 {
+  background-color: #8B1E41;
+  margin: 0;
+  padding: .5rem;
+}
+
+ul.roster {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.roster li {
+  display: flex;
+  justify-content: space-between;
+  padding: .5rem;
+}
+
+ul.roster li:nth-child(2n) {
+  background-color: lightgray;
+}
+
 @media (min-width: 760px) {
   h1, h2, h3, h4, h5, h6 {
     margin-left: 1rem;

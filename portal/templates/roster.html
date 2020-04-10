@@ -1,18 +1,21 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}TSCT Portal - {{ course['name'] + session['name'] }} Roster{% endblock %}
+{% block title %}TSCT Portal - Edit Roster{% endblock %}
 
 {% block content %}
 
-<h2>{{ course['name'] + ' ' + session['name'] }} Roster</h2>
+<article class="roster">
 
-<ul>
-  {% for student in students %}
+  <h2>{{ course['name'] + ' ' + session['name'] }} Roster</h2>
 
-    <li>{{ student['name'] }}<span class="email">{{ student['email'] }}</span></li>
+  <ul class="roster">
+    {% for student in students %}
 
-  {% endfor %}
-</ul>
+      <li>{{ student['name'] }}<span class="email">{{ student['email'] }}</span></li>
+
+    {% endfor %}
+  </ul>
+</article>
 
 <form class="addStudent" action="{{ url_for('roster.display_roster') }}" method="post">
 
