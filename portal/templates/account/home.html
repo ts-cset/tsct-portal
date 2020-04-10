@@ -6,16 +6,8 @@
 <p>You are logged in</p>
 {% if g.users['role'] == 'teacher' %}
 <p>You are a teacher</p>
-<a href="{{ url_for('portal.create_course') }}"><input type="button" value="Create a course"></a>
-<ul>
-  {% for course in courses %}
-  <li>
-  {{ course['course_number'], course['name'], course['major'] }}
-  {% if g.users['id'] == course['teacher'] %}
-  <a href="{{ url_for('portal.update_course', id=course['id']) }}"><input type="button" value="Update a course"></a>
-  {% endif %}
-  </li>
-  {% endfor %}
-</ul>
+{% elif g.users['role'] == 'student' %}
+<p>You are a student</p>
 {% endif %}
+<a href="{{ url_for('courses.courses') }}"><input type="button" value="Courses"></a>
 {% endblock %}

@@ -52,6 +52,16 @@ def create_app(test_config=None):
     from . import portal
     app.register_blueprint(portal.bp)
 
+    # Courses
+    # ---------------
+    from . import courses
+    app.register_blueprint(courses.bp)
+
+    # Sessions
+    # ---------------
+    from . import sessions
+    app.register_blueprint(sessions.bp)
+
     # Home Page
     # ---------------
     @app.route('/')

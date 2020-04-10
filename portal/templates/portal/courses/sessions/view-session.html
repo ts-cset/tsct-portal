@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+{% if g.users['role'] == 'teacher' %}
+<p>You are a teacher</p>
+<p>Session</p>
+<ul>
+  {% for session in sessions %}
+  <li>
+  {{ session['times'], session['name']}}
+  </li>
+  {% endfor %}
+</ul>
+<p>Rosters</p>
+<ul>
+  {% for roster in rosters %}
+  <li>
+  {{ roster['users_id'] }}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
