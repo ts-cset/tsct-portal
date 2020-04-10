@@ -84,3 +84,28 @@ label input {
   width: 400px;
   font-size: 18px;
 }
+
+.course-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.course-list-action {
+
+}
+.course-table {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.course-button {
+  width: 60px;
+}
+
+.test {
+}
+
+.link-button {
+  display: block;
+}

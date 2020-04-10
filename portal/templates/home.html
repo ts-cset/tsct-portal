@@ -3,33 +3,21 @@
 {% block content %}
 
   <h1>welcome to teacher home page</h1>
-  {% for course in courses %}
-  <ol>
-    <li>{{ course['major'], course['name'], course['description'] }}</li>
-  </ol>
-  <li>{{ course['major'], course['name'], course['description'] }}</li>
-  <form class="edit" action="{{ url_for('portal.edit', id=course[0]) }}" method="get">
-    <button type="Submit" name="edit">Edit</button>
+<section class="course-list">
+  <table class="course-table">
+    {% for course in courses %}
+    <tr>{{ course['major'] }}</tr>
+    <tr>{{ course['name'] }} </tr>
+    <tr>{{ course['description'] }}</tr>
+  <form class="course-list-action" action="{{ url_for('portal.edit', id=course[0]) }}" method="get">
+    <button type="Submit" name="edit" class="course-button">Edit</button>
   </form>
-  <form class="edit" action="{{ url_for('portal.delete', id=course[0]) }}" method="post">
-    <button type="Submit" name="edit">delete</button>
+  <form class="course-list-action" action="{{ url_for('portal.delete', id=course[0]) }}" method="post">
+    <button type="Submit" name="edit" class="course-button">delete</button>
   </form>
   {% endfor %}
+  </section>
 
-  <a href="{{ url_for('courses.create') }}">create new course</a>
+  <a class="link-button" href="{{ url_for('portal.create') }}">create new course</a>
 
-  <section class="teacher_forms">
-  <h2>create new assignment for course<h2>
-
-    <form class="teacher_home_form">
-      <label for="course">What course does the assignment belong to?
-        <input type="email" name="email" />
-      </label>
-      <label for="new_assignment">What is the new assignment's name?
-        <input type="new_assignment" name="new_assignment" />
-        <span>Assignment Description:</span>
-        <textarea class="course-description" name="course_description">Enter description here</textarea>
-        <input type="submit" value="Create New Assignment" />
-    </form>
-    </section>
 {% endblock %}
