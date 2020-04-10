@@ -45,8 +45,14 @@ class AuthActions(object):
             '/',
             data={'email': email, 'password': password}
         )
+    def teacher_login(self, email='teacher@stevenscollege.edu', password='qwerty'):
+        return self._client.post(
+            '/',
+            data={'email': email, 'password': password}
+            )
     # def logout(self):
     #     return self._client.get('/logout')
+
 
 
 @pytest.fixture
