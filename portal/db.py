@@ -64,35 +64,35 @@ def init_db_command():
 def insert_users():
     """Insert created users from csv file into database"""
     # connect to the database
-    con = get_db()
-    cur = con.cursor()
-    # empty the tables, otherwise duplicate key errors are thrown
-    cur.execute("DELETE FROM users")
-    cur.execute("DELETE FROM majors")
-    # open majors.csv
-    with open('./portal/data/majors.csv', 'r') as f:
-        reader = csv.reader(f)
-        next(reader)
-        # insert data into "majors" database
-        for row in reader:
-            cur.execute(
-            "INSERT INTO majors VALUES (%s, %s)",
-            row
-            )
-        con.commit()
-    # open users.csv
-    with open('./portal/data/users.csv', 'r') as f:
-        reader = csv.reader(f)
-        next(reader)
-        # insert data into "users" database
-        for row in reader:
-            cur.execute(
-            "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)",
-            row
-            )
-        con.commit()
-        # note: I have to create the "majors" database before "users" because
-        # users contains a reference to the majors database
+    with get_db() as con:
+        with con.cursor() as cur:
+            # empty the tables, otherwise duplicate key errors are thrown
+            cur.execute("DELETE FROM users")
+            cur.execute("DELETE FROM majors")
+            # open majors.csv
+            with open('./portal/data/majors.csv', 'r') as f:
+                reader = csv.reader(f)
+                next(reader)
+                # insert data into "majors" database
+                for row in reader:
+                    cur.execute(
+                    "INSERT INTO majors VALUES (%s, %s)",
+                    row
+                    )
+                con.commit()
+            # open users.csv
+            with open('./portal/data/users.csv', 'r') as f:
+                reader = csv.reader(f)
+                next(reader)
+                # insert data into "users" database
+                for row in reader:
+                    cur.execute(
+                    "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)",
+                    row
+                    )
+                con.commit()
+                # note: I have to create the "majors" database before "users" because
+                # users contains a reference to the majors database
 
 @click.command("insert-users")
 @with_appcontext
