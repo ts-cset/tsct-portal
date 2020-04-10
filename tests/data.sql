@@ -1,6 +1,7 @@
 -- Mock Data For Tests
 
 INSERT INTO majors (name)
+<<<<<<< HEAD
 VALUES  ('CSET'),
         ('WELD'),
         ('CNSA'),
@@ -27,3 +28,11 @@ VALUES ('We meet every Tues-Thurs at 1:30 to 2:45', 'ENG-216 D',
         on your right.', 180 ),
       ('We meet every Wends-Fri ath 12:00 - 3:30', '111', 108,
       'GreenField campus our room is right by the vending machine', 111);
+=======
+VALUES ('CSET'),
+        ('MATH');
+
+INSERT INTO users (email, password, role, name, major)
+VALUES ('teacher@stevenscollege.edu', 'qwerty', 'teacher', 'Teacher', 1),
+       ('student@stevenscollege.edu', 'asdfgh', 'student', 'Student', 1);
+>>>>>>> master
