@@ -1,32 +1,38 @@
 {% extends 'layouts/base.html' %}
 
+
 {% block content%}
 <header>
   <h2>Create a New Course</h2>
 
-  <a href="/courseManagement">Back</a>
+  <a href="{{ url_for('courseEditor.course_manage')}}">Back</a>
 </header>
 
 <section class='courseCreation'>
+
+  <!--Input for each field to create a course-->
 <form class="courseCreate" action="/courseCreate" method="post">
 
 <label for="courseTitle">Course Title</label>
-<input type="text" name="courseTitle" value="{{ request.form['courseTitle'] }}" required>
+<input type="text" name="courseTitle" required>
 
 <label for="description">Description</label>
-<textarea name="description" id=description value="{{ request.form['description'] }}"></textarea>
+<textarea name="description" id=description ></textarea>
 
 <label for="credits">Credits</label>
-<input type="text" name="courseCredits" value="{{ request.form['courseCredits'] }}" required>
+<input type="text" name="courseCredits" required>
 
 
 <label for="major_name">Major</label>
-<select class="majorNames" name="major_name" value="{{ request.form['major_name'] }}" required>
+<select class="majorNames" name="major_name" required>
   <!--They have a choice of
   majors to choose from-->
-  {% for name in majorChoices %}
-<option></option>
-  {% endfor %}
+
+  {% for major in Allmajors %}<!--Loops through all the names,
+    Allmajors list and id of the -->
+
+<option value="{{ major['id'] }}">{{ major['name'] }}</option>
+  {% endfor %}<!--end of loop-->
 </select>
 
 

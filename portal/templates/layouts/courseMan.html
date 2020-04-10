@@ -1,27 +1,29 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-<h2>Course Management</h2>
+
+<header>
+  <h2>Course Management</h2>
+  <a href="{{ url_for('index')}}">Home</a>
+</header>
+
 
 <section course='teacherCourses'><!--Start of teacher edit section-->
 <h3>Courses</h3>
 
 <ul>
 
-  {% for courses in course %}<!--Start of courses loop-->
+  {% for course in courses %}<!--Start of courses loop-->
 
+    {% if g.user['id'] == course['teacher_id'] %}<!--Only display if
+    the course has users teacher_id -->
 
   <li>
 
-    <h4>{{ courses['course_title'] }}</h4><!--Name of each course from database-->
+    <h4>{{ course['course_title'] }}</h4><!--Name of each course from database-->
 
-    <!-- <form class="edit" action="/courseEdit" method="post">
-    <input type="text" name="editDescription" value="{{ course['description'] }}" required>
-    <input type="text" name="editTitle" value="{{ course['course_title'] }}" required>
-    <button type="submit" name="editCourseButton" value="{{ course['id'] }}">Edit</button>
-    </form> -->
 
-    <a href="{{ url_for('courseEditor.course_edit', id=courses['course_num']) }}">Edit</a>
+    <a href="{{ url_for('courseEditor.course_edit', id=course['course_num']) }}">Edit</a>
 
     <form class="sessions" action="index.html" method="post">
       <button type="submit" name="showSessionsButton">Sessions</button>
@@ -31,15 +33,20 @@
 
 
 
-    {% if not loop.last %}
+      {% if not loop.last %}
     <hr>
 
-    {% endif %}
+      {% endif %}<!--End style if-->
+
+    {% endif %}<!--End g.user if-->
+
   {% endfor %}<!--End of courses loop-->
 
 </ul>
 
-<a href="{{ url_for('courseEditor.course_create')}}">+</a>
+<h3>Click the  + below to create a new course</h3>
+
+<a href="{{ url_for('courseEditor.course_create')}}" name="createButton">+</a>
 
 </section><!-- end of teacher edit section-->
 {% endblock %}

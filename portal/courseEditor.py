@@ -1,27 +1,36 @@
 from flask import redirect, g, url_for, render_template, session, request, Blueprint, flash
+import functools
 
 from . import db
+from portal.auth import login_required, teacher_required
+
 
 bp = Blueprint("courseEditor", __name__)
 
 
 @bp.route("/courseManagement", methods=('GET', 'POST'))  # Management Page
+@login_required
+@teacher_required
 def course_manage():
     """Allows teachers to have a page which allows
     them to edit and create courses"""
 
     cur = db.get_db().cursor()
     cur.execute('SELECT * FROM courses')
-    course = cur.fetchall()
+    courses = cur.fetchall()
+
     cur.close()
-    return render_template("layouts/courseMan.html", course=course)
+
+    return render_template("layouts/courseMan.html", courses=courses)
 
 
 @bp.route("/courseCreate", methods=('GET', 'POST'))  # Course Create
+@login_required
+@teacher_required
 def course_create():
     """Allows the teacher to create a course
     and fill out specifics on course"""
-    majorChoices = get_majors()
+    Allmajors = get_majors()
 
     if request.method == 'POST':
         with db.get_db() as con:
@@ -42,16 +51,10 @@ def course_create():
                     error = 'You are missing a required field'
                 # Adds info to courses table
                 cur.execute("""INSERT INTO courses (course_title, description,
-                credits)
-                VALUES (%s, %s, %s)""",
+                credits, major_id, teacher_id)
+                VALUES (%s, %s, %s, %s, %s)""",
                             (courseTitle, courseDescription,
-                             courseCredit,)
-                            )
-                con.commit()
-                # Adds info to majors table
-                cur.execute("""INSERT INTO majors (name)
-                VALUES (%s)""",
-                            (courseMajor,)
+                             courseCredit, courseMajor, g.user['id'], )
                             )
                 con.commit()
 
@@ -59,17 +62,13 @@ def course_create():
 
             flash(error)
 
-    return render_template('layouts/courseCreate.html', majorChoices=majorChoices)
-
-    cur = db.get_db().cursor()
-    cur.execute('SELECT * FROM courses')
-    course = cur.fetchall()
-    cur.close()
-    return render_template("layouts/courseCreate.html")
+    return render_template('layouts/courseCreate.html', Allmajors=Allmajors)
 
 
 # Needs new template
 @bp.route("/courseEdit/<int:id>", methods=('GET', 'POST'))
+@login_required
+@teacher_required
 def course_edit(id):
     """Allows user to edit the course"""
     course = get_course(id)
@@ -133,11 +132,10 @@ def get_majors():
         with con.cursor() as cur:
 
             cur.execute(
-                'SELECT name '
+                'SELECT name, id '
                 'FROM majors'
             )
 
-            majorChoices = cur.fetchall()
-            print(majorChoices)
+            Allmajors = cur.fetchall()
 
-            return majorChoices
+            return Allmajors

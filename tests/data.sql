@@ -12,12 +12,12 @@ VALUES ('teacher@stevenscollege.edu', 'qwerty', 'zach fedor', 'teacher'),
        ('teacher1@stevengscollege.edu', 'password', 'tim smith', 'teacher'),
        ('teacher2@stevenscollege.edu', 'PASSWORD', 'Ms.Sullivan', 'teacher');
 
-INSERT INTO courses (course_num, course_title, description, credits)
-VALUES (180, 'Software Project 2', 'Recreation of the portal', 3),
+INSERT INTO courses (course_num, course_title, description, credits, teacher_id)
+VALUES (180, 'Software Project 2', 'Recreation of the portal', 3, 1),
         (216, 'Technical Writing', 'The practice of proffesional writing',
-         3),
+         3, 3),
          (111, 'Tig Welding Basics', 'Learning how to operate and use the TIG welder',
-         3);
+         3, 4);
 
 INSERT INTO sessions (times, name, room_number, location, course_id)
 VALUES ('We meet every Tues-Thurs at 1:30 to 2:45', 'ENG-216 D',

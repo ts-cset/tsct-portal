@@ -1,41 +1,28 @@
-from portal import create_app
+from flask import g, session
 import pytest
-
-
-def test_config(monkeypatch):
-    # Default config
-    assert not create_app().testing
-
-    # Test config
-    assert create_app({'TESTING': True}).testing
-
-    # Prod config
-    monkeypatch.setenv('DATABASE_URL', "pretend this is on heroku...")
-    assert "heroku" in create_app().config['DB_URL']
-    assert "require" in create_app().config['DB_SSLMODE']
-
-
-def test_index(client):
-    response = client.get('/')
-    assert b'<h1>TSCT Portal</h1>' in response.data
-    assert b'<form>' in response.data
+from portal.db import get_db
 
 
 def test_edit(client):
-    response = client.get('/courseManagement')
-    assert b'<h2>Course Management<h2>' in response.data
-    assert b'Edit' in response.data
-    assert b'Info' in response.data
-    assert b'+' in response.data
+    assert client.get('/courseManagement').status_code == 302
+
+    response = client.post(
+        '/login', data={'email': 'teacher@stevenscollege.edu', 'password': 'qwerty'})
+
+    assert response.headers['Location'] == 'http://localhost/'
+
+    with client:
+        client.get('/courseManagement')
+        response2 = client.get('/courseManagement')
+        assert response.headers['Location'] == 'http://localhost/courseManagement'
+        assert client.get('/courseManagement').status_code == 200
+        assert session['user_id'] == 1
+        assert g.user['email'] == 'teacher@stevenscollege.edu'
+        assert b'<h2>Course Management<h2>' in response2.data
+        assert b'+' in response2.data
 
 
 def test_create_course(client):
+    assert client.get('/courseCreate').status_code == 200
     response = client.get('/courseCreate')
     assert b'+' in response.data
-    assert response.status_code() == 200 in response.data
-
-
-def test_info_course(client):
-    response = client.get('/courseInfo<ID>')
-    assert b'Course Information on' in response.data
-    assert b'Back' in response.data
