@@ -20,14 +20,6 @@
   <h2>create new course</h2>
 
   <form class="teacher_home_form" method="post">
-    <label for="major">What Major does the new course belong to?
-
-
-    <select name="majors" class="major-dropdown">
-    {% for major in majors %}
-    <option value="{{ major['major_id'] }}">{{ major['name'] }}</option>
-    {% endfor %}
-    </select>
     <label for="new_course">What will be the new course's name?
       <input type="new_course" name="new_course" required/>
       <span>Course Description:</span>
