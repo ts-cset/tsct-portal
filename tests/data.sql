@@ -7,7 +7,6 @@ VALUES ('teacher@stevenscollege.edu', 'pbkdf2:sha256:150000$71PbcIFv$ffc17b1d44f
 -- courses
 INSERT INTO courses (major, name, num, description, credits, teacher_id)
 VALUES ('CSET', 'Software Project II', 180, 'blaaah', 3, 1),
-<<<<<<< HEAD
        ('CSET', 'Web Development', 160, 'web dev lol', 3, 1);
 
 
@@ -21,6 +20,3 @@ INSERT INTO student_sessions (session_id, student_id)
 VALUES (1, 2),
        (2, 2),
        (3, 2);
-=======
-       ('CSET', 'Web Development', 160, 'web dev lol', 3, 2);
->>>>>>> 51fb00f2c0c068d848c4037c7799b0d6c5b81666

@@ -10,6 +10,10 @@
 {% for course in teacher_courses %}
   <li>{{ course['name'] }}
   <a href="{{ url_for('courses.courses_edit', cour_id=course.id) }}">Edit</a>
+
+  <a href="{{ url_for('sessions.sessions', course_id=course.id) }}">sessions</a>
+
+
 {% endfor %}
 </ul>
 {% endblock %}
