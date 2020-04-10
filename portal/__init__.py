@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, g
 
 
 def create_app(test_config=None):
@@ -41,13 +41,18 @@ def create_app(test_config=None):
     # --------------
     from . import db
     db.init_app(app)
-
+    # Teacher Course Editor routes
+    # ---------------
     from . import courseEditor
     app.register_blueprint(courseEditor.bp)
 
     # Register Routes
     # ---------------
+    from . import auth
+    app.register_blueprint(auth.bp)
+
     @app.route('/')
+    @auth.login_required
     def index():
         return render_template('index.html')
 
