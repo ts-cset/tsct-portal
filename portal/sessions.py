@@ -1,5 +1,5 @@
 import os
-from . import db
+from portal.db import get_db
 
 from flask import (
     Flask, Blueprint, flash, g, redirect, render_template, request, url_for, session
@@ -11,10 +11,11 @@ bp = Blueprint('sessions', __name__)
 
 @bp.route('/sessions', methods=('GET', 'POST'))
 def sessions():
-    cur = db.get_db().cursor()
+    cur = get_db().cursor()
 
     # grabs course id from the one clicked on
     course_id = request.args.get('course_id')
+    print(course_id)
 
     # shows student sessions
     if session['user'][4] == 'student':
@@ -32,7 +33,7 @@ def sessions():
 
     for sess in sessions:
         course_id = sess[1] # sess[1] = course id from session table
-        cur = db.get_db().cursor()
+        cur = get_db().cursor()
         # grabbing name of the course by session's fk
         cur.execute('SELECT name FROM courses WHERE id = %s;',
                     (sess[1],))
@@ -40,7 +41,27 @@ def sessions():
         # pulling string out of nested list
         classes.append(classname[0][0])
 
-    return render_template('portal/sessions.html', sessions=classes)
+    return render_template('portal/sessions.html', sessions=classes, course_id=course_id)
 
+@bp.route('/createsession', methods=("GET", "POST"))
+def session_create():
+    """View for creating a session"""
+    course_id = request.args.get('course_id')
 
-# join where session id = session id on session table
+    if request.method == "POST":
+        section = request.form['section']
+        meeting_time = request.form['meeting']
+        location = request.form['location']
+        teacher_id = session['user'][0]
+
+        # make a query that inserts into courses table with this info and teacher id
+        cur = get_db().cursor()
+
+        cur.execute("""INSERT INTO sessions (course_id,section, meeting_time, location, teacher_id)
+                        VALUES (%s, %s, %s, %s, %s);""", (course_id, section, meeting_time, location, teacher_id))
+        get_db().commit()
+        cur.close()
+
+        return redirect(url_for('courses.courses'))
+
+    return render_template('portal/createsession.html')

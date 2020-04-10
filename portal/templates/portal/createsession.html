@@ -6,16 +6,12 @@
 <p>welcome {{session['user'][3]}} to portal you are a {{session['user'][4]}}</p>
 
 <form method="post">
-  <label for="start">Start Time</label>
-  <input name="start" id="start">
-  <label for="end">End Time</label>
-  <input name="end" id="end">
+  <label for="section">Section</label>
+  <input name="section" id="section">
+  <label for="end">Meeting</label>
+  <input name="meeting" id="meeting">
   <label for="location"> Location</label>
   <input name="location" id="location">
-  <!-- for user in students
-  <input type="checkbox"  name="{{user['name']}}" value="{{user['id']}}">
-  <label for="{{user['name']}}"> {{user['name']}}</label><br>
-  -->
   <input type="submit" value="Register">
 </form>
 
