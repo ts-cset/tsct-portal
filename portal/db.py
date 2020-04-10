@@ -91,7 +91,6 @@ def init_app(app):
     app.cli.add_command(init_db_command)
     app.cli.add_command(mock_db_command)
     app.cli.add_command(import_csv_command)
-    app.cli.add_command(import_courses_command)
 
 
 def import_csv():
