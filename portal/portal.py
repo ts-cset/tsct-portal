@@ -14,8 +14,6 @@ def new_course():
         VALUES (%s, %s, %s, %s)""",
                 (course_name, major, course_description, teacherId,))
     g.db.commit()
-    cur.close()
-
 
 @bp.route('/')
 def index():
@@ -24,6 +22,11 @@ def index():
 
 @bp.route("/home", methods=['GET', 'POST'])
 def home():
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT * FROM courses""")
+    courses = cur.fetchall()
+    cur.close()
+
 
     cur = db.get_db().cursor()
     cur.execute("""
@@ -35,13 +38,56 @@ def home():
     if request.method == 'POST':
 
         new_course()
+        cur = db.get_db().cursor()
+        cur.execute("""SELECT * FROM courses""")
+        courses = cur.fetchall()
+        cur.close()
 
-        print("new course added")
+        return render_template("home.html", courses=courses, majors=majors)
 
-        return render_template("home.html", majors=majors)
+    return render_template("home.html", courses=courses, majors=majors)
 
-    return render_template("home.html", majors=majors)
 
+@bp.route("/<int:id>/edit", methods=('GET','POST'))
+def edit(id):
+    """Edits the description of the courses"""
+    cur = db.get_db().cursor()
+    cur.execute(
+        'SELECT * from courses WHERE course_id=%s',
+        (id,)
+    )
+    course = cur.fetchone()
+
+    if request.method == 'POST':
+
+        teacherId = session['user_id']
+        major = request.form['major']
+        course_name = request.form['new_course']
+        course_description = request.form['course_description']
+
+        cur = db.get_db().cursor()
+        cur.execute(
+                'UPDATE courses SET name = %s, major = %s, description = %s, teacherId = %s'
+                ' WHERE course_id = %s ',
+                (course_name, major, course_description, teacherId, id)
+            )
+        g.db.commit()
+        cur.close()
+
+        return redirect(url_for('portal.home'))
+
+    return render_template("edit.html", course=course)
+@bp.route("/<int:id>/delete", methods=["POST",])
+def delete(id):
+    """delete unwanted tasks"""
+    cur = db.get_db().cursor()
+
+    cur.execute(
+        'DELETE FROM courses WHERE course_id= %s', (id,)
+    )
+    g.db.commit()
+    cur.close()
+    return redirect(url_for('portal.home'))
 
 @bp.route("/student")
 def student():
