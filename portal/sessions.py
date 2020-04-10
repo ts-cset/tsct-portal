@@ -35,7 +35,6 @@ def create_session(course_id):
         name = request.form['name']
         times = request.form['times']
         students = request.form.getlist('students')
-        print(students)
         error = None
         cur = db.get_db().cursor()
         cur.execute("""INSERT INTO session (courses_id, times, name)
@@ -44,10 +43,9 @@ def create_session(course_id):
          (course_id, times, name))
         db.get_db().commit()
         cur.execute("""SELECT id FROM session
-                       WHERE courses_id = %s""",
-                       (course_id,))
+                       WHERE courses_id = %s and name = %s and times = %s""",
+                       (course_id, name, times))
         session = cur.fetchone()
-        print(session)
 
         for student in students:
             cur.execute("""INSERT INTO roster (users_id, session_id)
