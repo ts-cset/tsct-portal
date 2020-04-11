@@ -7,11 +7,11 @@
 <section class="teacher_forms">
 <form class="teacher_home_form" method="post">
 
-  <label for="new_course">Edit Course Name:</label>
+  <label class="form-label" for="new_course">edit course name:</label>
     <input type="new_course" name="new_course" value="{{ course['name']}}" required />
-    <span>Course Description:</span>
+    <span class="form-label">course description:</span>
     <textarea class="course-description" name="course_description">{{ course['description']}}</textarea>
-    <input type="submit" value="Submit Changes"/>
+    <input class="submit" type="submit" value="submit changes"/>
   </form>
   <form class="course-list-action" action="{{ url_for('portal.delete', id=course['course_id']) }}" method="post">
     <button type="Submit" name="edit" class="course-button">delete</button>
