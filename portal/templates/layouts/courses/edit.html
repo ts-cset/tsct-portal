@@ -1,0 +1,15 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<section class="edit">
+<h1>Edit course</h1>
+<form class="teacher_home_form" method="post">
+
+  <label for="new_course">What will be the course's new name?</label>
+    <input type="new_course" name="new_course" value="{{ course['name']}}" required />
+    <span>Course Description:</span>
+    <textarea class="course-description" name="course_description">{{ course['description']}}</textarea>
+    <input type="submit" value="Submit Changes"/>
+  </form>
+</section>
+{% endblock %}
