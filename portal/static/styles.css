@@ -74,38 +74,73 @@ label input {
   font-family: sans-serif;
   width: 75%;
 }
+.course-list-action {
+  width: 100px;
+  border: none;
+  padding: 0;
+  margin: 0;
 
+}
 .course-description {
   width: 100%;
   height: 400px;
 }
 
 .major-dropdown {
-  width: 400px;
+  width: 100px;
   font-size: 18px;
 }
 
-.course-list {
-  display: flex;
-  flex-direction: column;
-}
+.course {
+  display: block;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  padding: 5px 0 20px 0;
 
-.course-list-action {
-
 }
-.course-table {
+.courses-main {
+  margin: 10px 0 10px 0;
+  font-size: 20px;
+  font-variant: small-caps;
   display: flex;
   flex-direction: row;
-  width: 100%;
+}
+.courses {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.course-table-header {
+  color: black;
+  background-color: white;
+  width: 25%;
+  margin: 5px;
+}
+.about {
+  width: 25%;
+  border: 1px solid black;
+  background-color: lightgrey;
+  padding: 5px 0px 5px 5px;
 }
 
 .course-button {
-  width: 60px;
-}
-
-.test {
+  background-color: #fac0c0;
+  border: 1px solid black;
+  width: 200px;
+  margin: 5px;
 }
 
 .link-button {
   display: block;
+  text-decoration: none;
+  border: 1px solid darkred;
+  background-color: maroon;
+  border-radius: 25%;
+  color: white;
+  text-align: center;
+  font-variant: small-caps;
+  width: 15%;
+  margin: 10px;
+  padding: 5px;
 }
