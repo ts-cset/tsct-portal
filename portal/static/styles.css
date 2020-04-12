@@ -60,6 +60,42 @@ label input {
   width: 100%;
 }
 
+.namebar {
+  align-items: center;
+  background-color: maroon;
+  color: white;
+  list-style-type: none;
+  font-variant: small-caps;
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+}
+
+.namebar-item {
+  width: auto;
+  text-decoration: none;
+  margin: 0 10px 0 10px;
+}
+
+.namebar-name {
+  font-size: 22px;
+  margin-right: 20px;
+}
+
+.namebar-item-time {
+}
+
+.namebar-logout {
+  font-size: 16px;
+  background-color: lightgrey;
+  color: black;
+  text-decoration: none;
+  padding: 3px;
+}
+
 .teacher_forms {
   display: flex;
   flex-direction: column;

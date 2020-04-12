@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS roster CASCADE;
 
 -- Users
 CREATE TABLE users (
-    id bigserial PRIMARY KEY,
+    id bigint PRIMARY KEY,
     email text UNIQUE NOT NULL,
     password bytea NOT NULL,
     name text,

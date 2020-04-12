@@ -43,6 +43,12 @@ def login():
     return render_template('index.html')
 
 
+@bp.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('portal.index'))
+
+
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
