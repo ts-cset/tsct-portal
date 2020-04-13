@@ -38,6 +38,7 @@ CREATE TABLE courses (
  major_id bigint REFERENCES majors (id)
 );
 
+
 --Sessions
 CREATE TABLE sessions (
 id bigserial PRIMARY KEY,
@@ -48,9 +49,10 @@ location text NOT NULL,
 course_id bigint REFERENCES courses (course_num)
 );
 
+
 -- Rosters
 CREATE TABLE rosters (
 id bigserial PRIMARY KEY,
 user_id bigint REFERENCES users (id),
-course_id bigint REFERENCES courses (course_num)
+session_id bigint REFERENCES sessions (id)
 )

@@ -1,0 +1,56 @@
+{ extends 'layouts/base.html'}
+
+{% block content %}
+<header>
+
+  <h2>Edit Session {{ session['name'] }}</h2>
+  <a href="{{ url_for('sessionManage.course_sessions') }}">Back</a>
+
+</header>
+
+<section class='courseSession'><!--Start section edit session-->
+
+<form class="" action="{{ url_for('sessionManage.edit_sessions') }}" method="post">
+
+<ul>
+
+  <label for="editName">Name</label>
+  <li>{{ session['name'] }}
+
+    <input type="text" name="editName" required>
+
+  </li>
+
+
+  <label for="editTimes">Times</label>
+  <li>{{ session['times'] }}
+
+    <input type="text" name="editTimes" required><
+
+  </li>
+
+
+  <label for="editRoom">Room Number</label>
+  <li>{{ session['room_number'] }}
+
+    <input type="text" name="editRoom" required>
+
+  </li>
+
+  <label for="editLocal">Location</label>
+  <li>{{ session['location'] }}
+    <input type="text" name="editLocal" required>
+  </li>
+
+
+
+</ul>
+
+<input type="text" name="sessionEditSumbit" value="Save">
+
+</form>
+
+</section><!--End section-->
+
+
+{% endblock %}

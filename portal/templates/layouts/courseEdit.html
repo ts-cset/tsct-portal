@@ -4,16 +4,17 @@
 
 
 <header>
+
+  <h2>Edit page for {{ course['course_title']}}</h2>
   <a href="{{ url_for('courseEditor.course_manage')}}">Back</a>
+  
 </header>
 
 <section class='edit'><!--Start of section edit-->
 
-<h2>Edit page for {{ course['course_title']}}</h2>
+
 <!--Form for the edit course page
 which has three inputs of data-->
-
-
 
 
 <form class="editFeature" action="{{ url_for( 'courseEditor.course_edit', id=course['course_num'] ) }}" method="post">

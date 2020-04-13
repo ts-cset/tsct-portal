@@ -57,18 +57,18 @@ def test_createSession(client):
         assert b'TSCT Portal Login' in rv.data
 
 
-def test_sessionManage(client):
+def test_courseSessions(client):
     """Tests the data on the session Manage page of zach fedors
     Software Project 2 sessions"""
 
-    assert client.get('/course/180/sessions').status_code == 302
+    assert client.get('/courseSessions/180').status_code == 302
 
     rv = login(
         client, 'teacher@stevenscollege.edu', 'qwerty')
     assert b'Logged in' in rv.data
 
     with client:
-        response = client.get('/course/180/sessions')
+        response = client.get('/courseSessions/180')
         assert b'<h2>Session Management for Software Project 2' in response.data
         assert b'Click the + below to create a new session' in response.data
         assert b'Software Project 2-A' in response.data
