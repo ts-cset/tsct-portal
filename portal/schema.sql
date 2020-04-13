@@ -8,8 +8,9 @@
 -- Drop existing tables
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS courses CASCADE;
-DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS sessions CASCADE;
 DROP TABLE IF EXISTS majors;
+DROP TABLE IF EXISTS rosters;
 
 -- Major
 CREATE TABLE majors (
@@ -46,3 +47,10 @@ room_number integer NOT NULL,
 location text NOT NULL,
 course_id bigint REFERENCES courses (course_num)
 );
+
+-- Rosters
+CREATE TABLE rosters (
+id bigserial PRIMARY KEY,
+user_id bigint REFERENCES users (id),
+course_id bigint REFERENCES courses (course_num)
+)
