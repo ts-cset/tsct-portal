@@ -71,6 +71,7 @@ def insert_users():
             # empty the tables, otherwise duplicate key errors are thrown
             cur.execute("DELETE FROM users")
             cur.execute("DELETE FROM majors")
+
             # open majors.csv
             with open('./portal/data/majors.csv', 'r') as f:
                 reader = csv.reader(f)
@@ -93,6 +94,7 @@ def insert_users():
                         row
                     )
                 con.commit()
+
                 # note: I have to create the "majors" database before "users" because
                 # users contains a reference to the majors database
 

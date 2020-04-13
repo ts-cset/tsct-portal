@@ -1,32 +1,106 @@
 from flask import g, session
 import pytest
 from portal.db import get_db
+import os
+import tempfile
+
+
+def login(client, email, password):
+    """Logs in a user"""
+    return client.post('/login', data=dict(
+        email=email,
+        password=password,
+
+    ), follow_redirects=True)
+
+
+def logout(client):
+    """Logs out a user"""
+    return client.get('/logout', follow_redirects=True)
+
+
+def test_login_logout(client):
+    """Make sure login and logout functions work."""
+
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
+
+    rv = logout(client)
+    assert b'TSCT Portal Login' in rv.data
+
+    rv = login(
+        client, 'teacher@stevenscollege.edu'+ 'x', 'qwerty')
+    assert b'Incorrect email or password' in rv.data
+
+    rv = login(client, 'teacher@stevenscollege.edu',
+               'qwerty' + 'x')
+    assert b'Incorrect email or password' in rv.data
 
 
 def test_edit(client):
-    # Getting the courseEdit should return redirect
+    """Tests the courseEdit page with a specific id of the logged
+    in user. Also sees if editing the course forms work"""
     assert client.get('/courseEdit/180').status_code == 302
 
-    response = client.post(
-        '/login', data={'email': 'teacher@stevenscollege.edu', 'password': 'qwerty'})
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
 
     with client:
+        client.get('/courseEdit/180').status_code == 200
+
         response = client.get('/courseEdit/180')
-        assert response.headers['Location'] == 'http://localhost/courseEdit/180'
-        assert client.get('/courseEdit/180').status_code == 200
-        assert b'Course title' in response.data
-        assert b'save' in response.data
+        assert b'The courses current information' in response.data
+
+        response2 = client.post('/courseEdit/180', data={'editTitle': 'Software Project 6',
+        'editDesc': 'Making a website', 'editCredit': 3}, follow_redirects=True)
+        assert b'Software Project 6' in response2.data
+
+        rv = logout(client)
+        assert b'TSCT Portal Login' in rv.data
 
 
 def test_create_course(client):
-    assert client.get('/createCourse').status_code == 302
+    """Tests access of the courseCreate page
+    and tests the forms data to see if creating a course works"""
 
-    response = client.post(
-        '/login', data={'email': 'teacher@stevenscollege.edu', 'password': 'qwerty'})
+    assert client.get('/courseCreate').status_code == 302
+
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
+
 
     with client:
+        client.get('/courseCreate').status_code == 200
+
         response = client.get('/courseCreate')
-        assert response.headers['Location'] == 'http://localhost/courseEdit/1'
-        assert client.get('/courseManagement').status_code == 200
-        assert b'Course title' in response.data
-        assert b'save' in response.data
+        assert b'Create a New Course' in response.data
+
+        response2 = client.post('/courseCreate', data={'courseTitle': 'Welding 101',
+        'description': 'Learning how to use mig welder', 'courseCredits': 3, 'major_name': 2}, follow_redirects=True)
+
+        response3 = client.get('/courseManagement')
+        assert b'Welding 101' in response3.data
+
+        rv = logout(client)
+        assert b'TSCT Portal Login' in rv.data
+
+def test_course_manage(client):
+    """Tests the data on the page of courseManagement and access of teacher"""
+
+    assert client.get('courseManagement').status_code == 302
+
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
+
+    with client:
+        response = client.get('/courseManagement')
+        assert b'<h2>Course Management</h2>' in response.data
+        assert b'<h3>Click the  + below to create a new course</h3>' in response.data
+        assert b'Software Project 2' in response.data
+
+        rv = logout(client)
+        assert b'TSCT Portal Login' in rv.data
