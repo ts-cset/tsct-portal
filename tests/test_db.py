@@ -2,7 +2,7 @@ import psycopg2
 import pytest
 
 import portal
-from portal.db import get_db, register_command
+from portal.db import get_db, register_command, register
 
 
 def test_get_db_then_close(app):
@@ -54,3 +54,8 @@ def test_register_command(runner, monkeypatch):
     result = runner.invoke(args='register', input='a\nb\nc\nd\ne\nf\n')
     assert 'Successfully registered a user' in result.output
     assert Recorder.called
+
+def test_register(app):
+    # Calling register should raise no exceptions and return None
+    with app.app_context():
+        assert register('a', 'b', 'student', 'd', 'e', 'f') == None
