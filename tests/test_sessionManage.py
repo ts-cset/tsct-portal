@@ -69,9 +69,9 @@ def test_courseSessions(client):
 
     with client:
         response = client.get('/courseSessions/180')
-        assert b'<h2>Session Management for Software Project 2' in response.data
-        assert b'Click the + below to create a new session' in response.data
-        assert b'Software Project 2-A' in response.data
+        assert b'<h2>Sessions for course Software Project 2' in response.data
+        assert b'<h4>Click the + below to create a new session</h4>' in response.data
+        assert b'CSET-180-A' in response.data
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data

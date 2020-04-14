@@ -1,16 +1,16 @@
-{ extends 'layouts/base.html'}
+{% extends 'layouts/base.html' %}
 
 {% block content %}
 <header>
 
   <h2>Edit Session {{ session['name'] }}</h2>
-  <a href="{{ url_for('sessionEditor.course_sessions') }}">Back</a>
+  <a href="{{ url_for('sessionEditor.session_manage', id=course['course_num']) }}">Back</a>
 
 </header>
 
 <section class='courseSession'><!--Start section edit session-->
 
-<form class="" action="{{ url_for('sessionEditor.edit_sessions') }}" method="post">
+<form class="" action="{{ url_for('sessionEditor.session_edit', id=session['course_id'], sessions_id=session['id']) }}" method="post">
 
 <ul>
 
@@ -25,7 +25,7 @@
   <label for="editTimes">Times</label>
   <li>{{ session['times'] }}
 
-    <input type="text" name="editTimes" required><
+    <input type="text" name="editTimes" required>
 
   </li>
 
@@ -43,10 +43,9 @@
   </li>
 
 
-
 </ul>
 
-<input type="text" name="sessionEditSumbit" value="Save">
+<input type="submit" name="sessionEditSumbit" value="Save">
 
 </form>
 

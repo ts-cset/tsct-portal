@@ -14,11 +14,13 @@
     {% if session['course_id'] == course['course_num'] %}
 
   <h4>{{ session['name'] }}</h4>
-  
-  <a href="{{ url_for('sessionEditor.session_edit', id=session['id']) }}">Edit</a>
+
+  <a href="{{ url_for('sessionEditor.session_edit', id=session['course_id'], sessions_id=session['id']) }}">Edit</a>
 
     {% endif %}
   {% endfor %}
+  <h4>Click the + below to create a new session</h4>
+  <a href="#">+</a>
 </section>
 
 
