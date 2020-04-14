@@ -4,23 +4,22 @@
 
 {% block content %}
 {% if g.users['role'] == 'teacher' %}
-<p>You are a teacher</p>
-{% for course in courses %}
-<a href="{{ url_for('sessions.create_session', course_id=course['id']) }}"><input type="button" value="Create a session"></a>
-{% endfor %}
-<p>Course</p>
+<h2>Course</h2>
 <ul>
   {% for course in courses %}
   <li>
-  {{ course['course_number'], course['name'], course['major'] }}
+  <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
   </li>
   {% endfor %}
 </ul>
-<p>Sessions</p>
+<h3>Sessions</h3>
+{% for course in courses %}
+<a href="{{ url_for('sessions.create_session', course_id=course['id']) }}"><input type="button" value="Create a session"></a>
+{% endfor %}
 <ul>
   {% for session in sessions %}
   <li>
-  {{ session['times'], session['name']}}
+  <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
   <a href="{{ url_for('sessions.view_session', session_id=session['id']) }}"><input type="button" value="View Session"></a>
   </li>
   {% endfor %}
