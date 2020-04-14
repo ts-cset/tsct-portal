@@ -9,6 +9,7 @@
   {% for course in courses %}
   <li>
   <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
+  <p>]Description: {{ course['description'] }}</p>
   </li>
   {% endfor %}
 </ul>
