@@ -4,20 +4,27 @@
 
 {% block content %}
 {% if g.users['role'] == 'teacher' %}
-<p>You are a teacher</p>
-<p>Session</p>
+<h2>Course</h2>
 <ul>
-  {% for session in sessions %}
+  {% for course in courses %}
   <li>
-  {{ session['times'], session['name']}}
+  <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
   </li>
   {% endfor %}
 </ul>
-<p>Rosters</p>
+<h3>Session</h3>
+<ul>
+  {% for session in sessions %}
+  <li>
+  <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
+  </li>
+  {% endfor %}
+</ul>
+<h4>Roster</h4>
 <ul>
   {% for roster in rosters %}
   <li>
-  {{ roster['users_id'] }}
+  <p>{{ roster['users_id'] }}</p>
   </li>
   {% endfor %}
 </ul>

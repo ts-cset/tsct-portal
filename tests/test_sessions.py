@@ -20,7 +20,7 @@ def test_view_session(client):
     response = client.post(
         '/portal/sessions/1/create-session', data={'name': 'B', 'times':'Tuesday', 'students':43784}
     )
-    response = client.get('/portal/sessions/view-session/1')
+    response = client.get('/portal/sessions/1/view-session/1')
     assert b'Tuesday' in response.data
     assert b'B' in response.data
     assert b'43784' in response.data
