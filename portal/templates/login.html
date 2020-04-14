@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal Login{% endblock %}
+
+{% block content %}
+
+  {% for message in get_flashed_messages() %}
+    <p class="flash">{{ message }}</p>
+  {% endfor %}
+  <form method='post'>
+    <label for="email">Email
+      <input type="email" name="email" />
+    </label>
+    <label for="password">Password
+      <input type="password" name="password" />
+    </label>
+    <input type="submit" value="Login" />
+  </form>
+{% endblock %}
