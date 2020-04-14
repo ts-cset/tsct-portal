@@ -24,8 +24,8 @@ CREATE TABLE users (
     email text UNIQUE NOT NULL,
     password text NOT NULL,
     name text NOT NULL,
-    role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student'))
-    major int REFERENCES majors(id),
+    role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student')),
+    major int REFERENCES majors(id)
 );
 
 -- Courses

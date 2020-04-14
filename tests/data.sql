@@ -2,7 +2,7 @@
 
 INSERT INTO majors (name)
 VALUES ('CSET'),
-        ('MATH');
+        ('ARCH');
 
 INSERT INTO users (email, password, role, name, major)
 VALUES ('teacher@stevenscollege.edu', 'qwerty', 'teacher', 'Teacher', 1),
