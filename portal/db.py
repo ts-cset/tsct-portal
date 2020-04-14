@@ -81,7 +81,7 @@ def insert_users():
                     )
                 con.commit()
             # open users.csv
-            with open('./portal/data/users.csv', 'r') as f:
+            with open('./portal/data/portal_users.csv', 'r') as f:
                 reader = csv.reader(f)
                 next(reader)
                 # insert data into "users" database
