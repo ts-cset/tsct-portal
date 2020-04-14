@@ -7,7 +7,7 @@ def test_teacher_login(client, auth):
     assert client.get('/').status_code == 200
     response = auth.teacher_login()
     # Until a template is created the response when logging in with teacher is Hello teacher
-    assert b'Hello teacher' in response.data
+    assert 'http://localhost/teacher/home' == response.headers['Location']
 
     #with client:
         #client.get('/teacher-page')

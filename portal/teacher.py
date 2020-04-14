@@ -13,11 +13,24 @@ def home():
     return render_template("teacher-home.html")
 
 @bp.route('/courses', methods=('GET', 'POST'))
+@login_required
+@admin
+def courses():
+    with db.get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("""
+                SELECT * FROM courses
+                WHERE id = %s
+            """, (g.user['id'],))
+            courses = cur.fetchall()
+    return render_template('class.html', courses=courses)
+
+@bp.route('/courses/create', methods=('GET', 'POST'))
 #Checks if the user is log in and if they are an admin role
 @login_required
 @admin
 #Creates class
-def courses():
+def create():
     if request.method == "POST":
         #Requests tags with 'code', 'name', 'major', and 'description' in form
         class_code = request.form['code']
@@ -31,12 +44,8 @@ def courses():
                 (class_code, class_name, class_subject, class_description, g.user['id'], )
                 )
         #Selects all the data from courses and returns it to 'class.html'
-        cur = db.get_db().cursor()
-        cur.execute("SELECT * FROM courses")
-        courses = cur.fetchall()
-        cur.close()
-        return render_template("class.html", courses=courses)
-    return render_template("CourseCreation.html")
+        return redirect(url_for('teacher.courses'))
+    return render_template('course-creation.html')
 
 
 @bp.route('/session', methods=('GET', 'POST'))
