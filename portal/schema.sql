@@ -23,21 +23,21 @@ CREATE TABLE users (
 
 CREATE TABLE majors (
   major_id bigserial PRIMARY KEY,
-  name varchar(50),
+  name varchar(50) UNIQUE NOT NULL,
   description text
 );
 
 CREATE TABLE courses (
   course_id bigserial PRIMARY KEY,
-  name varchar(50),
-  major bigint NOT NULL,
+  name varchar(50) NOT NULL,
+  major varchar(50) NOT NULL,
   description text,
   teacherid bigint NOT NULL
 );
 
 ALTER TABLE courses
   ADD CONSTRAINT major_course FOREIGN KEY (major)
-    REFERENCES majors(major_id)
+    REFERENCES majors(name)
     ON UPDATE CASCADE
     ON DELETE CASCADE;
 
