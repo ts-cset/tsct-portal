@@ -9,23 +9,23 @@ from test_courseEditor import login, logout
 def test_edit_session(client):
     """Tests the editSession page with a specific session
     of the course 180 to see if functionallity works"""
-    assert client.get('/courseSessions/180/edit/0').status_code == 302
+    assert client.get('/courseSessions/180/edit/2').status_code == 302
 
     rv = login(
         client, 'teacher@stevenscollege.edu', 'qwerty')
     assert b'Logged in' in rv.data
 
     with client:
-        client.get('/courseSessions/180/edit/0').status_code == 200
+        client.get('/courseSessions/180/edit/2').status_code == 200
 
-        response = client.get('/courseSessions/180/edit/0')
-        assert b'Edit Software Project 2-A' in response.data
+        response = client.get('/courseSessions/180/edit/2')
+        assert b'Edit Session CSET-180-A' in response.data
 
-        response2 = client.post('/courseSessions/180/edit/0', data={ 'editStudents': ['bobphillup191@stevenscollege.edu']
-
-
+        response2 = client.post('/courseSessions/180/edit/2', data={ 'editName': 'Software Project 2-A',
+        'editTimes': '12:30 is the time', 'editRoom': '105', 'editLocal': 'Greenfield'
         }, follow_redirects=True)
-        assert b'Course Sessions' in response2.data
+        assert b'Sessions for course Software Project 2' in response2.data
+        assert b'Software Project 2-A' in response2.data
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
@@ -37,21 +37,24 @@ def test_createSession(client):
     form dat to see if you can successfully create a session
     in a specific course"""
 
-    assert client.get('/createSession/course/180').status_code == 302
+    assert client.get('/createSession/course/180/').status_code == 302
 
     rv = login(
         client, 'teacher@stevenscollege.edu', 'qwerty')
     assert b'Logged in' in rv.data
 
     with client:
-        client.get('/createSession/course/180') == 200
+        client.get('/createSession/course/180/') == 200
 
-        response = client.get('/createSession/course/180')
+        response = client.get('/createSession/course/180/')
         assert b'Create a New Session in Software Project 2'
 
-        response2 = client.post('/createSession/course/180', data={'students': [5, 6, 7]},
+        response2 = client.post("/courseSessions/180", data={ 'sessionTitle': 'Software-Project 2-C',
+        'sessionTimes': '12:30 is the time', 'roomNumber': '105', 'locations': 'Greenfield' },
         follow_redirects=True)
-        assert b'Software Project 2-C' in response2.data
+
+        response3 = client.get("/courseSessions/180")
+        assert b'Sessions for course Software Project 2' in response3.data
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
@@ -71,6 +74,8 @@ def test_courseSessions(client):
         response = client.get('/courseSessions/180')
         assert b'<h2>Sessions for course Software Project 2' in response.data
         assert b'<h4>Click the + below to create a new session</h4>' in response.data
+        assert b'Create roster' in response.data
+        assert b'Edit Roster' in response.data
         assert b'CSET-180-A' in response.data
 
         rv = logout(client)
@@ -78,8 +83,32 @@ def test_courseSessions(client):
 
 def test_create_roster(client):
     """Tests the creation of the student roster"""
-    pass
+    assert client.get('/courseSession/180/rosterCreate/4').status_code == 302
 
-def test_edit_roster(cleit):
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
+
+    with client:
+        response = client.get('courseSession/180/rosterCreate/4')
+        assert b'<h2>Roster for session CSET-180-B<h2>' in response.data
+        assert b'Students' in response.data
+        assert b'Save' in response.data
+
+
+
+
+def test_edit_roster(client):
     """Tests the edit of a sessions student roster"""
-    pass
+    assert client.get('/courseSession/180/rosterEdit/2').status_code == 302
+
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+
+    assert b'Logged in' in rv.data
+
+    with client:
+        response = client.get('courseSession/180/rosterEdit/2')
+        assert b'<h2>Roster for session CSET-180-A' in response.data
+        assert b'Students' in response.data
+        assert b'Save' in response.data

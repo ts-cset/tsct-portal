@@ -105,6 +105,16 @@ def session_manage(id):
     return render_template("layouts/sessionManage.html", course=course, sessions=sessions)
 
 
+@bp.route("/courseSession/<int:id>/rosterCreate/<int:roster_id>", methods=('GET','POST'))
+def create_roster(id, roster_id):
+    pass
+
+@bp.route("/courseSession/<int:id>/rosterEdit/<int:roster_id>")
+def edit_roster(id, roster_id):
+    pass
+
+
+
 def get_session(sessions_id):
     """Gets the session from the database"""
     with db.get_db() as con:
