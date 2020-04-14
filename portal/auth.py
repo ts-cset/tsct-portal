@@ -13,6 +13,7 @@ def hash_pass(password):
     hashed = bcrypt.hashpw(password, bcrypt.gensalt())
     return hashed
 
+
 @bp.route('/', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
@@ -33,14 +34,20 @@ def login():
             session.clear()
             session['user_id'] = user['id']
             if session['user_id'] == user['id'] and user['role'] == 'student':
-                return redirect(url_for('college.student'))
+                return redirect(url_for('portal.student'))
             elif session['user_id'] == user['id'] and user['role'] == 'teacher':
                 return redirect(url_for('portal.home'))
-
 
         flash(error)
 
     return render_template('index.html')
+
+
+@bp.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('portal.index'))
+
 
 @bp.before_app_request
 def load_logged_in_user():

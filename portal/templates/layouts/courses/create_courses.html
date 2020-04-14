@@ -1,13 +1,13 @@
-{% extends "layouts/base.html" %}
+{% extends "base.html" %}
+
+{% block title %}Create New Course{% endblock %}
 
 {% block content %}
 
 <section class="teacher_forms">
 
-  <h2>create new course</h2>
-
   <form class="teacher_home_form" method="post">
-    <label for="major">What Major does the new course belong to?
+    <label class="form-label" for="major">assign major to new course:
 
 
     <select name="majors" class="major-dropdown">
@@ -15,12 +15,12 @@
     <option value="{{ major['major_id'] }}">{{ major['name'] }}</option>
     {% endfor %}
     </select>
-    <label for="new_course">What will be the new course's name?
+    <label for="new_course">new course name:
       <input type="new_course" name="new_course" required/>
-      <span>Course Description:</span>
+      <span>course description:</span>
       <textarea class="course-description" name="course_description">Enter description here</textarea>
 
-      <input type="submit" value="Create New Course" />
+      <input class="submit" type="submit" value="create new course" />
     </form>
 
   </section>
