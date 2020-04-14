@@ -4,10 +4,7 @@
 
 
 <header>
-
-  <h2>Edit page for {{ course['course_title']}}</h2>
-  <a href="{{ url_for('courseEditor.course_manage')}}">Back</a>
-
+  <a href="{{ url_for('course_editor.course_manage')}}">Back</a>
 </header>
 
 <section class='edit'><!--Start of section edit-->
@@ -25,10 +22,13 @@ which has three inputs of data-->
 <ul>
 
 
-  <label for="editTitle">Course Title</label><!--Bold in styles-->
 
-<li> {{ course['course_title'] }}
 
+<li>
+
+ <label for="editTitle">Course Title</label><!--Bold in styles-->
+
+  {{ course['course_title'] }}
 
   <input type="text" name="editTitle" required>
 
@@ -37,9 +37,13 @@ which has three inputs of data-->
 
 </li>
 
+
+
+<li>
+
 <label for="editDesc">Course Description</label>
 
-<li>{{ course['description'] }}
+  {{ course['description'] }}
 
 <input type="text" name="editDesc" required>
 
@@ -47,9 +51,12 @@ which has three inputs of data-->
 
 </li>
 
+
+<li>
+
   <label for="editCredit">Course Credits</label>
 
-<li>{{ course['credits'] }}
+  {{ course['credits'] }}
 
   <input type="text" name="editCredit" required>
 
