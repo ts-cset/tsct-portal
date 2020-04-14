@@ -1,0 +1,25 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+
+<header>
+  <h2>Sessions for course {{ course['course_title']}}</h2>
+  <a href="{{ url_for('courseEditor.course_manage')}}">Back</a>
+</header>
+
+<section class='courseSession'>
+<h3>Sessions</h3>
+
+  {% for session in sessions %}
+    {% if session['course_id'] == course['course_num'] %}
+
+  <h4>{{ session['name'] }}</h4>
+  
+  <a href="{{ url_for('sessionEditor.session_edit', id=session['id']) }}">Edit</a>
+
+    {% endif %}
+  {% endfor %}
+</section>
+
+
+{% endblock %}

@@ -70,7 +70,7 @@ def course_create():
 @login_required
 @teacher_required
 def course_edit(id):
-    """Allows user to edit the course"""
+    """Allows teachers to edit the course"""
     course = get_course(id)
 
     if request.method == "POST":

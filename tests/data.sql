@@ -20,10 +20,10 @@ VALUES (180, 'Software Project 2', 'Recreation of the portal', 3, 1, 1),
          3, 4, 3);
 
 INSERT INTO sessions (times, name, room_number, location, course_id)
-VALUES ('We meet every Tues-Thurs at 1:30 to 2:45', 'ENG-216 D',
+VALUES ('We meet every Tues-Thurs at 1:30 to 2:45', 'ENG-216-D',
 307, 'Main campus in Mellor', 216),
       ('We meet every day at Mon-Fri at 12:00-4:30 except on Wends which we start
-        at 12:30', '180', 103, 'GreenField Campus down the hall three doors then
+        at 12:30', 'CHEM-100-C', 103, 'GreenField Campus down the hall three doors then
         on your right.', 180 ),
-      ('We meet every Wends-Fri ath 12:00 - 3:30', '111', 108,
+      ('We meet every Wends-Fri ath 12:00 - 3:30', 'TIG-A', 108,
       'GreenField campus our room is right by the vending machine', 111);

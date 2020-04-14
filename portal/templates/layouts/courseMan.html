@@ -25,9 +25,7 @@
 
     <a href="{{ url_for('courseEditor.course_edit', id=course['course_num']) }}">Edit</a>
 
-    <form class="sessions" action="index.html" method="post">
-      <button type="submit" name="showSessionsButton">Sessions</button>
-    </form>
+    <a href="{{ url_for('sessionEditor.session_manage', id=course['course_num'])}}">Sessions</a>
 
   </li>
 

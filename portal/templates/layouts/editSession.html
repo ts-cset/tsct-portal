@@ -4,13 +4,13 @@
 <header>
 
   <h2>Edit Session {{ session['name'] }}</h2>
-  <a href="{{ url_for('sessionManage.course_sessions') }}">Back</a>
+  <a href="{{ url_for('sessionEditor.course_sessions') }}">Back</a>
 
 </header>
 
 <section class='courseSession'><!--Start section edit session-->
 
-<form class="" action="{{ url_for('sessionManage.edit_sessions') }}" method="post">
+<form class="" action="{{ url_for('sessionEditor.edit_sessions') }}" method="post">
 
 <ul>
 

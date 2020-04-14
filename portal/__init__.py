@@ -46,6 +46,10 @@ def create_app(test_config=None):
     from . import courseEditor
     app.register_blueprint(courseEditor.bp)
 
+    # Teacher Session Editor Routes
+    #----------------
+    from . import sessionEditor
+    app.register_blueprint(sessionEditor.bp)
     # Register Routes
     # ---------------
     from . import auth
