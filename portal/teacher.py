@@ -120,6 +120,21 @@ def session_add():
                         """, (id, session['class_session']))
     return redirect(url_for('teacher.make_session'))
 
+@bp.route('/session/remove', methods=('GET', 'POST'))
+@login_required
+@admin
+def session_remove():
+    if request.method == 'POST':
+        if session.get('class_session'):
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    for item in request.form:
+                        cur.execute("""
+                            DELETE FROM roster
+                            WHERE student_id = %s and session_id = %s
+                        """, (request.form[item], session['class_session']))
+    return redirect(url_for('teacher.make_session'))
+
 @bp.route('/session/submit', methods=('GET', 'POST'))
 @login_required
 @admin

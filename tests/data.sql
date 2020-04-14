@@ -6,3 +6,16 @@ VALUES ('teacher@stevenscollege.edu', 'pbkdf2:sha256:150000$YKTR53od$3956727084a
 
 INSERT INTO courses (course_code, course_name, major, description, teacher_id)
 VALUES ('180', 'Big Software Energy', 'CSET', 'A class that really makes you FEEL like a developer', 1)
+
+-- ID,EMAIL,PASSWORD,NAME,ROLE,MAJOR
+-- 42267,duck@stevenscollege.edu,looney,Daffy Duck,teacher,CSET
+-- 53114,--email doo@stevenscollege.edu --password snacks --first Scooby --last Doo --role teacher --major ARCH
+-- 52502,--email mouse@stevenscollege.edu --password disney --first Minnie --last Mouse --role teacher --major CSET
+-- 13041,--email bsimpson041@stevenscollege.edu --password iwillnot --first Bart --last Simpson --role student --major ARCH
+-- 36706,--email lsimpson706@stevenscollege.edu --password saxophone --first Lisa --last Simpson --role student --majorCSET
+-- 70128,cbrown128@stevenscollege.edu,goodgrief,Charlie Brown,student,CSET
+-- 25208,apickles208@stevenscollege.edu,spoiled,Angelica Pickles,student,CSET
+-- 48175,bbunny175@stevenscollege.edu,carrots,Bugs Bunny,student,ARCH
+-- 50425,fflintstone425@stevenscollege.edu,bowling,Fred Flintstone,student,ARCH
+
+-- heroku run -a desolate-cliffs-09215 flask register --email lsimpson706@stevenscollege.edu --password saxophone --first Lisa --last Simpson --role student --major CSET

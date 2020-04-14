@@ -56,7 +56,7 @@ def test_session_add(client, auth):
     response = client.get('/teacher/session/add')
     assert 'http://localhost/teacher/session/create' == response.headers['Location']
 
-    # Session creation must be underway to add students to the roster for it
+    # Session creation must be underway to add students to the roster for that session
     # otherwise the user will simply be redirected away
     response = client.post(
         '/teacher/session/add',
@@ -79,6 +79,39 @@ def test_session_add(client, auth):
     response = client.get('/teacher/session/create')
     # Confirm that the roster is not empty
     assert b'Remove from Session' in response.data
+
+def test_session_remove(client, auth):
+    auth.teacher_login()
+
+    # Get requests should be redirected away
+    response = client.get('/teacher/session/remove')
+    assert 'http://localhost/teacher/session/create' == response.headers['Location']
+
+    # Session creation must be underway to remove students from the roster
+    # otherwise the user will simply be redirected away
+    response = client.post(
+        '/teacher/session/remove',
+        data={1:1}
+    )
+    assert 'http://localhost/teacher/session/create' == response.headers['Location']
+
+    # Now we begin creating a session
+    client.post(
+        '/teacher/session/create',
+        data={'session':1}
+    )
+    # Students need to be added before they can be removed
+    client.post(
+        '/teacher/session/add',
+        data={1:1}
+    )
+    # The added student can be removed
+    response = client.post(
+        'teacher/session/remove',
+        data={1:1}
+    )
+    # In the test case, the roster for this session should now be empty
+    assert b'Remove from Session' not in response.data
 
 def test_session_submit(client, auth):
     auth.teacher_login()
@@ -117,7 +150,7 @@ def test_session_cancel(client, auth):
     response = client.get('/teacher/session/cancel')
     assert 'http://localhost/teacher/home' == response.headers['Location']
 
-    
+
     # The user begins creation of a session
     client.post(
         '/teacher/session/create',
