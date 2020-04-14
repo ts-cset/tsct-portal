@@ -3,6 +3,10 @@
 {% block title %}Teacher Home Page{% endblock %}
 
 {% block content %}
+<article class="majors-list">
+ <h2>view courses by</h2>
+ <a href="">majors</a>
+</article>
 
     <h2>Course List</h2>
     <article class="course">
@@ -18,13 +22,10 @@
           <div class="about"> {{ course['course_id']}}</div>
           <div class="about"> {{ course['teacherid']}}</div>
           <div class="about"> {{ course['major'] }} </div>
+          <form class="course-list-action" action="{{ url_for('portal.view', id=course['course_id']) }}" method="get">
+            <button type="Submit" name="edit" class="course-button">View This Course</button>
+          </form>
       </header>
-        <p class="course-content">{{ course['description'] }} </p>
-        {% if g.user['id'] == course['teacherid'] %}
-        <form class="course-list-action" action="{{ url_for('portal.edit', id=course['course_id']) }}" method="get">
-          <button type="Submit" name="edit" class="course-button">Edit This Course</button>
-        </form>
-          {% endif %}
         {% endfor %}
     </article>
     <section class="teacher-links">

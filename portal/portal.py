@@ -40,6 +40,18 @@ def get_course(id, check_teacher=True):
     return course
 
 
+@bp.route('/<int:id>/view', methods=('GET', 'POST'))
+def view(id):
+    """Single page view of course"""
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT course_id, name, description, teacherid, major FROM courses WHERE course_id = %s""",
+                (id,))
+    course = cur.fetchone()
+    cur.close()
+
+    return render_template("layouts/courses/view_course.html", course=course)
+
+
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
     """Edits the description of the courses"""
