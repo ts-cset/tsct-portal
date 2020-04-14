@@ -25,14 +25,20 @@
         </li>
       {% endfor %}
     </ul>
-    <button type="submit" name="remove">Remove from Session</button>
+    {% if roster %}
+      <button type="submit" name="remove">Remove from Session</button>
+    {% endif %}
   </form>
 
   <form action="{{ url_for('teacher.session_submit') }}" method="post">
     <!-- Set dates and times for the session -->
+    <label for="meeting_days">Meeting Days:</label>
+    <input type="text" name="meeting_days" maxlength="6" size="8">
     <!-- Set a name for the session -->
+    <label for="session_name">Session Code</label>
     <input type="text" name="session_name" maxlength="1" size="2">
     <!-- Create the session -->
     <button type="submit">Create Session</button>
+    <button formaction="{{ url_for('teacher.session_cancel') }}" type="submit" name="button">Cancel Session</button>
   </form>
 {% endblock %}

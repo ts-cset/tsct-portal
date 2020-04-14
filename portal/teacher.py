@@ -16,11 +16,20 @@ def home():
 @login_required
 @admin
 def courses():
+    if request.method == 'POST':
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                for item in request.form:
+                    cur.execute("""
+                        DELETE FROM courses
+                        WHERE id = %s
+                    """, (request.form[item],))
+
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute("""
                 SELECT * FROM courses
-                WHERE id = %s
+                WHERE teacher_id = %s
             """, (g.user['id'],))
             courses = cur.fetchall()
     return render_template('class.html', courses=courses)
@@ -48,7 +57,7 @@ def create():
     return render_template('course-creation.html')
 
 
-@bp.route('/session', methods=('GET', 'POST'))
+@bp.route('/session/create', methods=('GET', 'POST'))
 @login_required
 @admin
 def make_session():
@@ -65,7 +74,8 @@ def make_session():
                     ORDER BY id DESC
                 """, (course_id, course_id))
 
-                session['class_session'] = cur.fetchone()
+                session_id = cur.fetchone().get('id')
+                session['class_session'] = session_id
 
     if session.get('class_session'):
         with db.get_db() as con:
@@ -87,7 +97,7 @@ def make_session():
                     SELECT u.last_name, u.first_name FROM roster r JOIN users u
                     ON r.student_id = u.id
                     WHERE r.session_id = %s
-                """, (session['class_session'][0],))
+                """, (session['class_session'],))
 
                 roster = cur.fetchall()
 
@@ -99,15 +109,15 @@ def make_session():
 @login_required
 @admin
 def session_add():
-    print(session['class_session'])
     if request.method == 'POST':
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                for id in request.form:
-                    cur.execute("""
-                        INSERT INTO roster (student_id, session_id)
-                        VALUES (%s, %s)
-                    """, (id, session['class_session'][0]))
+        if session.get('class_session'):
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    for id in request.form:
+                        cur.execute("""
+                            INSERT INTO roster (student_id, session_id)
+                            VALUES (%s, %s)
+                        """, (id, session['class_session']))
     return redirect(url_for('teacher.make_session'))
 
 @bp.route('/session/submit', methods=('GET', 'POST'))
@@ -115,14 +125,36 @@ def session_add():
 @admin
 def session_submit():
     if request.method == 'POST':
-        session_name = request.form['session_name']
+        if session.get('class_session'):
+            session_name = request.form['session_name']
+            meeting_days = request.form['meeting_days']
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("""
+                        UPDATE sessions
+                        SET session_name = %s, meeting_days = %s
+                        WHERE id = %s
+                    """, (session_name, meeting_days, session['class_session']))
+            session.pop('class_session', None)
+            session.pop('course_id', None)
+            return redirect(url_for('teacher.home'))
+    return redirect(url_for('teacher.make_session'))
+
+@bp.route('/session/cancel')
+@login_required
+@admin
+def session_cancel():
+    if session.get('class_session'):
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
-                    UPDATE sessions
-                    SET session_name = %s
+                    DELETE FROM roster
+                    WHERE session_id = %s
+                """, (session['class_session'],))
+                cur.execute("""
+                    DELETE FROM sessions
                     WHERE id = %s
-                """, (session_name, session['class_session'][0]))
+                """, (session['class_session'],))
         session.pop('class_session', None)
         session.pop('course_id', None)
     return redirect(url_for('teacher.home'))
