@@ -24,7 +24,9 @@ CREATE TABLE users (
     major_id bigint REFERENCES majors (id),
     email text UNIQUE NOT NULL,
     password text NOT NULL,
-    role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student'))
+    name text NOT NULL,
+    role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student')),
+    major int REFERENCES majors(id)
 );
 
 --Courses
