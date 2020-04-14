@@ -1,13 +1,14 @@
-from flask import g, session
+from flask import g, session, url_for
 import pytest
 from portal.db import get_db
+from portal.auth import login, logout
 import os
 import tempfile
 
 
 def login(client, email, password):
     """Logs in a user"""
-    return client.post('/login', data=dict(
+    return client.post("/login", data=dict(
         email=email,
         password=password,
 
@@ -16,7 +17,7 @@ def login(client, email, password):
 
 def logout(client):
     """Logs out a user"""
-    return client.get('/logout', follow_redirects=True)
+    return client.get("/logout", follow_redirects=True)
 
 
 def test_login_logout(client):
@@ -78,11 +79,13 @@ def test_create_course(client):
         response = client.get('/courseCreate')
         assert b'Create a New Course' in response.data
 
-        response2 = client.post('/courseCreate', data={'courseTitle': 'Welding 101',
+        response_2 = client.post('/courseCreate', data={'courseTitle': 'Welding 101',
         'description': 'Learning how to use mig welder', 'courseCredits': 3, 'major_name': 2}, follow_redirects=True)
 
-        response3 = client.get('/courseManagement')
-        assert b'Welding 101' in response3.data
+        response_3 = client.get('/courseManagement')
+        assert b'<h4>Welding 101</h4>' in response_3.data
+        assert b'<h4>Software Project 2</h4>' in response_3.data
+        assert b'Course Management' in response_3.data
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data

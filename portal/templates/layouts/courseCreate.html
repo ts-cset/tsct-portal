@@ -2,33 +2,50 @@
 
 
 {% block content%}
+
 <header>
+
   <h2>Create a New Course</h2>
 
-  <a href="{{ url_for('courseEditor.course_manage')}}">Back</a>
+  <a href="{{ url_for('course_editor.course_manage')}}">Back</a>
+
 </header>
+
+{% for message in get_flashed_messages() %}
+  <p class="flash">{{ message }}</p>
+{% endfor %}
 
 <section class='courseCreation'>
 
   <!--Input for each field to create a course-->
-<form class="courseCreate" action="/courseCreate" method="post">
+<form class="courseCreate" action="{{ url_for('course_editor.course_create') }}" method="post">
+
 
 <label for="courseTitle">Course Title</label>
+
 <input type="text" name="courseTitle" required>
 
+
+
 <label for="description">Description</label>
+
 <textarea name="description" id=description ></textarea>
 
+
+
 <label for="credits">Credits</label>
+
 <input type="text" name="courseCredits" required>
 
 
 <label for="major_name">Major</label>
+
 <select class="majorNames" name="major_name" required>
+
   <!--They have a choice of
   majors to choose from-->
 
-  {% for major in Allmajors %}<!--Loops through all the names,
+  {% for major in all_majors %}<!--Loops through all the names,
     Allmajors list and id of the -->
 
 <option value="{{ major['id'] }}">{{ major['name'] }}</option>
@@ -36,8 +53,10 @@
 </select>
 
 
-<input type="submit" name="SaveCourseButton" value="Save">
+<input type="submit" name="submit" value="Save">
+
 </form>
 
 </section>
+
 {% endblock %}

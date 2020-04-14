@@ -4,7 +4,7 @@
 
 
 <header>
-  <a href="{{ url_for('courseEditor.course_manage')}}">Back</a>
+  <a href="{{ url_for('course_editor.course_manage')}}">Back</a>
 </header>
 
 <section class='edit'><!--Start of section edit-->
@@ -16,7 +16,7 @@ which has three inputs of data-->
 
 
 
-<form class="editFeature" action="{{ url_for( 'courseEditor.course_edit', id=course['course_num'] ) }}" method="post">
+<form class="editFeature" action="{{ url_for( 'course_editor.course_edit', id=course['course_num'] ) }}" method="post">
 
   <p>The courses current information is displayed
   please fill out all the fields and save changes.</p>
@@ -24,10 +24,13 @@ which has three inputs of data-->
 <ul>
 
 
-  <label for="editTitle">Course Title</label><!--Bold in styles-->
 
-<li> {{ course['course_title'] }}
 
+<li>
+
+ <label for="editTitle">Course Title</label><!--Bold in styles-->
+
+  {{ course['course_title'] }}
 
   <input type="text" name="editTitle" required>
 
@@ -36,9 +39,13 @@ which has three inputs of data-->
 
 </li>
 
+
+
+<li>
+
 <label for="editDesc">Course Description</label>
 
-<li>{{ course['description'] }}
+  {{ course['description'] }}
 
 <input type="text" name="editDesc" required>
 
@@ -46,9 +53,12 @@ which has three inputs of data-->
 
 </li>
 
+
+<li>
+
   <label for="editCredit">Course Credits</label>
 
-<li>{{ course['credits'] }}
+  {{ course['credits'] }}
 
   <input type="text" name="editCredit" required>
 

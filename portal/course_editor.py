@@ -5,7 +5,7 @@ from . import db
 from portal.auth import login_required, teacher_required
 
 
-bp = Blueprint("courseEditor", __name__)
+bp = Blueprint("course_editor", __name__)
 
 
 @bp.route("/courseManagement", methods=('GET', 'POST'))  # Management Page
@@ -30,39 +30,43 @@ def course_manage():
 def course_create():
     """Allows the teacher to create a course
     and fill out specifics on course"""
-    Allmajors = get_majors()
+    all_majors = get_majors()
 
     if request.method == 'POST':
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                courseTitle = request.form['courseTitle']
-                courseDescription = request.form['description']
-                courseCredit = request.form['courseCredits']
-                courseMajor = request.form['major_name']
-                error = None
 
-                if not courseTitle:
-                    error = 'You are missing a required field'
-                if not courseCredit:
-                    error = 'You are missing a required field'
-                if not courseDescription:
-                    error = 'You are missing a required field'
-                if not courseMajor:
-                    error = 'You are missing a required field'
-                # Adds info to courses table
-                cur.execute("""INSERT INTO courses (course_title, description,
-                credits, major_id, teacher_id)
-                VALUES (%s, %s, %s, %s, %s)""",
-                            (courseTitle, courseDescription,
-                             courseCredit, courseMajor, g.user['id'], )
+        course_title = request.form['courseTitle']
+        course_description = request.form['description']
+        course_credit = request.form['courseCredits']
+        course_major = request.form['major_name']
+        error = None
+        result = isinstance(course_major, int)
+
+        if not course_title:
+            error = 'You are missing a required field'
+        if not course_credit:
+            error = 'You are missing a required field'
+        if not course_description:
+            error = 'You are missing a required field'
+        if not course_major:
+            error = 'You are missing a required field'
+
+        if error is None:
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    # Adds info to courses table
+                    cur.execute("""INSERT INTO courses (course_title, description,
+                    credits, major_id, teacher_id)
+                    VALUES (%s, %s, %s, %s, %s)""",
+                            (course_title, course_description,
+                             course_credit, course_major, g.user['id'], )
                             )
-                con.commit()
+                    con.commit()
 
-                return redirect(url_for("courseEditor.course_manage"))
+                    return redirect(url_for("course_editor.course_manage"))
 
-            flash(error)
+        flash(error)
 
-    return render_template('layouts/courseCreate.html', Allmajors=Allmajors)
+    return render_template('layouts/courseCreate.html', all_majors=all_majors)
 
 
 # Needs new template
@@ -79,17 +83,18 @@ def course_edit(id):
         title = request.form['editTitle']
         desc = request.form['editDesc']
         error = None
-        with db.get_db() as con:
-            with con.cursor() as cur:
 
-                if not credit:
-                    error = 'All fields must be filled in to edit course.'
-                if not title:
-                    error = 'All fields must be filled in to edit course.'
-                if not desc:
-                    error = 'All fields must be filled in to edit course.'
+        if not credit:
+            error = 'All fields must be filled in to edit course.'
+        if not title:
+            error = 'All fields must be filled in to edit course.'
+        if not desc:
+            error = 'All fields must be filled in to edit course.'
 
-                if error is None:
+        if error is None:
+
+            with db.get_db() as con:
+                with con.cursor() as cur:
 
                     cur.execute("""UPDATE courses SET
                     course_title = %s,
@@ -101,9 +106,9 @@ def course_edit(id):
                                 )
                     con.commit()
 
-                    return redirect(url_for("courseEditor.course_manage"))
+                    return redirect(url_for("course_editor.course_manage"))
 
-                flash(error)
+        flash(error)
 
     return render_template("layouts/courseEdit.html", course=course)
 
@@ -136,6 +141,6 @@ def get_majors():
                 'FROM majors'
             )
 
-            Allmajors = cur.fetchall()
+            all_majors = cur.fetchall()
 
-            return Allmajors
+            return all_majors
