@@ -33,7 +33,7 @@ def login():
             session.clear()
             session['user_id'] = user['id']
             if session['user_id'] == user['id'] and user['role'] == 'student':
-                return redirect(url_for('college.student'))
+                return redirect(url_for('portal.student'))
             elif session['user_id'] == user['id'] and user['role'] == 'teacher':
                 return redirect(url_for('portal.home'))
 
