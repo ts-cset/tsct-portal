@@ -6,34 +6,61 @@ bp = Blueprint("portal", __name__)
 
 @bp.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('layouts/index.html')
 
 
 @bp.route("/home", methods=['GET', 'POST'])
 def home():
 
+    user_id = session['user_id']
     cur = db.get_db().cursor()
-    cur.execute("""SELECT * FROM courses""")
+    cur.execute(
+        """SELECT courses.course_id, courses.name, courses.major, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id""")
     courses = cur.fetchall()
     cur.close()
     print(courses)
 
-    return render_template("home.html", courses=courses)
+    return render_template("layouts/home.html", courses=courses)
 
 
-@bp.route("/<int:id>/edit", methods=('GET', 'POST'))
+def get_course(id, check_teacher=True):
+
+    user_id = session['user_id']
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT course_id, name, description, teacherid FROM courses WHERE teacherid = %s AND course_id = %s""",
+                (user_id, id,))
+    course = cur.fetchone()
+    cur.close()
+
+    if course is None:
+        abort(404, "Post id {0} doesn't exist.".format(id))
+
+    if check_teacher and course['teacherid'] != g.user['id']:
+        abort(403)
+
+    return course
+
+
+@bp.route('/<int:id>/view', methods=('GET', 'POST'))
+def view(id):
+    """Single page view of course"""
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT courses.course_id, courses.name, courses.major, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id""",
+                (id,))
+    course = cur.fetchone()
+    cur.close()
+
+    return render_template("layouts/courses/view_course.html", course=course)
+
+
+@bp.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
     """Edits the description of the courses"""
-    cur = db.get_db().cursor()
-    cur.execute(
-        'SELECT * from courses WHERE course_id=%s',
-        (id,)
-    )
-    course = cur.fetchone()
+    course = get_course(id)
 
     if request.method == 'POST':
 
-        teacherId = session['user_id']
+        teacherid = session['user_id']
         course_name = request.form['new_course']
         course_description = request.form['course_description']
 
@@ -41,7 +68,7 @@ def edit(id):
         cur.execute(
             'UPDATE courses SET name = %s, description = %s, teacherId = %s'
             ' WHERE course_id = %s ',
-            (course_name, course_description, teacherId, id)
+            (course_name, course_description, teacherid, id)
         )
         g.db.commit()
         cur.close()
@@ -54,8 +81,8 @@ def edit(id):
 @bp.route("/<int:id>/delete", methods=["POST", ])
 def delete(id):
     """delete unwanted tasks"""
+    course = get_course(id)
     cur = db.get_db().cursor()
-
     cur.execute(
         'DELETE FROM courses WHERE course_id= %s', (id,)
     )
@@ -66,7 +93,7 @@ def delete(id):
 
 @bp.route("/student")
 def student():
-    return render_template("student-home.html")
+    return render_template("layouts/student-home.html")
 
 
 @bp.route("/create", methods=['GET', 'POST'])
