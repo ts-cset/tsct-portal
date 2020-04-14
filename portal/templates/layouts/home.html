@@ -20,7 +20,7 @@
       <header class= "courses">
           <div class="about"> {{ course['name'] }} </div>
           <div class="about"> {{ course['course_id']}}</div>
-          <div class="about"> {{ course['teacherid']}}</div>
+          <div class="about"> {{ course['teacher_name']}}</div>
           <div class="about"> {{ course['major'] }} </div>
           <form class="course-list-action" action="{{ url_for('portal.view', id=course['course_id']) }}" method="get">
             <button type="Submit" name="edit" class="course-button">View This Course</button>

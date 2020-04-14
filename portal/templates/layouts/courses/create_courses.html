@@ -12,7 +12,7 @@
 
     <select name="majors" class="major-dropdown">
     {% for major in majors %}
-    <option value="{{ major['major_id'] }}">{{ major['name'] }}</option>
+    <option value="{{ major['name'] }}">{{ major['name'] }}</option>
     {% endfor %}
     </select>
     <label for="new_course">new course name:
