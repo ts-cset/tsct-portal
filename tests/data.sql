@@ -1,5 +1,15 @@
 -- Mock Data For Tests
 
-INSERT INTO users (email, password, role)
-VALUES ('teacher@stevenscollege.edu', 'pbkdf2:sha256:150000$YKTR53od$3956727084a9d3470d800ca00005a2258bde5affab208eb9ae211c46a28f575d', 'teacher'),
-       ('student@stevenscollege.edu', 'pbkdf2:sha256:150000$db49oioE$95b37dfa834211006b45fddfa03debdca5d2ccf49486bb7e35af144406d51c8a', 'student');
+INSERT INTO users (id, email, password, name, role, major)
+VALUES (0001, 'teacher@stevenscollege.edu', 'qwerty', 'test', 'teacher', 1),
+       (0002, 'student@stevenscollege.edu', 'password', 'test', 'student', 10);
+
+INSERT INTO courses (name, major, description, teacherid)
+VALUES ('ENG 101', 'GEND', 'English Composition: Basic Writing', 0001),
+      ('METAL 155', 'WELD', 'Basic metals kinda stuff', 0001),
+      ('CSET 180', 'CSET', 'This damn software project', 0001),
+      ('DRAW 101', 'ARCH', 'Drawing basic buildings', 0001),
+      ('ENG 201', 'GEND', 'SECOND YEAR English Composition: Basic Writing', 0002),
+      ('METAL 255', 'WELD', 'SECOND YEAR Basic metals kinda stuff', 0002),
+      ('CSET 280', 'CSET', 'SECOND YEAR This damn software project', 0002),
+      ('DRAW 201', 'ARCH', 'SECOND YEAR Drawing basic buildings', 0002);
