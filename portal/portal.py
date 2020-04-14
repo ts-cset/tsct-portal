@@ -14,7 +14,8 @@ def home():
 
     user_id = session['user_id']
     cur = db.get_db().cursor()
-    cur.execute("""SELECT * FROM courses""")
+    cur.execute(
+        """SELECT courses.course_id, courses.name, courses.major, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id""")
     courses = cur.fetchall()
     cur.close()
     print(courses)
@@ -44,7 +45,7 @@ def get_course(id, check_teacher=True):
 def view(id):
     """Single page view of course"""
     cur = db.get_db().cursor()
-    cur.execute("""SELECT course_id, name, description, teacherid, major FROM courses WHERE course_id = %s""",
+    cur.execute("""SELECT courses.course_id, courses.name, courses.major, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id""",
                 (id,))
     course = cur.fetchone()
     cur.close()
