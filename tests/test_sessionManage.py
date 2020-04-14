@@ -6,7 +6,7 @@ import tempfile
 from test_courseEditor import login, logout
 
 
-def test_edit_roster(client):
+def test_edit_session(client):
     """Tests the editSession page with a specific session
     of the course 180 to see if functionallity works"""
     assert client.get('/courseSessions/180/edit/0').status_code == 302
@@ -75,3 +75,11 @@ def test_courseSessions(client):
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
+
+def test_create_roster(client):
+    """Tests the creation of the student roster"""
+    pass
+
+def test_edit_roster(cleit):
+    """Tests the edit of a sessions student roster"""
+    pass

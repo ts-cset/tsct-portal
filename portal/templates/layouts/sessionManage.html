@@ -20,7 +20,7 @@
     {% endif %}
   {% endfor %}
   <h4>Click the + below to create a new session</h4>
-  <a href="#">+</a>
+  <a href="{{ url_for('sessionEditor.session_create', id=course['course_num'] )}}">+</a>
 </section>
 
 

@@ -47,24 +47,42 @@ def session_edit(id, sessions_id):
     return render_template("layouts/editSession.html", course=course, session=session)
 
 
-@bp.route("/createSession/course/<int:id>", methods=('GET','POST'))
+@bp.route("/createSession/course/<int:id>/", methods=('GET','POST'))
 @login_required
 @teacher_required
 def session_create(id):
     """Allows a teacher to create a speficic session in  a
     specific course"""
     course = courseEditor.get_course(id)
-    session = get_session(sessions_id)
     students = get_students()
 
 
 
     if request.method == 'POST':
 
+        title = request.form['sessionTitle']
+        times = request.form['sessionTimes']
+        room = request.form['roomNumber']
+        location = request.form['locations']
+        error = None
 
-            flash(error)
+        with db.get_db() as con:
+            with con.cursor() as cur:
 
-    return render_template("layouts/createSession.html")
+                if error is None:
+
+                    cur.execute("""INSERT INTO sessions (times, name, room_number, location, course_id)
+                        VALUES (%s, %s, %s, %s, %s )
+                    """,
+                    (times, title, room, location, id )
+                    )
+                    con.commit()
+
+                    return redirect(url_for("sessionEditor.session_manage", id=course['course_num']))
+
+                flash(error)
+
+    return render_template("layouts/createSession.html", course=course)
 
 
 @bp.route("/courseSessions/<int:id>", methods=('GET', 'POST'))
@@ -118,3 +136,6 @@ def get_students():
             students = cur.fetchall()
 
             return students
+
+def get_roster():
+    pass

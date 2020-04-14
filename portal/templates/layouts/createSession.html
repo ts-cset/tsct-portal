@@ -4,13 +4,13 @@
 <header>
   <h2>Create a new Session for {{ course['course_title'] }}</h2>
 
-<a href="{{ url_for('sessionEditor.course_sessions')}}">Back</a>
+<a href="{{ url_for('sessionEditor.session_manage', id=course['course_num'] )}}">Back</a>
 
 </header>
 
 <section class='courseSession'>
 
-<form class="" action="url_for{{ sessionEditor.session_create }}" method="post">
+<form class="" action="{{ url_for('sessionEditor.session_create', id=course['course_num']) }}" method="post">
 
 <label for="sessionTitle">Session Title</label>
 <input type="text" name="sessionTitle" required>
@@ -22,19 +22,8 @@
 <input type="text" name="roomNumber" required>
 
 <label for="locations">Locations</label>
-<select class="" name="locations" required>
-  {% for location in locations %}
-<option value="location['id']">location['location']</option>
-  {% endfor %}
-</select>
+<input type="text" name="locations" required>
 
-<label for="students">Students</label>
-<select class="" name="students" required multiple>
-  {% for student in students %}
-  <option value="student['id']">student['email']</option>
-  {% endfor %}
-</select>
-<!-- TODO: Sessions automatically inherits course_id and course info-->
 
 <input type="submit" name="sessionSubmit" value="Save">
 
