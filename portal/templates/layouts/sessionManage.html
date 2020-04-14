@@ -3,25 +3,39 @@
 {% block content %}
 
 <header>
+
   <h2>Sessions for course {{ course['course_title']}}</h2>
+
   <a href="{{ url_for('courseEditor.course_manage')}}">Back</a>
+
 </header>
 
-<section class='courseSession'>
+<section class='courseSession'><!--Start section edit sessions-->
+
+
 <h3>Sessions</h3>
 
-  {% for session in sessions %}
-    {% if session['course_id'] == course['course_num'] %}
+  {% for session in sessions %}<!--For a session in the object sessions-->
 
-  <h4>{{ session['name'] }}</h4>
 
-  <a href="{{ url_for('sessionEditor.session_edit', id=session['course_id'], sessions_id=session['id']) }}">Edit</a>
+    {% if session['course_id'] == course['course_num'] %}<!--Display if only session cours_id is = to course course_num-->
+
+      <h4>{{ session['name'] }}</h4>
+
+      <a href="{{ url_for('session_editor.session_edit', id=session['course_id'], sessions_id=session['id']) }}">Edit</a>
 
     {% endif %}
+
   {% endfor %}
+
+
+  <!--Below is for create Session link and info-->
   <h4>Click the + below to create a new session</h4>
-  <a href="{{ url_for('sessionEditor.session_create', id=course['course_num'] )}}">+</a>
-</section>
+
+  <a href="{{ url_for('session_editor.session_create', id=course['course_num'] )}}">+</a>
+
+
+</section><!--End section-->
 
 
 {% endblock %}

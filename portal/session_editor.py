@@ -4,7 +4,7 @@ from . import courseEditor
 from . import db
 from portal.auth import login_required, teacher_required
 
-bp = Blueprint("sessionEditor", __name__)
+bp = Blueprint("session_editor", __name__)
 
 @bp.route("/courseSessions/<int:id>/edit/<int:sessions_id>", methods=('GET', 'POST'))
 @login_required
@@ -16,15 +16,14 @@ def session_edit(id, sessions_id):
     session = get_session(sessions_id)
 
     if request.method == 'POST':
+        name = request.form['editName']
+        times = request.form['editTimes']
+        room = request.form['editRoom']
+        location = request.form['editLocal']
+        error = None
+
         with db.get_db() as con:
             with con.cursor() as cur:
-
-
-                name = request.form['editName']
-                times = request.form['editTimes']
-                room = request.form['editRoom']
-                location = request.form['editLocal']
-                error = None
 
                 if error is None:
 
@@ -39,7 +38,7 @@ def session_edit(id, sessions_id):
                         )
                     con.commit()
 
-                    return redirect(url_for( 'sessionEditor.session_manage', id=course['course_num']))
+                    return redirect(url_for( 'session_editor.session_manage', id=course['course_num']))
 
                 flash(error)
 
@@ -69,16 +68,25 @@ def session_create(id):
         with db.get_db() as con:
             with con.cursor() as cur:
 
+                if not title:
+                    error = 'Required field missing.'
+                if not times:
+                    error = 'Required field missing.'
+                if not room:
+                    error = 'Required field missing.'
+                if not location:
+                    error = 'Required field missing.'
+
                 if error is None:
 
                     cur.execute("""INSERT INTO sessions (times, name, room_number, location, course_id)
                         VALUES (%s, %s, %s, %s, %s )
                     """,
-                    (times, title, room, location, id )
+                    (times, title, room, location, id, )
                     )
                     con.commit()
 
-                    return redirect(url_for("sessionEditor.session_manage", id=course['course_num']))
+                    return redirect(url_for("session_editor.session_manage", id=course['course_num']))
 
                 flash(error)
 
@@ -146,6 +154,3 @@ def get_students():
             students = cur.fetchall()
 
             return students
-
-def get_roster():
-    pass

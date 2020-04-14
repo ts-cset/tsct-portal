@@ -4,42 +4,63 @@
 <header>
 
   <h2>Edit Session {{ session['name'] }}</h2>
-  <a href="{{ url_for('sessionEditor.session_manage', id=course['course_num']) }}">Back</a>
+
+  <a href="{{ url_for('session_editor.session_manage', id=course['course_num']) }}">Back</a>
 
 </header>
 
 <section class='courseSession'><!--Start section edit session-->
 
-<form class="" action="{{ url_for('sessionEditor.session_edit', id=session['course_id'], sessions_id=session['id']) }}" method="post">
+
+<!--Updates the selected info via the forms and route-->
+<form class="" action="{{ url_for('session_editor.session_edit', id=session['course_id'], sessions_id=session['id']) }}" method="post">
 
 <ul>
 
-  <label for="editName">Name</label>
-  <li>{{ session['name'] }}
+  <li>
+
+    <label for="editName">Name</label>
+
+    {{ session['name'] }}
 
     <input type="text" name="editName" required>
 
   </li>
 
 
-  <label for="editTimes">Times</label>
-  <li>{{ session['times'] }}
+
+  <li>
+
+    <label for="editTimes">Times</label>
+
+    {{ session['times'] }}
 
     <input type="text" name="editTimes" required>
 
   </li>
 
 
-  <label for="editRoom">Room Number</label>
-  <li>{{ session['room_number'] }}
+
+  <li>
+
+    <label for="editRoom">Room Number</label>
+
+    {{ session['room_number'] }}
 
     <input type="text" name="editRoom" required>
 
   </li>
 
-  <label for="editLocal">Location</label>
-  <li>{{ session['location'] }}
+
+
+  <li>
+
+    <label for="editLocal">Location</label>
+
+    {{ session['location'] }}
+
     <input type="text" name="editLocal" required>
+
   </li>
 
 
