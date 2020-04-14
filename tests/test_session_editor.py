@@ -74,41 +74,41 @@ def test_courseSessions(client):
         response = client.get('/courseSessions/180')
         assert b'<h2>Sessions for course Software Project 2' in response.data
         assert b'<h4>Click the + below to create a new session</h4>' in response.data
-        assert b'Create roster' in response.data
-        assert b'Edit Roster' in response.data
         assert b'CSET-180-A' in response.data
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
 
-def test_create_roster(client):
-    """Tests the creation of the student roster"""
-    assert client.get('/courseSession/180/rosterCreate/4').status_code == 302
+#Starter Tests for roster
 
-    rv = login(
-        client, 'teacher@stevenscollege.edu', 'qwerty')
-    assert b'Logged in' in rv.data
-
-    with client:
-        response = client.get('courseSession/180/rosterCreate/4')
-        assert b'<h2>Roster for session CSET-180-B<h2>' in response.data
-        assert b'Students' in response.data
-        assert b'Save' in response.data
-
-
-
-
-def test_edit_roster(client):
-    """Tests the edit of a sessions student roster"""
-    assert client.get('/courseSession/180/rosterEdit/2').status_code == 302
-
-    rv = login(
-        client, 'teacher@stevenscollege.edu', 'qwerty')
-
-    assert b'Logged in' in rv.data
-
-    with client:
-        response = client.get('courseSession/180/rosterEdit/2')
-        assert b'<h2>Roster for session CSET-180-A' in response.data
-        assert b'Students' in response.data
-        assert b'Save' in response.data
+# def test_create_roster(client):
+#     """Tests the creation of the student roster"""
+#     assert client.get('/courseSession/180/rosterCreate/4').status_code == 302
+#
+#     rv = login(
+#         client, 'teacher@stevenscollege.edu', 'qwerty')
+#     assert b'Logged in' in rv.data
+#
+#     with client:
+#         response = client.get('courseSession/180/rosterCreate/4')
+#         assert b'<h2>Roster for session CSET-180-B<h2>' in response.data
+#         assert b'Students' in response.data
+#         assert b'Save' in response.data
+#
+#
+#
+#
+# def test_edit_roster(client):
+#     """Tests the edit of a sessions student roster"""
+#     assert client.get('/courseSession/180/rosterEdit/2').status_code == 302
+#
+#     rv = login(
+#         client, 'teacher@stevenscollege.edu', 'qwerty')
+#
+#     assert b'Logged in' in rv.data
+#
+#     with client:
+#         response = client.get('courseSession/180/rosterEdit/2')
+#         assert b'<h2>Roster for session CSET-180-A' in response.data
+#         assert b'Students' in response.data
+#         assert b'Save' in response.data
