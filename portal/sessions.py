@@ -19,12 +19,19 @@ def view_session(course_id, session_id):
                    WHERE id = %s;""",
                    (session_id,))
     sessions = cur.fetchall()
+    
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT * FROM assignments
+                   WHERE session_id = %s;""",
+                   (session_id,))
+    assignments = cur.fetchall()
+    
     cur.execute("""SELECT * FROM roster
                    WHERE session_id = %s;""",
                    (session_id,))
     rosters = cur.fetchall()
     cur.close()
-    return render_template('portal/courses/sessions/view-session.html', courses=courses, sessions=sessions, rosters=rosters)
+    return render_template('portal/courses/sessions/view-session.html', courses=courses, sessions=sessions, rosters=rosters, assignments=assignments)
 
 @bp.route('/<course_id>/create-session', methods=('GET', 'POST'))
 @login_required
