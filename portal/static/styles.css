@@ -144,9 +144,12 @@ label input {
 
 .course {
   display: block;
+  width: 100%;
   border-top: 2px solid black;
   border-bottom: 2px solid black;
   padding: 5px 0 20px 0;
+  justify-content: center;
+  align-items: center;
 
 }
 .courses-main {
@@ -159,29 +162,62 @@ label input {
 .courses {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
+  width:100%;
 }
 
 .course-table-header {
   color: black;
   background-color: white;
-  width: 25%;
+  width: 28%;
   margin: 5px;
 }
-.about {
-  width: 25%;
+.course-table-header1 {
+  color: black;
+  background-color: white;
+  width: 110px;
+  margin: 5px;
+}
+.about-course1 {
+  width: 120px;
   border: 1px solid black;
   background-color: lightgrey;
-  padding: 5px 0px 5px 5px;
-}
+  padding: 5px 5px 0 5px;
+  align-items: center;
 
+}
+.about-course {
+  width: 30%;
+  border: 1px solid black;
+  background-color: lightgrey;
+  padding: 5px 5px 0 5px;
+  align-items: center;
+}
+.about-course-form {
+  width: 100%;
+  background-color: lightgrey;
+  padding: 0;
+  margin: 0;
+  border: none;
+  justify-content: center;
+
+}
 .course-button {
   background-color: #fac0c0;
   border: 1px solid black;
-  width: 200px;
+  font-variant: small-caps;
+  width: 80px;
   margin: 5px;
 }
 
+.course-view {
+  font-size: 26px;
+  font-variant: small-caps;
+  margin-right: 20px;
+}
+.content {
+  font-size: 18px;
+}
 .link-button {
   display: block;
   text-decoration: none;
