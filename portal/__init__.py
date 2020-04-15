@@ -2,10 +2,10 @@ import os
 
 from flask import Flask, render_template, g
 
+from werkzeug.security import check_password_hash, generate_password_hash
 
 def create_app(test_config=None):
     """Factory to configure and return a Flask application.
-
     Keyword arguments:
     test_config -- dictionary to configure the app for tests (default None)
     """
@@ -17,7 +17,7 @@ def create_app(test_config=None):
     # -------------
     # Default configuration, can be overwritten by specific environment
     app.config.from_mapping(
-        SECRET_KEY='dev',
+        SECRET_KEY='gordu4rc1&zsi!uxff!d6e+k#1405$qjh-81k8y@3lbv_%04#(',
         DB_URL="postgresql://portal_user@localhost/portal",
         DB_SSLMODE="allow",
     )
@@ -45,6 +45,7 @@ def create_app(test_config=None):
     # ---------------
     from . import course_editor
     app.register_blueprint(course_editor.bp)
+
 
     # Register Routes
     # ---------------
