@@ -1,11 +1,11 @@
-ID,EMAIL,PASSWORD,NAME,ROLE,MAJOR
-42267,duck@stevenscollege.edu,looney,Daffy Duck,teacher,1
-53114,doo@stevenscollege.edu,snacks,Scooby Doo,teacher,2
-52502,mouse@stevenscollege.edu,disney,Minnie Mouse,teacher,1
-13041,bsimpson041@stevenscollege.edu,iwillnot,Bart Simpson,student,2
-36706,lsimpson706@stevenscollege.edu,saxophone,Lisa Simpson,student,1
-70128,cbrown128@stevenscollege.edu,goodgrief,Charlie Brown,student,1
-25208,apickles208@stevenscollege.edu,spoiled,Angelica Pickles,student,1
-48175,bbunny175@stevenscollege.edu,carrots,Bugs Bunny,student,2
-50425,fflintstone425@stevenscollege.edu,bowling,Fred Flintstone,student,2
-82079,mmouse079@stevenscollege.edu,steamboat,Mickey Mouse,student,2
+ID,NAME,MAJOR_ID,EMAIL,PASSWORD,ROLE
+42267,Daffy Duck,1,duck@stevenscollege.edu,looney,teacher
+53114,Scooby Doo,2,doo@stevenscollege.edu,snacks,teacher
+52502,Minnie Mouse,1,mouse@stevenscollege.edu,disney,teacher
+13041,Bart Simpson,1,bsimpson041@stevenscollege.edu,iwillnot,student
+36706,Lisa Simpson,1,lsimpson706@stevenscollege.edu,saxophone,student
+70128,Charlie Brown,1,cbrown128@stevenscollege.edu,goodgrief,student
+25208,Angelica Pickles,1,apickles208@stevenscollege.edu,spoiled,student
+48175,Bugs Bunny,2,bbunny175@stevenscollege.edu,carrots,student
+50425,Fred Flintstone,2,fflintstone425@stevenscollege.edu,bowling,student
+82079,Mickey Mouse,2,mmouse079@stevenscollege.edu,steamboat,student

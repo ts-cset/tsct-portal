@@ -1,3 +1,4 @@
+
 -- TSCT Portal Database Schema
 --
 -- This file will drop and recreate all tables necessary for
@@ -7,10 +8,8 @@
 -- Drop existing tables
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS courses CASCADE;
-DROP TABLE IF EXISTS assignments;
-DROP TABLE IF EXISTS rosters;
-DROP TABLE IF EXISTS sessions;
-DROP TABLE IF EXISTS majors;
+DROP TABLE IF EXISTS sessions CASCADE;
+DROP TABLE IF EXISTS majors CASCADE;
 
 -- Major
 CREATE TABLE majors (
@@ -20,43 +19,30 @@ CREATE TABLE majors (
 
 -- Users
 CREATE TABLE users (
-    id bigint PRIMARY KEY,
+    id bigserial PRIMARY KEY,
+    name text NOT NULL,
+    major_id bigint REFERENCES majors (id),
     email text UNIQUE NOT NULL,
     password text NOT NULL,
-    name text NOT NULL,
-    role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student')),
-    major int REFERENCES majors(id)
+    role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student'))
 );
 
--- Courses
+--Courses
 CREATE TABLE courses (
-    course_num bigserial PRIMARY KEY,
-    credits int NOT NULL,
-    course_title text NOT NULL,
-    teacher_id int REFERENCES users(id),
-    description text,
-    major_id int REFERENCES majors(id)
+ course_num bigserial PRIMARY KEY,
+ course_title text NOT NULL,
+ description text,
+ credits integer NOT NULL,
+ teacher_id bigint REFERENCES users (id),
+ major_id bigint REFERENCES majors (id)
 );
 
--- Assignments
-CREATE TABLE assignments (
-    id bigserial PRIMARY KEY,
-    course_id int REFERENCES courses(course_num)
-);
-
--- Sessions
+--Sessions
 CREATE TABLE sessions (
-    id bigserial PRIMARY KEY,
-    name text NOT NULL,
-    location text NOT NULL,
-    room_number text NOT NULL,
-    session_time text NOT NULL,
-    course_id int REFERENCES courses(course_num)
-);
-
--- Rosters
-CREATE TABLE rosters (
-    id bigserial PRIMARY KEY,
-    user_id int REFERENCES users(id),
-    session_id int REFERENCES sessions(id)
+id bigserial PRIMARY KEY,
+times text NOT NULL,
+name text NOT NULL,
+room_number integer NOT NULL,
+location text NOT NULL,
+course_id bigint REFERENCES courses (course_num)
 );

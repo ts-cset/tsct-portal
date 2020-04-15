@@ -4,4 +4,16 @@
 
 {% block content %}
   <p>Home</p>
+
+<section class='helpfulLinks'>
+
+  {% if g.user['role'] == 'teacher' %}
+
+  <a href="{{ url_for('course_editor.course_manage')}}">Course Management</a>
+  
+  {% endif %}
+
+</section>
+
+
 {% endblock %}

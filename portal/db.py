@@ -30,6 +30,7 @@ def get_db():
 
     return g.db
 
+
 def close_db(e=None):
     """Close the current PostgreSQL connection"""
 
@@ -53,6 +54,7 @@ def init_db():
                 # use the file's text to execute the SQL queries within
                 cur.execute(f.read())
 
+
 @click.command("init-db")
 @with_appcontext
 def init_db_command():
@@ -69,6 +71,7 @@ def insert_users():
             # empty the tables, otherwise duplicate key errors are thrown
             cur.execute("DELETE FROM users")
             cur.execute("DELETE FROM majors")
+
             # open majors.csv
             with open('./portal/data/majors.csv', 'r') as f:
                 reader = csv.reader(f)
@@ -76,10 +79,11 @@ def insert_users():
                 # insert data into "majors" database
                 for row in reader:
                     cur.execute(
-                    "INSERT INTO majors VALUES (%s, %s)",
-                    row
+                        "INSERT INTO majors VALUES (%s, %s)",
+                        row
                     )
                 con.commit()
+
             # open users.csv
             with open('./portal/data/portal_users.csv', 'r') as f:
                 reader = csv.reader(f)
@@ -87,12 +91,23 @@ def insert_users():
                 # insert data into "users" database
                 for row in reader:
                     cur.execute(
-                    "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)",
-                    row
+                        "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)",
+                        row
                     )
-                con.commit()
+
+            with open('./portal/data/courses.csv', 'r') as f:
+                reader = csv.reader(f)
+                next(reader)
+
+                for row in reader:
+                    cur.execute(
+                        "INSERT INTO courses VALUES (%s, %s, %s, %s, %s, %s)",
+                        row
+                    )
+
                 # note: I have to create the "majors" database before "users" because
                 # users contains a reference to the majors database
+
 
 @click.command("insert-users")
 @with_appcontext
@@ -105,12 +120,14 @@ def insert_users_command():
 def mock_db():
     """Seed the database with mock data."""
 
-    data_filepath = os.path.join(os.path.dirname(__file__), os.pardir, "tests", "data.sql")
+    data_filepath = os.path.join(os.path.dirname(
+        __file__), os.pardir, "tests", "data.sql")
     # open the mock data file and close when done
     with open(data_filepath, "rb") as f:
         with get_db() as con:
             with con.cursor() as cur:
                 cur.execute(f.read())
+
 
 @click.command("mock-db")
 @with_appcontext
