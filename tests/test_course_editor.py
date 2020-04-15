@@ -90,6 +90,21 @@ def test_create_course(client):
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
 
+def test_unique_teacher(client):
+    """Test to make sure teachers cannot view or edit other teachers courses"""
+    assert client.get('courseEdit/216').status_code == 302
+
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
+
+    with client:
+        response = client.get('courseEdit/216', follow_redirects=True)
+        # Ensure that it redirects to index if teacher does not own course
+        assert b'Course Management' in response.data
+        assert b'Home' in response.data
+
+
 def test_course_manage(client):
     """Tests the data on the page of courseManagement and access of teacher"""
 
