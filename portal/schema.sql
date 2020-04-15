@@ -45,3 +45,19 @@ CREATE TABLE roster (
   users_id bigint NOT NULL REFERENCES users (id),
   session_id bigint NOT NULL REFERENCES session (id)
 );
+
+--assignments
+CREATE TABLE assignments (
+  id bigserial PRIMARY KEY,
+  name text NOT NULL,
+  description text NOT NULL,
+  date datetime NOT NULL,
+  points bigint NOT NULL
+);
+
+--assignments and session join table
+CREATE TABLE assignment_session (
+  id bigserial PRIMARY KEY,
+  assignments_id bigint NOT NULL REFERENCES assignments (id),
+  session_id bigint NOT NULL REFERENCES session (id)
+);
