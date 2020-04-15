@@ -135,3 +135,18 @@ def create():
         return redirect(url_for('portal.home'))
 
     return render_template("layouts/courses/create_courses.html", majors=majors)
+
+
+@bp.route("/<int:id>/sessions", methods=['GET', 'POST'])
+@login_required
+def view_sessions(id):
+    """Single page view of course"""
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT * FROM sessions where course = %s""",
+                (id,))
+    # cur.execute("""SELECT sessions.course, sessions.days, sessions.class_time, courses.teacherid, users.name AS teacher_name FROM sessions INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
+    #             (id,))
+    sessions = cur.fetchall()
+    cur.close()
+
+    return render_template("layouts/sessions/view_sessions.html", sessions=sessions)
