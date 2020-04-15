@@ -7,8 +7,8 @@ VALUES  (1,'CSET'),
         (4,'ENG');
 
 INSERT INTO users (id,name, major_id, email, password, role)
-VALUES (1,'zach fedor', 1,'teacher@stevenscollege.edu', 'qwerty',  'teacher'),
-       (2,'bob phillp', 2, 'student@stevenscollege.edu', 'asdfgh',  'student'),
+VALUES (1,'zach fedor', 1,'teacher@stevenscollege.edu', 'pbkdf2:sha256:150000$YKTR53od$3956727084a9d3470d800ca00005a2258bde5affab208eb9ae211c46a28f575d',  'teacher'),
+       (2,'bob phillp', 2, 'student@stevenscollege.edu', 'pbkdf2:sha256:150000$db49oioE$95b37dfa834211006b45fddfa03debdca5d2ccf49486bb7e35af144406d51c8a',  'student'),
        (3,'tim smith', 3,'teacher1@stevengscollege.edu', 'password','teacher'),
        (4,'Ms.Sullivan', 4,'teacher2@stevenscollege.edu', 'PASSWORD', 'teacher');
 

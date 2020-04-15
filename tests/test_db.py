@@ -47,5 +47,7 @@ def test_cli_commands(runner, monkeypatch, function, command, output):
 def test_login(client):
   assert client.get('/').status_code == 302
   response = client.post(
-     '/', data={'email': 'student@stevenscollege.edu', 'password': ''})
-  assert response.headers['Location'] == "http://localhost/"
+     '/login', data={'email': 'student@stevenscollege.edu', 'password': 'asdfgh'}, follow_redirects = True)
+  print(response.data)
+  assert b'Logged in' in response.data
+  assert b'Home' in response.data
