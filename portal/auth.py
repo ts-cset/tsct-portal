@@ -36,8 +36,7 @@ def index():
             session['user_role'] = user['role']
             #Return different views for a teacher vs student
             if user['role'] == 'teacher':
-                return "Hello teacher"
-                #return redirect(url_for('portal.teacher_page'))
+                return redirect(url_for('teacher.home'))
             elif user['role'] == 'student':
                 # return "hello student"
                 return redirect(url_for('student.home'))

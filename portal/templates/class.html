@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Course Selection {% endblock %}
+{% block title %}Course Selection{% endblock %}
 
 {% block content %}
     <section>
@@ -8,14 +8,20 @@
         <ul>
           {% for course in courses %}
             <li>
-              <label>{{ course['major'] }}</label>
-              <label>{{ course['course_name'] }}</label>
-              <label>{{ course['description'] }}</label>
+              <h2>{{ course['major'] }}</h2>
+              <p>{{ course['course_name'] }}</p>
+              <p>{{ course['description'] }}</p>
               <input type="checkbox" value="{{ course['id'] }}" name="{{ course['id'] }}"/>
+              <button formaction="{{ url_for('teacher.make_session') }}" type="submit" name="session" value="{{ course['id'] }}">Create Session</button>
             </li>
-          {% endfor  %}
+          {% endfor %}
         </ul>
-        <button type="submit" name="submit-class"></button>
+        {% if courses %}
+          <button type="submit">Delete Selected</button>
+        {% else %}
+          <p>No courses to show</p>
+        {% endif %}
       </form>
     </section>
+    <a href="{{ url_for('teacher.create') }}">Create a Course</a>
 {% endblock %}

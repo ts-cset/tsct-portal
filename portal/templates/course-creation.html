@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Course creation{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="code">Course Code
+      <input type="number" name="code" required/>
+    </label>
+    <label for="name">Course Name
+      <input type="text" name="name" required/>
+    </label>
+      <select name="major">
+        <option value="CSET" selected>CSET</option>
+        <option value="GEN">GEN</option>
+        <option value="MASN">MASN</option>
+      </select>
+    <label for="description">Course description
+      <input type="text" name="description" required/>
+    </label>
+    <input type="submit"/>
+  </form>
+{% endblock %}

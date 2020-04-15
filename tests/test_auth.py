@@ -2,27 +2,17 @@ import pytest
 from flask import g, session
 from portal.db import get_db
 
-# When doing a GET request we should get a status code of 200 back
 def test_teacher_login(client, auth):
     assert client.get('/').status_code == 200
     response = auth.teacher_login()
-    # Until a template is created the response when logging in with teacher is Hello teacher
-    assert b'Hello teacher' in response.data
-
-    #with client:
-        #client.get('/teacher-page')
-        #assert session['user_id'] == 1
-        #assert g.user['email'] == 'teacher@stevenscollege.edu'
+    assert 'http://localhost/teacher/home' == response.headers['Location']
 
 def test_student_login(client, auth):
     assert client.get('/').status_code == 200
     response = auth.student_login()
     assert 'http://localhost/student/home' == response.headers['Location']
-
-    #with client:
-        #client.get('/teacher-page')
-        #assert session['user_id'] == 1
-        #assert g.user['email'] == 'teacher@stevenscollege.edu'
+    response = client.get('/teacher/home')
+    assert 'http://localhost/' == response.headers['Location']
 
 # This attempts to 'login' with an incorrect email or password. Does it for both email or password so both error messages are tested
 @pytest.mark.parametrize(('email', 'password', 'message'), (
