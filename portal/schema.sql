@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS users;
 
 -- Users
 CREATE TABLE users (
-    id bigserial PRIMARY KEY,
+    id bigint PRIMARY KEY,
     email text UNIQUE NOT NULL,
     password text NOT NULL,
     name text,
@@ -33,7 +33,7 @@ CREATE TABLE courses (
   teacher_id bigint REFERENCES users (id) -- One teacher owns many courses
 );
 
--- Session
+-- Sessions
 CREATE TABLE sessions (
   id bigserial PRIMARY KEY,
   course_id bigint REFERENCES courses (id), -- One course owns many sessions

@@ -1,15 +1,17 @@
 -- Mock Data For Tests
 
 -- Users
-INSERT INTO users (email, password, role)
-VALUES ('teacher@stevenscollege.edu', 'pbkdf2:sha256:150000$71PbcIFv$ffc17b1d44fa5ac0b5a9a1707b25e1c69b40a697676a6a30c374a57594b4df99', 'teacher'),
-       ('student@stevenscollege.edu', 'pbkdf2:sha256:150000$bhcUxUAk$b08d717a84c93c4d09afe712f0d781b216e5b77a27b9becbf4d535fde22d0e97', 'student');
-
+INSERT INTO users (id, email, password, name, role, major)
+VALUES (1, 'teacher@stevenscollege.edu', 'pbkdf2:sha256:150000$71PbcIFv$ffc17b1d44fa5ac0b5a9a1707b25e1c69b40a697676a6a30c374a57594b4df99', 'ms teacher', 'teacher', 'CSET'),
+       (2, 'student@stevenscollege.edu', 'pbkdf2:sha256:150000$bhcUxUAk$b08d717a84c93c4d09afe712f0d781b216e5b77a27b9becbf4d535fde22d0e97', 'kyle', 'student', 'CSET'),
+       (42267, 'duck@stevenscollege.edu', 'looney', 'Daffy Duck', 'teacher', 'WELD'),
+       (50425, 'fflintstone425@stevenscollege.edu', 'bowling', 'Fred Flintstone', 'student', 'ARCH'),
+       (13041, 'bsimpson041@stevenscollege.edu', 'iwillnot', 'Bart Simpson', 'student', 'ARCH');
 -- Courses
 INSERT INTO courses (major, name, num, description, credits, teacher_id)
 VALUES ('CSET', 'Software Project II', 180, 'blaaah', 3, 1),
        ('CSET', 'Web Development', 160, 'web dev lol', 3, 2),
-       ('Welding', 'Metal', 105, 'weld', 3, 42267) ;
+       ('Welding', 'Metal', 105, 'weld', 3, 42267);
 
 -- Sessions
 INSERT INTO sessions (course_id, teacher_id, section, meeting_time, location)
