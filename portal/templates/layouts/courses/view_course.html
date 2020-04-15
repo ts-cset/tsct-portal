@@ -1,23 +1,20 @@
 {% extends "base.html" %}
 
-{% block title %}View Course{% endblock %}
+{% block title %}{{ course['name'] }}{% endblock %}
 
 {% block content %}
 <h2>Course Information</h2>
-<article class="course">
-  <header class="courses-main">
-  <div class="course-table-header">course name: {{ course['name'] }}</div>
-  <div class="course-table-header">course number: {{ course['course_id']}}</div>
-  <div class="course-table-header">teacher: {{ course['teacher_name']}}</div>
-  <div class="course-table-header">major ID:  {{ course['major'] }}</div>
-  </header>
-
-    <p class="course-content">{{ course['description'] }} </p>
+<h3><span class="course-view">course id:</span>{{ course['course_id']}}</h3>
+<h3><span class="course-view">teacher:</span>{{ course['teacher_name']}}</h3>
+<h3><span class="course-view">major:</span>{{ course['major'] }}</h3>
+<section class="course-description">
+  <h3><span class="course-view">course description:</span></h3>
+    <p class="content">{{ course['description'] }} </p>
     {% if g.user['id'] == course['teacherid'] %}
     <form class="course-list-action" action="{{ url_for('portal.edit', id=course['course_id']) }}" method="get">
-      <button type="Submit" name="edit" class="course-button">Edit This Course</button>
+      <button type="Submit" name="edit" class="course-button">edit</button>
     </form>
-      {% endif %}
-</article>
+    {% endif %}
+</section>
 
 {% endblock %}

@@ -45,7 +45,7 @@ def get_course(id, check_teacher=True):
 def view(id):
     """Single page view of course"""
     cur = db.get_db().cursor()
-    cur.execute("""SELECT courses.course_id, courses.name, courses.major, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id""",
+    cur.execute("""SELECT courses.course_id, courses.name, courses.major, courses.description, courses.teacherid, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
                 (id,))
     course = cur.fetchone()
     cur.close()
@@ -66,9 +66,9 @@ def edit(id):
 
         cur = db.get_db().cursor()
         cur.execute(
-            'UPDATE courses SET name = %s, description = %s, teacherId = %s'
+            'UPDATE courses SET name = %s, description = %s'
             ' WHERE course_id = %s ',
-            (course_name, course_description, teacherid, id)
+            (course_name, course_description, id)
         )
         g.db.commit()
         cur.close()

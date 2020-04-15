@@ -11,21 +11,24 @@
     <h2>Course List</h2>
     <article class="course">
       <header class="courses-main">
-      <div class="course-table-header">Course Name:</div>
-      <div class="course-table-header">Course ID:</div>
-      <div class="course-table-header">Teacher:</div>
-      <div class="course-table-header">Major ID:</div>
+      <div class="course-table-header1">course id:</div>
+      <div class="course-table-header">course name:</div>
+      <div class="course-table-header">teacher:</div>
+      <div class="course-table-header">major id:</div>
+      <div class="course-table-header1"></div>
       </header>
        {% for course in courses %}
-      <header class= "courses">
-          <div class="about"> {{ course['name'] }} </div>
-          <div class="about"> {{ course['course_id']}}</div>
-          <div class="about"> {{ course['teacher_name']}}</div>
-          <div class="about"> {{ course['major'] }} </div>
-          <form class="course-list-action" action="{{ url_for('portal.view', id=course['course_id']) }}" method="get">
-            <button type="Submit" name="edit" class="course-button">View This Course</button>
+      <section class= "courses">
+          <div class="about-course1"> {{ course['course_id'] }} </div>
+          <div class="about-course"> {{ course['name']}}</div>
+          <div class="about-course"> {{ course['teacher_name']}}</div>
+          <div class="about-course"> {{ course['major'] }} </div>
+          <div class="about-course1">
+            <form class="about-course-form" action="{{ url_for('portal.view', id=course['course_id']) }}" method="get">
+            <button type="Submit" name="edit" class="course-button">view</button>
           </form>
-      </header>
+          </div>
+      </section>
         {% endfor %}
     </article>
     <section class="teacher-links">
