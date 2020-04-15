@@ -147,9 +147,17 @@ form {
 label {
   display: block;
   padding-bottom: 1rem;
+  border-bottom: 3px solid black;
 }
 
+
+
 label input {
+  width: 100%;
+}
+
+input {
+  padding: 10px;
   width: 100%;
 }
 
@@ -169,8 +177,36 @@ p.flash {
   width: 265px;
 }
 
+p {
+  width: 400px;
+}
+
 @media (min-width: 760px) {
   p.flash {
     width: 35vw;
   }
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  font-size: 15pt;
+  padding: 10px;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: white;
+
+}
+
+section {
+  background-color: #8B1E41;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between
+}
+
+ul {
+  list-style: none;
 }

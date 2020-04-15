@@ -1,0 +1,11 @@
+ID,NAME,MAJOR_ID,EMAIL,PASSWORD,ROLE
+42267,Daffy Duck,1,duck@stevenscollege.edu,looney,teacher
+53114,Scooby Doo,2,doo@stevenscollege.edu,snacks,teacher
+52502,Minnie Mouse,1,mouse@stevenscollege.edu,disney,teacher
+13041,Bart Simpson,1,bsimpson041@stevenscollege.edu,iwillnot,student
+36706,Lisa Simpson,1,lsimpson706@stevenscollege.edu,saxophone,student
+70128,Charlie Brown,1,cbrown128@stevenscollege.edu,goodgrief,student
+25208,Angelica Pickles,1,apickles208@stevenscollege.edu,spoiled,student
+48175,Bugs Bunny,2,bbunny175@stevenscollege.edu,carrots,student
+50425,Fred Flintstone,2,fflintstone425@stevenscollege.edu,bowling,student
+82079,Mickey Mouse,2,mmouse079@stevenscollege.edu,steamboat,student

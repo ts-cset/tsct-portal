@@ -41,6 +41,10 @@ def create_app(test_config=None):
     # --------------
     from . import db
     db.init_app(app)
+    # Teacher Course Editor routes
+    # ---------------
+    from . import course_editor
+    app.register_blueprint(course_editor.bp)
 
     # Register Routes
     # ---------------
