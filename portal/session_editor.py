@@ -1,4 +1,4 @@
-from flask import redirect, g, url_for, render_template, session, request, Blueprint, flash
+from flask import redirect, g, url_for, render_template, session, request, Blueprint, flash, abort
 import functools
 from . import course_editor
 from . import db
@@ -16,7 +16,7 @@ def session_edit(id, sessions_id):
     session = get_session(sessions_id)
 
     if request.method == 'POST':
-        
+
         name = request.form['editName']
         times = request.form['editTimes']
         room = request.form['editRoom']
@@ -138,7 +138,7 @@ def get_session(sessions_id):
             session = cur.fetchone()
 
             if session is None:
-                abort(404, "Session id {0} doesn't exist.".format(session_id))
+                abort(404, "Session id {0} doesn't exist.".format(sessions_id))
 
             return session
 

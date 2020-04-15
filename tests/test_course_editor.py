@@ -61,6 +61,27 @@ def test_edit(client):
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
 
+# Test a few faliure edits an feedback a error
+@pytest.mark.parametrize(('editTitle', 'editCredit',  'error'),
+( ('', '4', b'Title is required'),
+('wow_a_title','', b'Credit amount required')
+))
+
+def test_edit_function_errors(client, editTitle, editCredit, error):
+
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
+
+    response = client.post('/courseEdit/180', data={'editTitle':editTitle, 'editCredit': editCredit })
+    # Make sure errors display on page
+    assert error in response.data
+
+    rv = logout(client)
+    assert b'TSCT Portal Login' in rv.data
+
+
+
 
 def test_create_course(client):
     """Tests access of the courseCreate page
@@ -82,13 +103,33 @@ def test_create_course(client):
         response_2 = client.post('/courseCreate', data={'courseTitle': 'Welding 101',
         'description': 'Learning how to use mig welder', 'courseCredits': 3, 'major_name': 2}, follow_redirects=True)
 
-        response_3 = client.get('/courseManagement')
-        assert b'<h4>Welding 101</h4>' in response_3.data
-        assert b'<h4>Software Project 2</h4>' in response_3.data
-        assert b'Course Management' in response_3.data
+        assert b'<h4>Welding 101</h4>' in response_2.data
+        assert b'<h4>Software Project 2</h4>' in response_2.data
+        assert b'Course Management' in response_2.data
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
+
+# Test a few cases of creating a course
+@pytest.mark.parametrize(('courseTitle', 'courseCredits', 'major_name', 'error'),
+( ('title_of_course', '', 3, b'Credit amount is required'),
+  ('', '3', 2, b'Title of course required')
+))
+
+def test_edit_function_errors(client, courseTitle, courseCredits, major_name, error):
+
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
+
+    response = client.post('/courseCreate', data={'courseTitle':courseTitle, 'courseCredits': courseCredits,'major_name': major_name, 'description': ''})
+    # Make sure errors display on page
+    assert error in response.data
+
+    rv = logout(client)
+    assert b'TSCT Portal Login' in rv.data
+
+
 
 def test_course_manage(client):
     """Tests the data on the page of courseManagement and access of teacher"""

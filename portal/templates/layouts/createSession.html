@@ -10,6 +10,11 @@
 
 </header>
 
+
+{% for message in get_flashed_messages() %}
+  <p class="flash">{{ message }}</p>
+{% endfor %}
+
 <section class='courseSession'><!--Start section courseSession-->
 
 

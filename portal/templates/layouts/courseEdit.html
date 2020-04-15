@@ -7,12 +7,16 @@
   <a href="{{ url_for('course_editor.course_manage')}}">Back</a>
 </header>
 
+
+{% for message in get_flashed_messages() %}
+  <p class="flash">{{ message }}</p>
+{% endfor %}
+
 <section class='edit'><!--Start of section edit-->
 
 
 <!--Form for the edit course page
 which has three inputs of data-->
-
 
 <form class="editFeature" action="{{ url_for( 'course_editor.course_edit', id=course['course_num'] ) }}" method="post">
 
@@ -30,7 +34,7 @@ which has three inputs of data-->
 
   {{ course['course_title'] }}
 
-  <input type="text" name="editTitle" required>
+  <input type="text" name="editTitle" >
 
 
 
@@ -45,7 +49,7 @@ which has three inputs of data-->
 
   {{ course['description'] }}
 
-<input type="text" name="editDesc" required>
+<input type="text" name="editDesc" >
 
 
 
@@ -58,7 +62,7 @@ which has three inputs of data-->
 
   {{ course['credits'] }}
 
-  <input type="text" name="editCredit" required>
+  <input type="text" name="editCredit">
 
 
 
