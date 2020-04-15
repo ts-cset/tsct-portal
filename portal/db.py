@@ -7,7 +7,7 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 from werkzeug.security import generate_password_hash
 
-
+#------- Get Database -----------------------------------------------------------------
 def get_db():
     """Get a PostgreSQL database connection object."""
 
@@ -30,6 +30,7 @@ def get_db():
 
     return g.db
 
+#------- Close Database -----------------------------------------------------------------
 def close_db(e=None):
     """Close the current PostgreSQL connection"""
 
@@ -41,6 +42,7 @@ def close_db(e=None):
         db.close()
 
 
+#------- Initialize Database -----------------------------------------------------------------
 def init_db():
     """Clear any existing data and create all tables."""
 
@@ -54,14 +56,7 @@ def init_db():
                 cur.execute(f.read())
 
 
-@click.command("init-db")
-@with_appcontext
-def init_db_command():
-    """CLI command to clear any existing data and create all tables."""
-    init_db()
-    click.echo("Initialized the database.")
-
-
+#------- Mock Database -----------------------------------------------------------------
 def mock_db():
     """Seed the database with mock data."""
 
@@ -72,6 +67,8 @@ def mock_db():
             with con.cursor() as cur:
                 cur.execute(f.read())
 
+
+#------- Import CSV -----------------------------------------------------------------
 def import_csv():
     """ import csv """
     file = os.path.join(os.path.dirname(__file__), os.pardir, "portal_users.csv")
@@ -87,6 +84,16 @@ def import_csv():
                     cur.execute("UPDATE users SET password = %s WHERE password = %s", (generate_password_hash(password[0]), password[0]))
 
                 sql.close()
+
+
+#------- Click Commands -----------------------------------------------------------------
+@click.command("init-db")
+@with_appcontext
+def init_db_command():
+    """CLI command to clear any existing data and create all tables."""
+    init_db()
+    click.echo("Initialized the database.")
+
 
 @click.command("import-csv")
 @with_appcontext

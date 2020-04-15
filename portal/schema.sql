@@ -19,8 +19,6 @@ CREATE TABLE users (
     major text
 );
 
-
-
 -- Courses
 CREATE TABLE courses (
   id bigserial PRIMARY KEY,
@@ -29,5 +27,6 @@ CREATE TABLE courses (
   num integer UNIQUE NOT NULL,
   description text,
   credits integer NOT NULL,
+-- One teacher owns many courses
   teacher_id bigint REFERENCES users (id)
 );

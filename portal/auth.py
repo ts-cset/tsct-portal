@@ -8,7 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 bp = Blueprint('auth', __name__)
 
-
+#------- Index -----------------------------------------------------------------
 @bp.route('/', methods=('GET', 'POST'))
 def index():
     if request.method == 'POST':
@@ -32,6 +32,7 @@ def index():
     return render_template('index.html')
 
 
+#------- Home -----------------------------------------------------------------
 @bp.route('/home', methods=('GET', 'POST'))
 def home():
     return render_template('portal/home.html')
