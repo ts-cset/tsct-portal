@@ -42,7 +42,7 @@ def course_create():
         result = isinstance(course_major, int)
 
         if not course_title:
-            error = 'Title of course required'
+            error = 'Title of course is required'
         if not course_credit:
             error = 'Credit amount is required'
         if not course_major:
@@ -86,9 +86,9 @@ def course_edit(id):
         error = None
 
         if not credit:
-            error = 'Credit amount required'
+            error = 'Credit amount is required'
         if not title:
-            error = 'Title is required'
+            error = 'Title of course is required'
 
         if error is None:
 

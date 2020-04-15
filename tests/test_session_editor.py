@@ -79,36 +79,30 @@ def test_course_sessions(client):
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
 
-#Starter Tests for roster
+def test_unique_teacher(client):
+    """Test to make sure teachers cannot view or edit other teachers courses"""
+    assert client.get('courseSessions/180').status_code == 302
 
-# def test_create_roster(client):
-#     """Tests the creation of the student roster"""
-#     assert client.get('/courseSession/180/rosterCreate/4').status_code == 302
-#
-#     rv = login(
-#         client, 'teacher@stevenscollege.edu', 'qwerty')
-#     assert b'Logged in' in rv.data
-#
-#     with client:
-#         response = client.get('courseSession/180/rosterCreate/4')
-#         assert b'<h2>Roster for session CSET-180-B<h2>' in response.data
-#         assert b'Students' in response.data
-#         assert b'Save' in response.data
-#
-#
-#
-#
-# def test_edit_roster(client):
-#     """Tests the edit of a sessions student roster"""
-#     assert client.get('/courseSession/180/rosterEdit/2').status_code == 302
-#
-#     rv = login(
-#         client, 'teacher@stevenscollege.edu', 'qwerty')
-#
-#     assert b'Logged in' in rv.data
-#
-#     with client:
-#         response = client.get('courseSession/180/rosterEdit/2')
-#         assert b'<h2>Roster for session CSET-180-A' in response.data
-#         assert b'Students' in response.data
-#         assert b'Save' in response.data
+
+    rv = login(
+        client, 'teacher1@stevenscollege.edu', 'password')
+    assert b'Logged in' in rv.data
+
+    with client:
+        response = client.get('courseSessions/180', follow_redirects=True)
+        # Ensure that it redirects to index if teacher does not own course
+        print(response.data)
+        assert b'Course Management' in response.data
+        assert b'Home' in response.data
+
+        response_2 = client.get('/createSession/course/180/', follow_redirects=True)
+
+        assert b'Course Management' in response_2.data
+
+        response_3 = client.get('/courseSessions/180/edit/21', follow_redirects=True)
+
+        assert b'Course Management' in response_3.data
+
+
+        rv = logout(client)
+        assert b'TSCT Portal Login' in rv.data

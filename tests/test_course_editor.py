@@ -63,8 +63,8 @@ def test_edit(client):
 
 # Test a few faliure edits an feedback a error
 @pytest.mark.parametrize(('editTitle', 'editCredit',  'error'),
-( ('', '4', b'Title is required'),
-('wow_a_title','', b'Credit amount required')
+( ('', '4', b'Title of course is required'),
+('wow_a_title','', b'Credit amount is required')
 ))
 
 def test_edit_function_errors(client, editTitle, editCredit, error):
@@ -74,12 +74,12 @@ def test_edit_function_errors(client, editTitle, editCredit, error):
     assert b'Logged in' in rv.data
 
     response = client.post('/courseEdit/180', data={'editTitle':editTitle, 'editCredit': editCredit })
+
     # Make sure errors display on page
     assert error in response.data
 
     rv = logout(client)
     assert b'TSCT Portal Login' in rv.data
-
 
 
 
@@ -116,16 +116,23 @@ def test_create_course(client):
 # Test a few cases of creating a course
 @pytest.mark.parametrize(('courseTitle', 'courseCredits', 'major_name', 'error'),
 ( ('title_of_course', '', 3, b'Credit amount is required'),
-  ('', '3', 2, b'Title of course required')
+  ('', '3', 2, b'Title of course is required')
 ))
 
 def test_edit_function_errors(client, courseTitle, courseCredits, major_name, error):
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
+
+
     response = client.post('/courseCreate', data={'courseTitle':courseTitle, 'courseCredits': courseCredits,'major_name': major_name, 'description': ''})
     # Make sure errors display on page
     assert error in response.data
 
     rv = logout(client)
     assert b'TSCT Portal Login' in rv.data
+
+
 
 def test_unique_teacher(client):
     """Test to make sure teachers cannot view or edit other teachers courses"""

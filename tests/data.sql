@@ -9,7 +9,7 @@ VALUES  (1,'CSET'),
 INSERT INTO users (id, name, major_id, email, password, role)
 VALUES (1,'zach fedor', 1,'teacher@stevenscollege.edu', 'qwerty',  'teacher'),
        (2,'bob phillp', 2, 'student@stevenscollege.edu', 'asdfgh',  'student'),
-       (3,'tim smith', 3,'teacher1@stevengscollege.edu', 'password','teacher'),
+       (3,'tim smith', 3,'teacher1@stevenscollege.edu', 'password','teacher'),
        (4,'Ms.Sullivan', 4,'teacher2@stevenscollege.edu', 'PASSWORD', 'teacher');
 
 INSERT INTO courses (course_num, course_title, description, credits, teacher_id, major_id)

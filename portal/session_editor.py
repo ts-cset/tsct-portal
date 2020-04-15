@@ -14,6 +14,8 @@ def session_edit(id, sessions_id):
     specific course"""
     course = course_editor.get_course(id)
     session = get_session(sessions_id)
+    if g.user['id'] != course['teacher_id']:
+        return redirect(url_for('index'))
 
     if request.method == 'POST':
 
@@ -55,6 +57,8 @@ def session_create(id):
     specific course"""
     course = course_editor.get_course(id)
     students = get_students()
+    if g.user['id'] != course['teacher_id']:
+        return redirect(url_for('index'))
 
 
 
@@ -102,6 +106,8 @@ def session_manage(id):
     a specific course"""
 
     course = course_editor.get_course(id)
+    if g.user['id'] != course['teacher_id']:
+        return redirect(url_for('index'))
 
     cur = db.get_db().cursor()
     cur.execute('SELECT * FROM sessions WHERE course_id = %s',
