@@ -11,22 +11,35 @@
   <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
   <p>Description: {{ course['description'] }}</p>
   </li>
-  {% endfor %}
+
 </ul>
 <h3>Session</h3>
 <ul>
   {% for session in sessions %}
   <li>
   <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
+
   </li>
+
+</ul>
+<h4>Assignments</h4>
+<a href="{{ url_for('assignments.create_assignment', session_id=session['id']) }}"><input type="button" value="Create Assignments"></a>
+
+<ul>
+  {% for assignment in assignments %}
+  <p>Assignment: {{ assignment['name'] }}</p>
+  <p> Due: {{ assignment['date'] }}</p>
+  <a href="{{ url_for('assignments.view_assignment', course_id=course['id'], session_id=session['id'], assignment_id=assignment['id']) }}"><input type="button" value="View Assignment"></a>
   {% endfor %}
 </ul>
+{% endfor %}
 <h4>Roster</h4>
 <ul>
   {% for roster in rosters %}
   <li>
   <p>{{ roster['users_id'] }}</p>
   </li>
+  {% endfor %}
   {% endfor %}
 </ul>
 {% endif %}

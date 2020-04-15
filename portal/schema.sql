@@ -5,6 +5,7 @@
 -- command in your terminal.
 
 -- Drop existing tables
+DROP TABLE IF EXISTS assignments;
 DROP TABLE IF EXISTS roster;
 DROP TABLE IF EXISTS session;
 DROP TABLE IF EXISTS courses;
@@ -45,3 +46,28 @@ CREATE TABLE roster (
   users_id bigint NOT NULL REFERENCES users (id),
   session_id bigint NOT NULL REFERENCES session (id)
 );
+
+--assignments
+CREATE TABLE assignments (
+  id bigserial PRIMARY KEY,
+  session_id bigint NOT NULL REFERENCES session (id),
+  name text NOT NULL,
+  description text NOT NULL,
+  date DATE NOT NULL,
+  answer text,
+  points bigint NOT NULL
+
+);
+
+--assignments and session join table
+--CREATE TABLE assignment_sessions (
+  --id bigserial PRIMARY KEY,
+  --assignments_id bigint NOT NULL REFERENCES assignments (id),
+  --session_id bigint NOT NULL REFERENCES session (id)
+--);
+
+--CREATE TABLE student_assignments (
+  --id bigserial PRIMARY KEY,
+  --users_id bigint NOT NULL REFERENCES users (id),
+  --assignments_id bigint NOT NULL REFERENCES assignments (id)
+--)

@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+{% if g.users['role'] == 'teacher' %}
+<h2>Course</h2>
+<ul>
+  {% for course in courses %}
+  <li>
+  <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
+  <p>Description: {{ course['description'] }}</p>
+  </li>
+  {% endfor %}
+</ul>
+<h3>Session</h3>
+<ul>
+  {% for session in sessions %}
+  <li>
+  <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
+  </li>
+  {% endfor %}
+</ul>
+<h4>Assignment</h4>
+<ul>
+  {% for assignment in assignments %}
+  <li>
+  <p>Name: {{ assignment['name'] }}</p>
+  <p>Due Date: {{ assignment['date'] }}</p>
+  <p>Description: {{ assignment['description'] }}</p>
+  <p>Points: {{ assignment['points'] }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
