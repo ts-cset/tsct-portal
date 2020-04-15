@@ -85,15 +85,29 @@ label input {
   margin-right: 20px;
 }
 
-.namebar-item-time {
-}
-
 .namebar-logout {
-  font-size: 16px;
+  font-size: 18px;
   background-color: lightgrey;
   color: black;
   text-decoration: none;
-  padding: 3px;
+  padding: 4px;
+}
+.return {
+  background-color: lightgrey;
+  border: 1px solid darkgrey;
+  font-size: 18px;
+  font-variant: small-caps;
+  margin-left: 10px;
+}
+.home-button {
+  color: black;
+  background-color: lightgrey;
+  border: 1px solid darkgrey;
+  margin-left: 20px;
+  padding: 0px 2px 1.5px 2px;
+  font-size: 18px;
+  font-variant: small-caps;
+  text-decoration: none;
 }
 
 .teacher_forms {
@@ -101,6 +115,7 @@ label input {
   flex-direction: column;
   font-size: 24px;
   font-weight: bold;
+  margin-top: 30px;
   text-align: left;
   align-items:center;
 }
@@ -190,7 +205,7 @@ label input {
   width: 30%;
   border: 1px solid black;
   background-color: lightgrey;
-  padding: 5px 5px 0 5px;
+  padding: 9px 0 0 5px;
   align-items: center;
 }
 .about-course-form {
@@ -230,4 +245,8 @@ label input {
   width: 15%;
   margin: 10px;
   padding: 5px;
+}
+
+.link-something {
+  display: block;
 }
