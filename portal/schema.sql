@@ -5,6 +5,7 @@
 -- command in your terminal.
 
 -- Drop existing tables
+DROP TABLE IF EXISTS assignments;
 DROP TABLE IF EXISTS roster;
 DROP TABLE IF EXISTS session;
 DROP TABLE IF EXISTS courses;
@@ -53,9 +54,9 @@ CREATE TABLE assignments (
   name text NOT NULL,
   description text NOT NULL,
   date DATE NOT NULL,
-  answer text, 
+  answer text,
   points bigint NOT NULL
-  
+
 );
 
 --assignments and session join table

@@ -21,6 +21,7 @@ def test_view_session(client):
         '/portal/sessions/1/create-session', data={'name': 'B', 'times':'Tuesday', 'students':43784}
     )
     response = client.get('/portal/sessions/1/view-session/1')
+    assert b'Create Assignments' in response.data
     assert b'Tuesday' in response.data
     assert b'B' in response.data
     assert b'43784' in response.data
