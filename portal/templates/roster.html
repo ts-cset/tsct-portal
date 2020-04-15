@@ -17,6 +17,12 @@
   </ul>
 </article>
 
+{% for message in get_flashed_messages() %}
+
+  <p class="flash">{{ message}}</p>
+
+{% endfor %}
+
 <form class="addStudent" action="{{ url_for('roster.display_roster') }}" method="post">
 
   <label for="email">Enter student email:

@@ -6,11 +6,12 @@ VALUES  (1,'CSET'),
         (3,'CNSA'),
         (4,'ENG');
 
-INSERT INTO users (id,name, major_id, email, password, role)
-VALUES (1,'zach fedor', 1,'teacher@stevenscollege.edu', 'qwerty',  'teacher'),
-       (2,'bob phillp', 2, 'student@stevenscollege.edu', 'asdfgh',  'student'),
-       (3,'tim smith', 3,'teacher1@stevengscollege.edu', 'password','teacher'),
-       (4,'Ms.Sullivan', 4,'teacher2@stevenscollege.edu', 'PASSWORD', 'teacher');
+INSERT INTO users (name, major_id, email, password, role)
+VALUES ('zach fedor', 1,'teacher@stevenscollege.edu', 'qwerty',  'teacher'),
+       ('bob phillp', 2, 'student@stevenscollege.edu', 'asdfgh',  'student'),
+       ('tim smith', 3,'teacher1@stevengscollege.edu', 'password','teacher'),
+       ('Ms.Sullivan', 4,'teacher2@stevenscollege.edu', 'PASSWORD', 'teacher'),
+       ('Marisa Kirisame', 3, 'student2@stevenscollege.edu', '123456789', 'student');
 
 INSERT INTO courses (course_num, course_title, description, credits, teacher_id, major_id)
 VALUES (180, 'Software Project 2', 'Recreation of the portal', 3, 1, 1),

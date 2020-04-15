@@ -8,20 +8,6 @@ bp = Blueprint("roster", __name__)
 @bp.route('/roster', methods=('GET', 'POST'))
 def display_roster():
 
-    #Test variables
-    course = { 'name': 'CSET 180' }
-    session = { 'name': 'A' }
-    students = [
-        {
-            'name': 'John Smith',
-            'email': 'smithj@stevenscollege.edu'
-        },
-        {
-            'name': 'Example McTest',
-            'email': 'example@stevenscollege.edu'
-        }
-    ]
-
     if request.method == 'POST':
 
         email = request.form['email']
@@ -37,22 +23,24 @@ def display_roster():
 
                 user = cur.fetchone()
 
-                # Check if the student is already in the current session
+
+                # TODO: Check if the student is already in the current session
 
         # If there is no student with the entered email create an error message
+
         if user == None:
 
             error = 'No student found'
 
         # If the selected user is not a student, create an error message
-        if user['role'] != 'student':
+        elif user['role'] != 'student':
 
-            error = f'{user['name']} is not a student'
+            error = f'{user["name"]} is not a student'
 
         # If the student is already in the session create an error message
-        if already_enrolled:
+        elif already_enrolled:
 
-            error = f'{user['name']} is already enrolled in this session.'
+            error = f'{user["name"]} is already enrolled in this session.'
 
         if error == None:
 
@@ -64,4 +52,4 @@ def display_roster():
             flash(error)
 
 
-    return render_template('roster.html', course=course, session=session, students=students)
+    return render_template('roster.html', course={'name': 'course'}, session={'name': 'session'}, students=[{'name': 'bob', 'email': 'email'}])

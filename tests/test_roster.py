@@ -14,11 +14,11 @@ def test_edit_roster(client):
 
 @pytest.mark.parametrize(('email', 'message'), (
     ('incorrect@email.com', b'No student found'),
-    ('teacher@stevenscollege.edu', b'Teacher is not a student'),
-    ('student2@stevenscollege.edu', b'Student2 is already registered')
+    ('teacher@stevenscollege.edu', b'zach fedor is not a student'),
+    ('student2@stevenscollege.edu', b'Marisa Kirisame is already registered')
 ))
 def test_roster_validation(client, email, message):
 
     response = client.post('/roster', data={'email': email })
 
-    assert message in resposne.data
+    assert message in response.data
