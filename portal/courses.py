@@ -6,6 +6,7 @@ from portal.db import get_db
 
 bp = Blueprint('courses', __name__)
 
+#------- Course Page -----------------------------------------------------------------
 @bp.route('/courses')
 def courses():
     """View for the courses"""
@@ -22,6 +23,8 @@ def courses():
     else: # if not a teacher, return to home page
         return render_template('portal/home.html')
 
+
+#------- Create Courses -----------------------------------------------------------------
 @bp.route('/createcourse', methods=("GET", "POST"))
 def courses_create():
     """View for creating a course"""
@@ -76,6 +79,8 @@ def courses_delete():
             cur.close()
             return redirect(url_for('courses.courses'))
 
+
+#------- Edit Courses -----------------------------------------------------------------
 @bp.route('/<int:cour_id>/editcourse', methods=("GET", "POST"))
 def courses_edit(cour_id):
     """Edits the course name/info"""
