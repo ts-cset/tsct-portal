@@ -7,4 +7,5 @@ VALUES ('teacher@stevenscollege.edu', 'pbkdf2:sha256:150000$71PbcIFv$ffc17b1d44f
 -- courses
 INSERT INTO courses (major, name, num, description, credits, teacher_id)
 VALUES ('CSET', 'Software Project II', 180, 'blaaah', 3, 1),
+       ('CSET', 'Security and Ethics', 170, 'delete me', 3, 1),
        ('CSET', 'Web Development', 160, 'web dev lol', 3, 2);

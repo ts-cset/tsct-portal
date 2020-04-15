@@ -63,8 +63,8 @@ def test_delete_course(app, client, auth):
 
         auth.teacher_login()
 
-        response = client.post('/deletecourse', data={'course_to_delete': 1})
-        cur.execute("SELECT * FROM courses WHERE name = 'Software Project II';")
+        response = client.post('/deletecourse', data={'course_to_delete': 2})
+        cur.execute("SELECT * FROM courses WHERE name = 'Security and Ethics';")
         check = cur.fetchone()
 
         assert check is None
