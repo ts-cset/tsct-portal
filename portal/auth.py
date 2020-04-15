@@ -40,7 +40,7 @@ def login():
 
         flash(error)
 
-    return render_template('index.html')
+    return render_template('layouts/index.html')
 
 
 @bp.route('/logout')
@@ -62,3 +62,21 @@ def load_logged_in_user():
         )
         g.user = cur.fetchone()
         cur.close()
+
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+    return wrapped_view
+
+
+def login_role(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user['role'] != 'teacher':
+            return redirect(url_for('portal.student'))
+        return view(**kwargs)
+    return wrapped_view

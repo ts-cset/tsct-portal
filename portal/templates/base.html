@@ -26,10 +26,22 @@
         hours = hours ? hours : 12;var minutes = myDate.getMinutes();
         minutes = minutes < 10 ? '0' + minutes : minutes;var myTime = hours + " " + " : " + minutes+ ampm
         document.write(myTime);
+        function goBack() {
+          window.history.back()
+        }
     </script> </li>
       </div>
 
       <h1>{{ self.title() }}</h1>
+      {% if g.user %}
+      <button class="return" onclick="goBack()">previous</button>
+        {% if g.user['role'] == 'teacher' %}
+          <a class="home-button" href="{{ url_for('portal.home') }}">home</a>
+        {% else %}
+          <a class="home-button" href="{{ url_for('portal.student') }}">student home</a>
+        {% endif %}
+      </div>
+      {% endif %}
     </header>
 
     <main>
@@ -39,6 +51,7 @@
       <p class="flash">{{ message }}</p>
       {% endfor %}
     <footer>
+
       <h2>Thaddeus Stevens College of Technology</h2>
       <address>
         <p>750 E King St</p>

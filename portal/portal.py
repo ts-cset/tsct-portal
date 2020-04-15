@@ -1,5 +1,7 @@
 from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
+
 from . import db
+from portal.auth import login_required, login_role
 
 bp = Blueprint("portal", __name__)
 
@@ -10,6 +12,8 @@ def index():
 
 
 @bp.route("/home", methods=['GET', 'POST'])
+@login_role
+@login_required
 def home():
 
     user_id = session['user_id']
@@ -42,6 +46,8 @@ def get_course(id, check_teacher=True):
 
 
 @bp.route('/<int:id>/view', methods=('GET', 'POST'))
+@login_role
+@login_required
 def view(id):
     """Single page view of course"""
     cur = db.get_db().cursor()
@@ -54,6 +60,8 @@ def view(id):
 
 
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))
+@login_role
+@login_required
 def edit(id):
     """Edits the description of the courses"""
     course = get_course(id)
@@ -79,6 +87,8 @@ def edit(id):
 
 
 @bp.route("/<int:id>/delete", methods=["POST", ])
+@login_role
+@login_required
 def delete(id):
     """delete unwanted tasks"""
     course = get_course(id)
@@ -92,11 +102,14 @@ def delete(id):
 
 
 @bp.route("/student")
+@login_required
 def student():
     return render_template("layouts/student-home.html")
 
 
 @bp.route("/create", methods=['GET', 'POST'])
+@login_role
+@login_required
 def create():
 
     cur = db.get_db().cursor()
