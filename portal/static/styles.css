@@ -10,6 +10,7 @@
 html {
   font-family: 'Lato', Helvetica, Arial, sans-serif;
   font-size: 18px;
+
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -27,6 +28,10 @@ body {
   flex-direction: column;
   min-height: 100vh;
   padding: 1rem;
+  background-color: #a6093d;
+  color: #ffffff;
+
+
 }
 
 @media (min-width: 760px) {
@@ -59,5 +64,40 @@ label {
 label input {
   width: 100%;
 }
+/**
+*header
+*/
+header {
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+}
+header h1{
+  display: inline;
+  padding-left: 1px;
+  color: #a6093d;
+}
 
+header nav ul {
+margin: 0;
+list-style: none;
+}
 
+header nav li {
+  display: inline-block;
+  margin-left: 70px;
+  padding-top: 10px
+  position: relative;
+}
+
+header nav a {
+color: #a6093d;
+text-decoration: none;
+text-transform: uppercase;
+
+}
+
+header p{
+  color: #a6093d;
+  display: inline-block;
+}

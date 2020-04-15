@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {% block head %}
+
     <title>{% block title %}{% endblock %}</title>
 
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/latest/normalize.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Crimson+Text|Lato:400,400i,700" />
-    <link rel="stylesheet" href="static/styles.css" type="text/css" />
-    {% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
   </head>
   <body>
     <header>
@@ -18,13 +18,17 @@
       <nav>
         <ul>
           {% if g.users %}
-            <li><span>{{ g.users['email'] }}</span>
+            <li><p>{{ g.users['email'] }}</p>
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+          {% endif %}
+            <li><a href="{{ url_for('index') }}">Home</a>
+          {% if g.users %}
             <li><a href="{{ url_for('portal.userpage') }}">User Page</a>
+            <li><a href="{{ url_for('courses.courses') }}">Courses</a>
           {% else %}
             <li><a href="{{ url_for('auth.login') }}">Log In</a>
           {% endif %}
-            <li><a href="{{ url_for('index') }}">Home</a>
+
         </ul>
       </nav>
     </header>
