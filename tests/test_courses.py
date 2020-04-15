@@ -55,3 +55,28 @@ def test_edit_course(app, client, auth):
         courses_resp = client.get('/courses')
 
         assert b'This is a test' in courses_resp.data
+def test_delete_course(app, client, auth):
+    with app.app_context():
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.teacher_login()
+
+        response = client.post('/deletecourse', data={'course_to_delete': 1})
+        cur.execute("SELECT * FROM courses WHERE name = 'Software Project II';")
+        check = cur.fetchone()
+
+        assert check is None
+def test_course_view(app, client, auth):
+    with app.app_context():
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.teacher_login()
+
+        response = client.get('/1/viewcourse')
+
+        assert b'Software Project II' in response.data
+        assert b'blaaah' in response.data
