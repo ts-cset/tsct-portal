@@ -20,11 +20,12 @@ VALUES (180, 'Software Project 2', 'Recreation of the portal', 3, 1, 1),
          (111, 'Tig Welding Basics', 'Learning how to operate and use the TIG welder',
          3, 4, 3);
 
-INSERT INTO sessions (times, name, room_number, location, course_id)
-VALUES ('We meet every Tues-Thurs at 1:30 to 2:45', 'ENG-216 D',
+INSERT INTO sessions (id, times, name, room_number, location, course_id)
+VALUES (22, 'We meet every Tues-Thurs at 1:30 to 2:45', 'ENG-216-D',
 307, 'Main campus in Mellor', 216),
-      ('We meet every day at Mon-Fri at 12:00-4:30 except on Wends which we start
-        at 12:30', '180', 103, 'GreenField Campus down the hall three doors then
+      (21, 'We meet every day at Mon-Fri at 12:00-4:30 except on Wends which we start
+        at 12:30', 'CSET-180-A', '103', 'GreenField Campus down the hall three doors then
         on your right.', 180 ),
-      ('We meet every Wends-Fri ath 12:00 - 3:30', '111', 108,
-      'GreenField campus our room is right by the vending machine', 111);
+      (34, 'We meet every Wends-Fri at 12:00 - 3:30', 'TIG-A', 108,
+      'GreenField campus our room is right by the vending machine', 111),
+      (42, 'We meet every tues-thurs at 12-4', 'CSET-180-B', '103', 'Greenfield', 180 );
