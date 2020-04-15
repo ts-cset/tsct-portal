@@ -17,11 +17,8 @@ def test_view_assignment(client):
     response = client.post(
         '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
     )
-    response = client.post(
-        '/portal/assignments/1/create-assignment', data={'name': 'Homework', 'date':'2000-06-06', 'description':'Do homework','points':'10'}
-    )
-    response = client.get('/portal/assignments/1/1/view-assignment/2')
+    response = client.get('/portal/assignments/1/1/view-assignment/1')
     assert b'Homework' in response.data
-    assert b'2000-06-06' in response.data
-    assert b'Do homework' in response.data
-    assert b'10' in response.data
+    assert b'2000-12-31' in response.data
+    assert b'homework' in response.data
+    assert b'5' in response.data
