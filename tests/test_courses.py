@@ -63,7 +63,7 @@ def test_delete_course(app, client, auth):
 
         auth.teacher_login()
 
-        response = client.post('/deletecourse', data={'course_to_delete': 2})
+        response = client.post('/deletecourse', data={'course_to_delete': 4})
         cur.execute("SELECT * FROM courses WHERE name = 'Security and Ethics';")
         check = cur.fetchone()
 

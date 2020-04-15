@@ -10,9 +10,9 @@ VALUES (1, 'teacher@stevenscollege.edu', 'pbkdf2:sha256:150000$71PbcIFv$ffc17b1d
 -- Courses
 INSERT INTO courses (major, name, num, description, credits, teacher_id)
 VALUES ('CSET', 'Software Project II', 180, 'blaaah', 3, 1),
-       ('CSET', 'Security and Ethics', 170, 'delete me', 3, 1),
        ('CSET', 'Web Development', 160, 'web dev lol', 3, 2),
-       ('Welding', 'Metal', 105, 'weld', 3, 42267);
+       ('Welding', 'Metal', 105, 'weld', 3, 42267),
+       ('CSET', 'Security and Ethics', 170, 'delete me', 3, 1);
 
 -- Sessions
 INSERT INTO sessions (course_id, teacher_id, section, meeting_time, location)
