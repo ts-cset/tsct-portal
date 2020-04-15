@@ -39,6 +39,11 @@ def test_creation(client, auth):
     #Asserts that it's switched over to the Course Selection
     assert 'http://localhost/teacher/courses' == response.headers['Location']
 
+def test_sessions(client, auth):
+    auth.teacher_login()
+    assert client.get('/teacher/session').status_code == 200
+
+
 def test_make_session(client, auth):
     auth.teacher_login()
     response = client.get('teacher/session/create')
@@ -106,10 +111,12 @@ def test_session_remove(client, auth):
         data={1:1}
     )
     # The added student can be removed
-    response = client.post(
+    client.post(
         'teacher/session/remove',
         data={1:1}
     )
+
+    response = client.get('/teacher/session/create')
     # In the test case, the roster for this session should now be empty
     assert b'Remove from Session' not in response.data
 
@@ -140,7 +147,7 @@ def test_session_submit(client, auth):
         '/teacher/session/submit',
         data={'session_name': 'A', 'meeting_days': 'MTWThF'}
     )
-    assert 'http://localhost/teacher/home' == response.headers['Location']
+    assert 'http://localhost/teacher/session' == response.headers['Location']
 
 def test_session_cancel(client, auth):
     auth.teacher_login()
@@ -163,3 +170,44 @@ def test_session_cancel(client, auth):
     # redirected to the teacher home
     response = client.get('/teacher/session/create')
     assert 'http://localhost/teacher/home' == response.headers['Location']
+
+def test_session_edit(client, auth, app):
+    auth.teacher_login()
+
+    # If the user tries to visit the edit page without an edit in progress,
+    # They should be redirected to the teacher home view
+    response = client.get('/teacher/session/edit')
+    assert 'http://localhost/teacher/home' == response.headers['Location']
+
+    # The user should be able to begin a new editing session by posting a session code
+    response = client.post(
+        '/teacher/session/edit',
+        data={'edit':1}
+    )
+    # They should then see the editing page
+    assert b'Edit a Session' in response.data
+
+def test_edit_mode(client, auth):
+    auth.teacher_login()
+
+    # A user begins editing a post
+    client.post(
+        '/teacher/session/edit',
+        data={'edit':1}
+    )
+
+    # Adding and removing from the roster, canceling, and submitting
+    # should behave differently when an edit is in progress
+
+    response = client.get('/teacher/session/add')
+    assert 'http://localhost/teacher/session/edit' == response.headers['Location']
+
+    response = client.get('/teacher/session/remove')
+    assert 'http://localhost/teacher/session/edit' == response.headers['Location']
+
+    response = client.get('/teacher/session/submit')
+    assert 'http://localhost/teacher/session/edit' == response.headers['Location']
+
+    client.get('/teacher/session/cancel')
+    response = client.get('/teacher/home')
+    assert b'Session edit canceled' in response.data

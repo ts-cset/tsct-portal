@@ -21,6 +21,15 @@ def courses():
             with con.cursor() as cur:
                 for item in request.form:
                     cur.execute("""
+                        DELETE FROM roster
+                        WHERE session_id in (SELECT id FROM sessions
+                                             WHERE course_id = %s)
+                    """, (request.form[item],))
+                    cur.execute("""
+                        DELETE FROM sessions
+                        WHERE course_id = %s
+                    """, (request.form[item],))
+                    cur.execute("""
                         DELETE FROM courses
                         WHERE id = %s
                     """, (request.form[item],))
@@ -56,6 +65,21 @@ def create():
         return redirect(url_for('teacher.courses'))
     return render_template('course-creation.html')
 
+@bp.route('/session')
+@login_required
+@admin
+def sessions():
+    with db.get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("""
+                SELECT s.id, s.session_name, c.course_code, c.course_name, c.major
+                FROM sessions s JOIN courses c
+                ON s.course_id = c.id
+                WHERE c.teacher_id = %s
+            """, (g.user['id'],))
+            sessions = cur.fetchall()
+    return render_template('sessions.html', sessions=sessions)
+
 
 @bp.route('/session/create', methods=('GET', 'POST'))
 @login_required
@@ -88,13 +112,13 @@ def make_session():
 
                 cur.execute("""
                     SELECT * FROM users
-                    WHERE major = %s AND role = 'student'
-                """, (course['major'],))
+                    WHERE major = %s AND role = 'student' AND id NOT IN (SELECT student_id FROM roster WHERE session_id = %s)
+                """, (course['major'], session['class_session']))
 
                 students = cur.fetchall()
 
                 cur.execute("""
-                    SELECT u.last_name, u.first_name FROM roster r JOIN users u
+                    SELECT u.last_name, u.first_name, u.id FROM roster r JOIN users u
                     ON r.student_id = u.id
                     WHERE r.session_id = %s
                 """, (session['class_session'],))
@@ -118,7 +142,10 @@ def session_add():
                             INSERT INTO roster (student_id, session_id)
                             VALUES (%s, %s)
                         """, (id, session['class_session']))
-    return redirect(url_for('teacher.make_session'))
+    if not session.get('edit'):
+        return redirect(url_for('teacher.make_session'))
+    else:
+        return redirect(url_for('teacher.session_edit'))
 
 @bp.route('/session/remove', methods=('GET', 'POST'))
 @login_required
@@ -133,7 +160,10 @@ def session_remove():
                             DELETE FROM roster
                             WHERE student_id = %s and session_id = %s
                         """, (request.form[item], session['class_session']))
-    return redirect(url_for('teacher.make_session'))
+    if not session.get('edit'):
+        return redirect(url_for('teacher.make_session'))
+    else:
+        return redirect(url_for('teacher.session_edit'))
 
 @bp.route('/session/submit', methods=('GET', 'POST'))
 @login_required
@@ -152,24 +182,77 @@ def session_submit():
                     """, (session_name, meeting_days, session['class_session']))
             session.pop('class_session', None)
             session.pop('course_id', None)
-            return redirect(url_for('teacher.home'))
-    return redirect(url_for('teacher.make_session'))
+            session.pop('edit', None)
+            return redirect(url_for('teacher.sessions'))
+    if not session.get('edit'):
+        return redirect(url_for('teacher.make_session'))
+    else:
+        return redirect(url_for('teacher.session_edit'))
 
 @bp.route('/session/cancel')
 @login_required
 @admin
 def session_cancel():
     if session.get('class_session'):
+        if not session.get('edit'):
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("""
+                        DELETE FROM roster
+                        WHERE session_id = %s
+                    """, (session['class_session'],))
+                    cur.execute("""
+                        DELETE FROM sessions
+                        WHERE id = %s
+                    """, (session['class_session'],))
+            session.pop('class_session', None)
+            session.pop('course_id', None)
+            error = "Session creation canceled"
+        else:
+            session.pop('class_session', None)
+            session.pop('course_id', None)
+            session.pop('edit', None)
+            error = "Session edit canceled"
+    else:
+        error = "Not able to cancel session"
+
+    flash(error)
+
+    return redirect(url_for('teacher.home'))
+
+@bp.route('/session/edit', methods=('GET', 'POST'))
+@login_required
+@admin
+def session_edit():
+    if request.method == "POST":
+        session['class_session'] = request.form['edit']
+        session['edit'] = True
+
+    if session.get('edit'):
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
-                    DELETE FROM roster
-                    WHERE session_id = %s
-                """, (session['class_session'],))
-                cur.execute("""
-                    DELETE FROM sessions
+                    SELECT * FROM sessions
                     WHERE id = %s
                 """, (session['class_session'],))
-        session.pop('class_session', None)
-        session.pop('course_id', None)
+                session_info = cur.fetchone()
+
+                cur.execute("""
+                    SELECT last_name, first_name, id FROM users
+                    WHERE role = 'student' AND major IN (SELECT major from courses
+                        WHERE id IN (SELECT course_id FROM sessions where id = %s))
+                    AND id NOT IN (SELECT student_id FROM roster WHERE session_id = %s)
+                """, (session['class_session'], session['class_session']))
+                students = cur.fetchall()
+
+                cur.execute("""
+                    SELECT u.last_name, u.first_name, u.id FROM roster r JOIN users u
+                    ON r.student_id = u.id
+                    WHERE r.session_id = %s
+                """, (session['class_session'],))
+
+                roster = cur.fetchall()
+
+        return render_template('edit-sessions.html', session_info=session_info, students=students, roster=roster)
+
     return redirect(url_for('teacher.home'))

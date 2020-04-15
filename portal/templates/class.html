@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Course Selection {% endblock %}
+{% block title %}Course Selection{% endblock %}
 
 {% block content %}
     <section>
@@ -16,7 +16,11 @@
             </li>
           {% endfor %}
         </ul>
-        <button type="submit">Delete Selected</button>
+        {% if courses %}
+          <button type="submit">Delete Selected</button>
+        {% else %}
+          <p>No courses to show</p>
+        {% endif %}
       </form>
     </section>
     <a href="{{ url_for('teacher.create') }}">Create a Course</a>
