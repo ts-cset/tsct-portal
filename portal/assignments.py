@@ -41,9 +41,9 @@ def create_assignment(session_id):
         cur = db.get_db().cursor()
         cur.execute("""
         SELECT * FROM assignments
-        WHERE name = %s;
+        WHERE name = %s and session_id = %s;
         """,
-        (name,))
+        (name, session_id))
         assignment = cur.fetchone()
 
         if assignment != None:
@@ -56,8 +56,8 @@ def create_assignment(session_id):
              (session_id, name, date, description, points))
             db.get_db().commit()
             cur.close()
-            
-            
+
+
             return redirect(url_for('portal.userpage'))
         else:
             return redirect(url_for('assignments.create_assignment', session_id=session_id))
