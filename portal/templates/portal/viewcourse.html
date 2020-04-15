@@ -5,15 +5,15 @@
 {% block content %}
 <h1>Viewing: {{ course['name'] }}</h1>
 
-<div class="buttonGroup">
-  <a class="fakebutton" href="{{ url_for('courses.courses_edit', cour_id=course.id) }}">Edit Course</a>
+<div class="button-group">
+  <a class="fake-button" href="{{ url_for('courses.courses_edit', cour_id=course.id) }}">Edit Course</a>
   <form class="button" action="{{ url_for('courses.courses_delete') }}" method="post">
-    <button type="submit" class="fakebutton" name="course_to_delete" value="{{ course.id }}">Delete Course</button>
+    <button type="submit" class="fake-button" name="course_to_delete" value="{{ course.id }}">Delete Course</button>
   </form>
 </div>
 
 
-<ul>
+<ul class="course-list">
   <li>Course Description:</li>
     <p>{{ course['description'] }}</p>
   <li>Course Number:</li>

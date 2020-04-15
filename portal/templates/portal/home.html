@@ -5,7 +5,7 @@
 {% block content %}
 
 {% if session['user'][4] == 'teacher' %}
-<a href="{{ url_for('courses.courses') }}">Courses</a>
+<a class="fake-button" href="{{ url_for('courses.courses') }}">Courses</a>
 {% endif %}
 <p>welcome {{session['user'][3]}} to portal you are a {{session['user'][4]}}</p>
 

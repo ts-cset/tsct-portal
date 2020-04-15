@@ -22,6 +22,7 @@ h1, h2, h3, h4, h5, h6 {
  * Layout
  */
 body {
+  background-color: #8b1e41;
   justify-content: space-between;
   display: flex;
   flex-direction: column;
@@ -29,6 +30,19 @@ body {
   padding: 1rem;
 }
 
+header, footer {
+  background-color: white;
+  border: #8b1e41 1vw solid;
+  border-radius: 1em;
+  padding-left: 1em;
+}
+
+main {
+  background-color: white;
+  border: #8b1e41 1vw solid;
+  border-radius: 1em;
+  padding: 1em;
+}
 @media (min-width: 760px) {
   footer {
     display: flex;
@@ -40,7 +54,7 @@ body {
   }
 }
 
-.fakebutton {
+.fake-button {
   background: white;
   border: solid grey 2px;
   border-radius: 1em;
@@ -48,10 +62,11 @@ body {
   text-decoration: none;
   color: black;
   box-shadow: 1px 2px 1px 1px lightgrey;
+  text-align: center;
 }
 
-.buttonGroup {
-  display: flex;
+.button-group {
+  display: inline-flex;
   align-items: center;
 }
 
@@ -61,11 +76,16 @@ body {
   border: none;
   margin: 12px;
 }
+
+.course-list {
+  list-style-type: none;
+  padding-left: 0px;
+}
+
 /**
  * Forms
  */
 form {
-  border: 1px solid black;
   margin: 0 auto;
   padding: 1rem;
   width: 35vw;

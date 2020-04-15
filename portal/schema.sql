@@ -26,7 +26,7 @@ CREATE TABLE courses (
   id bigserial PRIMARY KEY,
   major text NOT NULL,
   name text UNIQUE NOT NULL,
-  num integer UNIQUE NOT NULL,
+  num integer NOT NULL,
   description text,
   credits integer NOT NULL,
   teacher_id bigint REFERENCES users (id)
