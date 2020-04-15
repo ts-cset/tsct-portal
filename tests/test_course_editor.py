@@ -110,6 +110,9 @@ def test_create_course(client):
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
 
+
+
+
 # Test a few cases of creating a course
 @pytest.mark.parametrize(('courseTitle', 'courseCredits', 'major_name', 'error'),
 ( ('title_of_course', '', 3, b'Credit amount is required'),
@@ -117,11 +120,6 @@ def test_create_course(client):
 ))
 
 def test_edit_function_errors(client, courseTitle, courseCredits, major_name, error):
-
-    rv = login(
-        client, 'teacher@stevenscollege.edu', 'qwerty')
-    assert b'Logged in' in rv.data
-
     response = client.post('/courseCreate', data={'courseTitle':courseTitle, 'courseCredits': courseCredits,'major_name': major_name, 'description': ''})
     # Make sure errors display on page
     assert error in response.data
@@ -129,6 +127,23 @@ def test_edit_function_errors(client, courseTitle, courseCredits, major_name, er
     rv = logout(client)
     assert b'TSCT Portal Login' in rv.data
 
+def test_unique_teacher(client):
+    """Test to make sure teachers cannot view or edit other teachers courses"""
+    assert client.get('courseEdit/216').status_code == 302
+
+
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
+
+    with client:
+        response = client.get('courseEdit/216', follow_redirects=True)
+        # Ensure that it redirects to index if teacher does not own course
+        assert b'Course Management' in response.data
+        assert b'Home' in response.data
+
+    rv = logout(client)
+    assert b'TSCT Portal Login' in rv.data
 
 
 def test_course_manage(client):

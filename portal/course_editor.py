@@ -71,10 +71,13 @@ def course_create():
 @bp.route("/courseEdit/<int:id>", methods=('GET', 'POST'))
 @login_required
 @teacher_required
+
+
 def course_edit(id):
     """Allows teachers to edit the course"""
     course = get_course(id)
-
+    if g.user['id'] != course['teacher_id']:
+        return redirect(url_for('index'))
     if request.method == "POST":
 
         credit = request.form['editCredit']
@@ -115,7 +118,7 @@ def get_course(id):
         with con.cursor() as cur:
 
             cur.execute(
-                'SELECT course_num, credits, description, course_title'
+                'SELECT course_num, credits, description, course_title, teacher_id'
                 ' FROM courses WHERE course_num = %s',
                 (id,))
 
