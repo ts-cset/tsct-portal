@@ -53,9 +53,10 @@ course_id bigint REFERENCES courses (course_num)
 CREATE TABLE assignments (
   id bigserial PRIMARY KEY,
   sessions_id bigint REFERENCES sessions (id),
+  course_id bigint REFERENCES courses (course_num),
   assign_name text NOT NULL,
   description text NOT NULL,
-  points integer NOT NULL
+  points text NOT NULL
 );
 
 -- Rosters

@@ -36,7 +36,7 @@
 
   <h4>Click the + below to create a new assignment</h4>
 
-  <a href="{{ url_for('assign.assign_create', id=session['id'])}}">+</a>
+  <a href="{{ url_for('assign.assign_create', id=course['course_num'], sessions_id=session['id'])}}">+</a>
 
 </section>
 

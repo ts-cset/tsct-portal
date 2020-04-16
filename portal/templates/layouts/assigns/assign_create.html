@@ -6,7 +6,7 @@
 
   <h2>Create a New Assignment</h2>
 
-<a href="{{ url_for('assign.assign_manage')}}">Back</a>
+<a href="{{ url_for('assign.assign_manage', id=course['course_num'], sessions_id=session['id'] )}}">Back</a>
 
 </header>
 
@@ -15,23 +15,23 @@
 {% endfor %}
 
 <section>
-  <form class="" action="{{ url_for('assign.assign_create')}}" method="post">
+  <form class="" action="{{ url_for('assign.assign_create',id=course['course_num'], sessions_id=session['id'] )}}" method="post">
     <!--#createing a assignment name-->
-    <label for="name">
+    <label for="name">Name
       <input type="text" name="name">
     </label>
 
     <!--#create a description-->
-    <label for="description">
+    <label for="description">Description
       <input type="text" name="description">
     </label>
 
     <!--adding points-->
-    <label for="points">
-      <input type="number" name="points">
+    <label for="points">Points
+      <input type="text" name="points">
     </label>
 
-    <input type="summit" name="assign_creation_button" value="Save">
+    <input type="submit" name="assign_creation_button" value="Save">
 
   </form>
 </section>
