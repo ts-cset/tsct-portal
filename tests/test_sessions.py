@@ -22,3 +22,18 @@ def test_view_session(client):
     assert b'monday' in response.data
     assert b'A' in response.data
     assert b'43784' in response.data
+    assert b'Assignment: Homework' in response.data
+    assert b'Due: 2000-12-31' in response.data
+
+def test_view_session_student(client):
+    response = client.get('/auth/login')
+    response = client.post(
+        '/auth/login', data={'email': 'student@stevenscollege.edu', 'password':'asdfgh'}
+    )
+    response = client.get('/portal/sessions/1/view-session/1')
+    assert b'Create Assignments' not in response.data
+    assert b'monday' in response.data
+    assert b'A' in response.data
+    assert b'43784' not in response.data
+    assert b'Assignment: Homework' in response.data
+    assert b'Due: 2000-12-31' in response.data

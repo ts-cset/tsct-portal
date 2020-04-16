@@ -3,7 +3,6 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-{% if g.users['role'] == 'teacher' %}
 <h2>Course</h2>
 <ul>
   {% for course in courses %}
@@ -15,7 +14,9 @@
 </ul>
 <h3>Sessions</h3>
 {% for course in courses %}
+{% if g.users['role'] == 'teacher' %}
 <a href="{{ url_for('sessions.create_session', course_id=course['id']) }}"><input type="button" value="Create a session"></a>
+{% endif %}
 <ul>
   {% for session in sessions %}
   <li>
@@ -25,5 +26,4 @@
   {% endfor %}
 </ul>
 {% endfor %}
-{% endif %}
 {% endblock %}

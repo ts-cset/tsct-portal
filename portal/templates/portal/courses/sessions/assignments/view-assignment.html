@@ -3,7 +3,6 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-{% if g.users['role'] == 'teacher' %}
 <h2>Course</h2>
 <ul>
   {% for course in courses %}
@@ -32,5 +31,4 @@
   </li>
   {% endfor %}
 </ul>
-{% endif %}
 {% endblock %}
