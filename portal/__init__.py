@@ -62,6 +62,11 @@ def create_app(test_config=None):
     from . import sessions
     app.register_blueprint(sessions.bp)
 
+    # Assignments
+    #----------------
+    from . import assignments
+    app.register_blueprint(assignments.bp)
+
     # Home Page
     # ---------------
     @app.route('/')
@@ -70,3 +75,4 @@ def create_app(test_config=None):
 
     # Return application object to be used by a WSGI server, like gunicorn
     return app
+

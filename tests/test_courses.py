@@ -1,6 +1,6 @@
 from portal import create_app
 
-def test_view_course(client):
+def test_courses(client):
     response = client.get('/auth/login')
     response = client.post(
         '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
@@ -13,6 +13,54 @@ def test_view_course(client):
     assert b'301' in response.data
     assert b'Public Speaking' in response.data
     assert b'GENEDS' in response.data
+
+def test_view_course(client):
+    response = client.get('/auth/login')
+    response = client.post(
+        '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
+    )
+    response = client.get('/portal/userpage')
+    response = client.get('/portal/courses/view-course/1')
+    assert b'101' in response.data
+    assert b'Web Design' in response.data
+    assert b'CSET' in response.data
+    assert b'Sessions' in response.data
+    assert b'Name: A' in response.data
+    assert b'Times: monday' in response.data
+    assert b'301' not in response.data
+    assert b'Public Speaking' not in response.data
+    assert b'GENEDS' not in response.data
+
+def test_courses_student(client):
+    response = client.get('/auth/login')
+    response = client.post(
+        '/auth/login', data={'email': 'student@stevenscollege.edu', 'password':'asdfgh'}
+    )
+    response = client.get('/portal/userpage')
+    response = client.get('/portal/courses/')
+    assert b'101' in response.data
+    assert b'Web Design' in response.data
+    assert b'CSET' in response.data
+    assert b'301' not in response.data
+    assert b'Public Speaking' not in response.data
+    assert b'GENEDS' not in response.data
+
+def test_view_course_student(client):
+    response = client.get('/auth/login')
+    response = client.post(
+        '/auth/login', data={'email': 'student@stevenscollege.edu', 'password':'asdfgh'}
+    )
+    response = client.get('/portal/userpage')
+    response = client.get('/portal/courses/view-course/1')
+    assert b'101' in response.data
+    assert b'Web Design' in response.data
+    assert b'CSET' in response.data
+    assert b'Sessions' in response.data
+    assert b'Name: A' in response.data
+    assert b'Times: monday' in response.data
+    assert b'301' not in response.data
+    assert b'Public Speaking' not in response.data
+    assert b'GENEDS' not in response.data
 
 def test_create_course(client):
     response = client.get('/auth/login')
