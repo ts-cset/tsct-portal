@@ -44,8 +44,8 @@ def create_app(test_config=None):
 
     # Register Routes
     # ---------------
-    from . import portal
-    app.register_blueprint(portal.bp)
+    from . import course
+    app.register_blueprint(course.bp)
 
 
     from . import auth

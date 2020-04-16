@@ -3,7 +3,7 @@ from flask import Flask, render_template, g, redirect, url_for, Blueprint, reque
 from . import db
 from portal.auth import login_required, login_role
 
-bp = Blueprint("portal", __name__)
+bp = Blueprint("course", __name__)
 
 
 @bp.route('/')
@@ -81,7 +81,7 @@ def edit(id):
         g.db.commit()
         cur.close()
 
-        return redirect(url_for('portal.home'))
+        return redirect(url_for('course.home'))
 
     return render_template("layouts/courses/edit.html", course=course)
 
@@ -98,7 +98,7 @@ def delete(id):
     )
     g.db.commit()
     cur.close()
-    return redirect(url_for('portal.home'))
+    return redirect(url_for('course.home'))
 
 
 @bp.route("/student")
@@ -132,6 +132,6 @@ def create():
                     (course_name, major, course_description, teacherId,))
 
         g.db.commit()
-        return redirect(url_for('portal.home'))
+        return redirect(url_for('course.home'))
 
     return render_template("layouts/courses/create_courses.html", majors=majors)
