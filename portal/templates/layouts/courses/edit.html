@@ -13,7 +13,7 @@
     <textarea class="course-description" name="course_description">{{ course['description']}}</textarea>
     <input class="submit" type="submit" value="submit changes"/>
   </form>
-  <form class="course-list-action" action="{{ url_for('portal.delete', id=course['course_id']) }}" method="post">
+  <form class="course-list-action" action="{{ url_for('course.delete', id=course['course_id']) }}" method="post">
     <button type="Submit" name="edit" class="course-button">delete</button>
   </form>
 </section>

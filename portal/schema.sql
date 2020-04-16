@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS majors CASCADE;
 DROP TABLE IF EXISTS courses CASCADE;
 DROP TABLE IF EXISTS sessions CASCADE;
 DROP TABLE IF EXISTS roster CASCADE;
+DROP TABLE IF EXISTS assignments CASCADE;
 
 -- Users
 CREATE TABLE users (
@@ -76,6 +77,13 @@ ALTER TABLE roster
     REFERENCES sessions(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE;
+
+CREATE TABLE assignments(
+  assignment_id bigserial PRIMARY KEY,
+  session_id bigserial REFERENCES sessions(id),
+  name text,
+  description text
+);
 
 INSERT INTO majors (name, description)
   VALUES ('ARCH', 'Architectural Technology'),

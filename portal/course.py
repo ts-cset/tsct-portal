@@ -3,30 +3,9 @@ from flask import Flask, render_template, g, redirect, url_for, Blueprint, reque
 from . import db
 from portal.auth import login_required, login_role
 
-bp = Blueprint("portal", __name__)
+bp = Blueprint("course", __name__)
 
-
-@bp.route('/')
-def index():
-    return render_template('layouts/index.html')
-
-
-@bp.route("/home", methods=['GET', 'POST'])
-@login_role
-@login_required
-def home():
-
-    user_id = session['user_id']
-    cur = db.get_db().cursor()
-    cur.execute(
-        """SELECT courses.course_id, courses.name, courses.major, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id""")
-    courses = cur.fetchall()
-    cur.close()
-    print(courses)
-
-    return render_template("layouts/home.html", courses=courses)
-
-
+#Function used to get a specific course
 def get_course(id, check_teacher=True):
 
     user_id = session['user_id']
@@ -45,20 +24,8 @@ def get_course(id, check_teacher=True):
     return course
 
 
-@bp.route('/<int:id>/view', methods=('GET', 'POST'))
-@login_role
-@login_required
-def view(id):
-    """Single page view of course"""
-    cur = db.get_db().cursor()
-    cur.execute("""SELECT courses.course_id, courses.name, courses.major, courses.description, courses.teacherid, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
-                (id,))
-    course = cur.fetchone()
-    cur.close()
 
-    return render_template("layouts/courses/view_course.html", course=course)
-
-
+#route to edit the course description
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))
 @login_role
 @login_required
@@ -81,16 +48,32 @@ def edit(id):
         g.db.commit()
         cur.close()
 
-        return redirect(url_for('portal.home'))
+        return redirect(url_for('main.home'))
 
     return render_template("layouts/courses/edit.html", course=course)
 
 
+#Route to view the course, and information about it
+@bp.route('/<int:id>/view', methods=('GET', 'POST'))
+@login_role
+@login_required
+def view(id):
+    """Single page view of a course"""
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT courses.course_id, courses.name, courses.major, courses.description, courses.teacherid, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
+                (id,))
+    course = cur.fetchone()
+    cur.close()
+
+    return render_template("layouts/courses/view_course.html", course=course)
+
+
+#Route to delete a course
 @bp.route("/<int:id>/delete", methods=["POST", ])
 @login_role
 @login_required
 def delete(id):
-    """delete unwanted tasks"""
+    """Delete unwanted courses"""
     course = get_course(id)
     cur = db.get_db().cursor()
     cur.execute(
@@ -98,20 +81,14 @@ def delete(id):
     )
     g.db.commit()
     cur.close()
-    return redirect(url_for('portal.home'))
+    return redirect(url_for('main.home'))
 
 
-@bp.route("/student")
-@login_required
-def student():
-    return render_template("layouts/student-home.html")
-
-
+#Route to create a course
 @bp.route("/create", methods=['GET', 'POST'])
 @login_role
 @login_required
 def create():
-
     cur = db.get_db().cursor()
     cur.execute("""
         SELECT major_id, name FROM majors""",
@@ -132,6 +109,6 @@ def create():
                     (course_name, major, course_description, teacherId,))
 
         g.db.commit()
-        return redirect(url_for('portal.home'))
+        return redirect(url_for('main.home'))
 
     return render_template("layouts/courses/create_courses.html", majors=majors)
