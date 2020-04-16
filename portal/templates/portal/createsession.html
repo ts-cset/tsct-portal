@@ -6,13 +6,29 @@
 <p>welcome {{session['user'][3]}} to portal you are a {{session['user'][4]}}</p>
 
 <form method="post">
-  <label for="section">Section</label>
-  <input name="section" id="section">
-  <label for="end">Meeting</label>
-  <input name="meeting" id="meeting">
-  <label for="location"> Location</label>
-  <input name="location" id="location">
+  <label for="section">Section
+    <input name="section" id="section">
+  </label>
+  <label for="end">Meeting Time
+    <input type="time" name="meeting" id="meeting">
+  </label>
+  <label for="location"> Location
+    <input name="location" id="location">
+  </label>
+
+  <p>add students to roster</p>
+  <ul>
+    {% for student in all_students %}
+    <li>
+      <label class='students' for="students">{{student[3]}}</label>
+      <input type="checkbox" id="students" name="students" value="{{student[3]}}">
+    </li>
+    {% endfor %}
+  </ul>
+
+
   <input type="submit" value="Register">
+
 </form>
 
 {% endblock %}

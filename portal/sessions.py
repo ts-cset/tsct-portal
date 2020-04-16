@@ -15,7 +15,6 @@ def sessions():
 
     # grabs course id from the one clicked on
     course_id = request.args.get('course_id')
-    print(course_id)
 
     # shows student sessions
     if session['user'][4] == 'student':
@@ -24,6 +23,8 @@ def sessions():
 
     # shows teachers session according to which course they are looking at
     if session['user'][4] == 'teacher':
+        if(course_id == None):
+            return redirect(url_for('courses.courses'))
         cur.execute('SELECT * FROM sessions WHERE teacher_id = %s AND course_id = %s;',
                     (session['user'][0], course_id))
 
@@ -32,7 +33,7 @@ def sessions():
     cur.close()
 
     for sess in sessions:
-        course_id = sess[1] # sess[1] = course id from session table
+        course_id = sess[1]  # sess[1] = course id from session table
         cur = get_db().cursor()
         # grabbing name of the course by session's fk
         cur.execute('SELECT name FROM courses WHERE id = %s;',
@@ -43,16 +44,26 @@ def sessions():
 
     return render_template('portal/sessions.html', sessions=classes, course_id=course_id)
 
+
 @bp.route('/createsession', methods=("GET", "POST"))
 def session_create():
     """View for creating a session"""
     course_id = request.args.get('course_id')
+    cur = get_db().cursor()
+    # grabbing name of the course by session's fk
+    cur.execute('SELECT * FROM student_sessions Join users ON student_id =users. id  WHERE session_id = %s;',
+                (1,))
+    enrolled_students = cur.fetchall()
+    cur.execute('SELECT * FROM users WHERE role = %s;', ('student',))
+    all_students = cur.fetchall()
 
     if request.method == "POST":
         section = request.form['section']
         meeting_time = request.form['meeting']
         location = request.form['location']
         teacher_id = session['user'][0]
+        students = request.form['students']
+        print(students + ' ')
 
         # make a query that inserts into courses table with this info and teacher id
         cur = get_db().cursor()
@@ -64,4 +75,4 @@ def session_create():
 
         return redirect(url_for('courses.courses'))
 
-    return render_template('portal/createsession.html')
+    return render_template('portal/createsession.html', all_students=all_students)

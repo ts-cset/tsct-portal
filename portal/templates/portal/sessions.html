@@ -4,7 +4,10 @@
 
 {% block content %}
 <p>welcome {{session['user'][3]}} to portal you are a {{session['user'][4]}}</p>
+{% if session['user'][4] == 'teacher' %}
 <a href="{{ url_for('sessions.session_create', course_id=course_id) }}">Create New Session</a>
+{% endif %}
+
 <!-- where teachers will see all their sessions  -->
 {% for class in sessions %}
 <li class=" ">
