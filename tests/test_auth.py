@@ -17,6 +17,7 @@ def test_login(client):
         assert session['user_id'] == 1
         assert g.user['email'] == 'teacher@stevenscollege.edu'
 
+
 #Check a bunch of incorrect and/or missing login credentials that should all fail
 @pytest.mark.parametrize(('email', 'password', 'error'), (
     ('student@stevenscollege.edu', 'qwerty', b'Incorrect email or password'),

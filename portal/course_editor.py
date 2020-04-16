@@ -42,13 +42,11 @@ def course_create():
         result = isinstance(course_major, int)
 
         if not course_title:
-            error = 'You are missing a required field'
+            error = 'Title of course is required'
         if not course_credit:
-            error = 'You are missing a required field'
-        if not course_description:
-            error = 'You are missing a required field'
+            error = 'Credit amount is required'
         if not course_major:
-            error = 'You are missing a required field'
+            error = 'Major is required'
 
         if error is None:
             with db.get_db() as con:
@@ -76,7 +74,7 @@ def course_create():
 
 
 def course_edit(id):
-    """Allows user to edit the course"""
+    """Allows teachers to edit the course"""
     course = get_course(id)
     if g.user['id'] != course['teacher_id']:
         return redirect(url_for('index'))
@@ -88,11 +86,9 @@ def course_edit(id):
         error = None
 
         if not credit:
-            error = 'All fields must be filled in to edit course.'
+            error = 'Credit amount is required'
         if not title:
-            error = 'All fields must be filled in to edit course.'
-        if not desc:
-            error = 'All fields must be filled in to edit course.'
+            error = 'Title of course is required'
 
         if error is None:
 
