@@ -12,18 +12,23 @@
   </li>
   {% endfor %}
 </ul>
-<h3>Sessions</h3>
-{% for course in courses %}
-{% if g.users['role'] == 'teacher' %}
-<a href="{{ url_for('sessions.create_session', course_id=course['id']) }}"><input type="button" value="Create a session"></a>
-{% endif %}
+<h3>Session</h3>
 <ul>
   {% for session in sessions %}
   <li>
   <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
-  <a href="{{ url_for('sessions.view_session', course_id=course['id'], session_id=session['id']) }}"><input type="button" value="View Session"></a>
   </li>
   {% endfor %}
 </ul>
-{% endfor %}
+<h4>Assignment</h4>
+<ul>
+  {% for assignment in assignments %}
+  <li>
+  <p>Name: {{ assignment['name'] }}</p>
+  <p>Due Date: {{ assignment['date'] }}</p>
+  <p>Description: {{ assignment['description'] }}</p>
+  <p>Points: {{ assignment['points'] }}</p>
+  </li>
+  {% endfor %}
+</ul>
 {% endblock %}
