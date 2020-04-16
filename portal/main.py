@@ -5,12 +5,12 @@ from portal.auth import login_required, login_role
 
 bp = Blueprint("main", __name__)
 
-#route for index template
+# route for index template
 @bp.route('/')
 def index():
     return render_template('layouts/index.html')
 
-#route for showing the home for teachers
+# route for showing the home for teachers
 @bp.route("/home", methods=['GET', 'POST'])
 @login_role
 @login_required
@@ -25,7 +25,7 @@ def home():
     return render_template("layouts/home.html", courses=courses)
 
 
-#Route for showing the home for students
+# Route for showing the home for students
 @bp.route("/student")
 @login_required
 def student():

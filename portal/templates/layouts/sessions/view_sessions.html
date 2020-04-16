@@ -4,6 +4,7 @@
 
 {% block content %}
 <h2>Sessions</h2>
+
 <article class="course">
   <header class="courses-main">
   <div class="course-table-header1">session id:</div>
@@ -16,9 +17,12 @@
       <div class="about-course1"> {{ session['id'] }} </div>
       <div class="about-course"> {{ session['days']}}</div>
       <div class="about-course"> {{ session['class_time']}}</div>
+
+      {% if g.user['id'] == session['teacher_id'] %}
+
       <div class="about-course1">
-        <form class="about-course-form" action="" method="get">
-        <button type="Submit" name="edit" class="course-button">view</button>
+        <form class="about-course-form" action="{{ url_for('portal.edit_session', id=session['id']) }}" method="get">
+        <button type="Submit" name="edit" class="course-button">edit</button>
       </form>
       </div>
       <div class="about-course1">
@@ -26,6 +30,7 @@
       </div>
   </section>
     {% endfor %}
+
 </article>
 
 {% endblock %}

@@ -51,13 +51,20 @@ ALTER TABLE courses
 CREATE TABLE sessions (
   id bigserial PRIMARY KEY,
   course bigint NOT NULL,
+  teacher bigint NOT NULL,
   days varchar(20),
-  class_time time NOT NULL
+  class_time time NOT NULL,
 );
 
 ALTER TABLE sessions
   ADD CONSTRAINT session_course FOREIGN KEY (course)
     REFERENCES courses(course_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
+
+ALTER TABLE sessions
+  ADD CONSTRAINT session_teacher FOREIGN KEY (teacher)
+    REFERENCES courses(teacherid)
     ON UPDATE CASCADE
     ON DELETE CASCADE;
 

@@ -14,8 +14,11 @@
       <button type="Submit" name="edit" class="course-button">sessions</button>
     </form>
     {% if g.user['id'] == course['teacherid'] %}
-    <form class="course-list-action" action="{{ url_for('course.edit', id=course['course_id']) }}" method="get">
-      <button type="Submit" name="edit" class="course-button">edit</button>
+    <form class="course-list-action" action="" method="get">
+      <button type="Submit" name="edit" class="course-button">add sessions</button>
+    </form>
+    <form class="course-list-action" action="{{ url_for('portal.edit', id=course['course_id']) }}" method="get">
+      <button type="Submit" name="edit" class="course-button">edit course</button>
     </form>
     {% endif %}
 </section>

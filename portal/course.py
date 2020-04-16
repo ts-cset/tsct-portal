@@ -1,11 +1,13 @@
-from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
+from portal.auth import login_required, login_role
 
 from . import db
-from portal.auth import login_required, login_role
+
+from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
 
 bp = Blueprint("course", __name__)
 
-#Function used to get a specific course
+
+# Function used to get a specific course
 def get_course(id, check_teacher=True):
 
     user_id = session['user_id']
@@ -24,8 +26,7 @@ def get_course(id, check_teacher=True):
     return course
 
 
-
-#route to edit the course description
+# route to edit the course description
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))
 @login_role
 @login_required
@@ -53,7 +54,7 @@ def edit(id):
     return render_template("layouts/courses/edit.html", course=course)
 
 
-#Route to view the course, and information about it
+# Route to view the course, and information about it
 @bp.route('/<int:id>/view', methods=('GET', 'POST'))
 @login_role
 @login_required
@@ -68,7 +69,7 @@ def view(id):
     return render_template("layouts/courses/view_course.html", course=course)
 
 
-#Route to delete a course
+# Route to delete a course
 @bp.route("/<int:id>/delete", methods=["POST", ])
 @login_role
 @login_required
@@ -76,15 +77,14 @@ def delete(id):
     """Delete unwanted courses"""
     course = get_course(id)
     cur = db.get_db().cursor()
-    cur.execute(
-        'DELETE FROM courses WHERE course_id= %s', (id,)
-    )
-    g.db.commit()
+    cur.execute("""SELECT courses.course_id, courses.name, courses.major, courses.description, courses.teacherid, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
+                (id,))
+    course = cur.fetchone()
     cur.close()
     return redirect(url_for('main.home'))
 
 
-#Route to create a course
+# Route to create a course
 @bp.route("/create", methods=['GET', 'POST'])
 @login_role
 @login_required
