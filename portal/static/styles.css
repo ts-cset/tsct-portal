@@ -21,11 +21,26 @@ h1, h2, h3, h4, h5, h6 {
  * Layout
  */
 body {
+  background-color: #8b1e41;
   justify-content: space-between;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   padding: 1rem;
+}
+
+header, footer {
+  background-color: white;
+  border: #8b1e41 1vw solid;
+  border-radius: 1em;
+  padding-left: 1em;
+}
+
+main {
+  background-color: white;
+  border: #8b1e41 1vw solid;
+  border-radius: 1em;
+  padding: 1em;
 }
 
 @media (min-width: 760px) {
@@ -40,11 +55,38 @@ body {
   }
 }
 
+.fake-button {
+  background: white;
+  border: solid grey 2px;
+  border-radius: 1em;
+  padding: 5px;
+  text-decoration: none;
+  color: black;
+  box-shadow: 1px 2px 1px 1px lightgrey;
+  text-align: center;
+}
+
+.button-group {
+  display: inline-flex;
+  align-items: center;
+}
+
+.button {
+  width: auto;
+  padding: 1rem 1rem 1rem 0rem;
+  border: none;
+  margin: 12px;
+}
+
+.course-list {
+  list-style-type: none;
+  padding-left: 0px;
+}
+
 /**
  * Forms
  */
 form {
-  border: 1px solid black;
   margin: 0 auto;
   padding: 1rem;
   width: 35vw;

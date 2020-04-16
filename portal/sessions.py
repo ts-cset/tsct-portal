@@ -33,11 +33,11 @@ def sessions():
     cur.close()
 
     for sess in sessions:
-        course_id = sess[1]  # sess[1] = course id from session table
+
         cur = get_db().cursor()
         # grabbing name of the course by session's fk
         cur.execute('SELECT name FROM courses WHERE id = %s;',
-                    (sess[1],))
+                    (sess[0],))
         classname = cur.fetchall()
         # pulling string out of nested list
         classes.append(classname[0][0])
@@ -48,8 +48,8 @@ def sessions():
 @bp.route('/createsession', methods=("GET", "POST"))
 def session_create():
     """View for creating a session"""
-    course_id = request.args.get('course_id')
     cur = get_db().cursor()
+    course_id = request.args.get('course_id')
     # grabbing name of the course by session's fk
 
     # ---join for grabbing enrolled_students---
@@ -60,17 +60,14 @@ def session_create():
     all_students = cur.fetchall()
 
     if request.method == "POST":
+
         section = request.form['section']
         meeting_time = request.form['meeting']
         location = request.form['location']
         teacher_id = session['user'][0]
         students = request.form.getlist('students')
-        print(students)
-        # TODO: take students and put them into student session and match with the course id and section
 
-        # make a query that inserts into courses table with this info and teacher id
         cur = get_db().cursor()
-
         cur.execute("""INSERT INTO sessions (course_id,section, meeting_time, location, teacher_id)
                         VALUES (%s, %s, %s, %s, %s);""", (course_id, section, meeting_time, location, teacher_id))
         get_db().commit()

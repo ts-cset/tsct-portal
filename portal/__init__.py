@@ -20,7 +20,7 @@ def create_app(test_config=None):
     # -------------
     # Default configuration, can be overwritten by specific environment
     app.config.from_mapping(
-        SECRET_KEY='dev',
+        SECRET_KEY= b'y3?g?f??|???e',
         DB_URL="postgresql://portal_user@localhost/portal",
         DB_SSLMODE="allow",
     )
@@ -55,6 +55,6 @@ def create_app(test_config=None):
 
     from . import courses
     app.register_blueprint(courses.bp)
-    
+
     # Return application object to be used by a WSGI server, like gunicorn
     return app
