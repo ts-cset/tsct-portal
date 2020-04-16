@@ -3,7 +3,7 @@ from flask import Flask, render_template, g, redirect, url_for, Blueprint, reque
 from . import db
 from portal.auth import login_required, login_role
 
-bp = Blueprint("portal", __name__)
+bp = Blueprint("main", __name__)
 
 #route for index template
 @bp.route('/')

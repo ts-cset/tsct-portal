@@ -48,7 +48,7 @@ def edit(id):
         g.db.commit()
         cur.close()
 
-        return redirect(url_for('portal.home'))
+        return redirect(url_for('main.home'))
 
     return render_template("layouts/courses/edit.html", course=course)
 
@@ -81,7 +81,7 @@ def delete(id):
     )
     g.db.commit()
     cur.close()
-    return redirect(url_for('portal.home'))
+    return redirect(url_for('main.home'))
 
 
 #Route to create a course
@@ -109,6 +109,6 @@ def create():
                     (course_name, major, course_description, teacherId,))
 
         g.db.commit()
-        return redirect(url_for('portal.home'))
+        return redirect(url_for('main.home'))
 
     return render_template("layouts/courses/create_courses.html", majors=majors)

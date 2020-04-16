@@ -36,9 +36,9 @@
       {% if g.user %}
       <button class="return" onclick="goBack()">previous</button>
         {% if g.user['role'] == 'teacher' %}
-          <a class="home-button" href="{{ url_for('portal.home') }}">home</a>
+          <a class="home-button" href="{{ url_for('main.home') }}">home</a>
         {% else %}
-          <a class="home-button" href="{{ url_for('portal.student') }}">student home</a>
+          <a class="home-button" href="{{ url_for('main.student') }}">student home</a>
         {% endif %}
       </div>
       {% endif %}

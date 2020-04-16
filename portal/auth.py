@@ -34,9 +34,9 @@ def login():
             session.clear()
             session['user_id'] = user['id']
             if session['user_id'] == user['id'] and user['role'] == 'student':
-                return redirect(url_for('portal.student'))
+                return redirect(url_for('main.student'))
             elif session['user_id'] == user['id'] and user['role'] == 'teacher':
-                return redirect(url_for('portal.home'))
+                return redirect(url_for('main.home'))
 
         flash(error)
 
@@ -46,7 +46,7 @@ def login():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('portal.index'))
+    return redirect(url_for('main.index'))
 
 
 @bp.before_app_request
@@ -77,6 +77,6 @@ def login_role(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user['role'] != 'teacher':
-            return redirect(url_for('portal.student'))
+            return redirect(url_for('main.student'))
         return view(**kwargs)
     return wrapped_view
