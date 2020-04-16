@@ -7,8 +7,8 @@ VALUES ('teacher@stevenscollege.edu', 'pbkdf2:sha256:150000$YKTR53od$3956727084a
 INSERT INTO courses (course_code, course_name, major, description, teacher_id)
 VALUES ('180', 'Big Software Energy', 'CSET', 'A class that really makes you FEEL like a developer', 1);
 
-INSERT INTO sessions (session_name, meeting_days, course_id)
-VALUES ('A', 'MTWThF', 1);
+INSERT INTO sessions (session_name, meeting_days, meeting_place, meeting_time course_id)
+VALUES ('A', 'MTWThF', 'Greenfield', '12:00-16:30' 1);
 
 -- ID,EMAIL,PASSWORD,NAME,ROLE,MAJOR
 -- 42267,duck@stevenscollege.edu,looney,Daffy Duck,teacher,CSET
