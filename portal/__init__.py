@@ -42,10 +42,15 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
     # Teacher Course Editor routes
-    # ---------------
+    # --------------
+
+    # Teacher Session Editor Routes
+    #----------------
     from . import course_editor
     app.register_blueprint(course_editor.bp)
 
+    from . import session_editor
+    app.register_blueprint(session_editor.bp)
     # Register Routes
     # ---------------
     from . import auth
