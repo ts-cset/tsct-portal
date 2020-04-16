@@ -6,17 +6,18 @@ from portal.db import get_db
 
 bp = Blueprint('assignments', __name__)
 
-@bp.route('/assignments', methods=('GET'))
+@bp.route('/assignments')
 def assignments():
     """View for the assignments"""
-    if session ['user'][3] == 'student':
+    if session['user'][4] == 'student':
     # get the id of the student
-        student = session['user'][1]
+        student = session['user'][0]
     # Display the student's assignments
         cur = get_db().cursor()
 
-        cur.execute("SELECT * FROM assignments JOIN student_sessions ON student_sessions_id = student_sessions.id WHERE student_id = ?;")
+        cur.execute("SELECT * FROM assignments JOIN student_sessions ON student_sessions_id = student_sessions.id WHERE student_id = %s;", (student,))
         student_assignments = cur.fetchall()
+        print(student_assignments)
     else:
         return render_template('portal/home.html')
 

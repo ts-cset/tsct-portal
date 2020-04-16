@@ -4,5 +4,8 @@
 
 {% block content %}
 <h1>Assignments</h1>
-
+{% for assignments in student_assignments %}
+{{ assignments["name"] }}
+{{ assignments["points"] }}
+{% endfor %}
 {% endblock %}
