@@ -1,23 +1,35 @@
-{% extends "layouts/base.html" %}
 <!-- This page is the first page a student user sees when they login -->
+{% extends "layouts/base.html" %}
+
 {% block title %}TSCT student{% endblock %}
 
 {% block content %}
-  <!-- Greets user -->
+
   <section>
+    <!-- Greets user -->
     <h2>Hello <span class="greetingname">{{ g.user['first_name']}}!</span></h2>
   </section>
-  <!-- g.user looks for information in user table -->
+  <!-- g.user looks for information in user table.
+  This will loop and see how many classes the user has
+  and then put them in a list element -->
   {% if g.user %}
-    <!-- This will loop and see how many classes the user has
-    and then put them in a list element -->
+    <!-- Displays classes -->
     <ul>
       {% for session in course_sessions %}
-        <li>{{ session['session_name'] }}</li>
         <!-- The content in the list element should be an anchor to the course page  -->
+        <li>{{ session['session_name'] }}</li>
       {% endfor %}
     </ul>
   {% endif %}
-  <!-- Displays classes -->
 
-{% endblock %}
+  <!-- Shows scheduling for classes -->
+  <!-- <section id="schedule">
+    {% if g.user %}
+      <ul>
+        {% for scheduling in date_time %}
+        <li>{{ scheduling['dnt'] }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </section>
+{% endblock %} -->
