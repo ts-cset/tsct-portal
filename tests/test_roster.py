@@ -2,23 +2,27 @@ import pytest
 
 def test_roster_page(client):
 
-    response = client.get('/roster')
+    response = client.get('/courses/180/sessions/2/roster')
     assert response.status_code == 200
     assert b'CSET 180 A Roster' in response.data
 
 def test_edit_roster(client):
 
     #Check that a student appears in the roster list after being added
-    response = client.post('/roster', data={'email': 'student@stevenscollege.edu'})
+    response = client.post('/courses/180/sessions/2/roster', data={'email': 'student@stevenscollege.edu'})
     assert b'student@stevenscollege.edu' in response.data
 
 @pytest.mark.parametrize(('email', 'message'), (
     ('incorrect@email.com', b'No student found'),
     ('teacher@stevenscollege.edu', b'zach fedor is not a student'),
-    ('student2@stevenscollege.edu', b'Marisa Kirisame is already registered')
+    ('student2@stevenscollege.edu', b'Marisa Kirisame is already enrolled in this session')
 ))
 def test_roster_validation(client, email, message):
+    #Checks that the correct error message displays for invalid user additions
+    with client:
+        #First log in as the teacher so that the roster can be updated
+        client.post('/login', data={'email': 'teacher2@stevenscollege.edu', 'password': 'PASSWORD'})
 
-    response = client.post('/roster', data={'email': email })
+        response = client.post('/courses/216/sessions/1/roster', data={'email': email })
 
-    assert message in response.data
+        assert message in response.data

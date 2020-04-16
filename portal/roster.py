@@ -1,12 +1,12 @@
-from flask import render_template, Blueprint, session, g, flash, request
+from flask import render_template, Blueprint, session, g, flash, request, redirect
 
 from . import db
 
 bp = Blueprint("roster", __name__)
 
 
-@bp.route('/roster', methods=('GET', 'POST'))
-def display_roster():
+@bp.route('/courses/<int:course_id>/sessions/<int:session_id>/roster', methods=('GET', 'POST'))
+def display_roster(course_id, session_id):
 
     if request.method == 'POST':
 
@@ -18,13 +18,19 @@ def display_roster():
             with con.cursor() as cur:
 
                 # Find the student in the users table
-                cur.execute("""SELECT name, email, role FROM users
+                cur.execute("""SELECT id, name, email, role FROM users
                     WHERE email = %s""", (email,))
 
                 user = cur.fetchone()
 
+                # Check if the student is already in the current session
+                if user:
+                    cur.execute("""SELECT * FROM rosters
+                        WHERE session_id = %s AND user_id = %s""",
+                        (session_id, user['id'],))
 
-                # TODO: Check if the student is already in the current session
+                    if cur.fetchone():
+                        already_enrolled = True
 
         # If there is no student with the entered email create an error message
 
@@ -51,5 +57,23 @@ def display_roster():
 
             flash(error)
 
+    with db.get_db() as con:
+        with con.cursor() as cur:
 
-    return render_template('roster.html', course={'name': 'course'}, session={'name': 'session'}, students=[{'name': 'bob', 'email': 'email'}])
+            cur.execute('SELECT * FROM courses WHERE course_num = %s',
+                (course_id,))
+
+            course = cur.fetchone()
+
+            cur.execute('SELECT * FROM sessions WHERE id = %s',
+                (session_id,))
+
+            session = cur.fetchone()
+
+            cur.execute('SELECT * FROM rosters WHERE session_id = %s',
+                (session_id,))
+
+            students = cur.fetchall()
+
+
+    return render_template('roster.html', course=course, session=session, students=students)

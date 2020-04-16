@@ -6,7 +6,7 @@
 
 <article class="roster">
 
-  <h2>{{ course['name'] + ' ' + session['name'] }} Roster</h2>
+  <h2>{{ course['course_title'] + ' ' + session['name'] }} Roster</h2>
 
   <ul class="roster">
     {% for student in students %}
@@ -23,7 +23,7 @@
 
 {% endfor %}
 
-<form class="addStudent" action="{{ url_for('roster.display_roster') }}" method="post">
+<form class="addStudent" action="{{ url_for('roster.display_roster', course_id = course['course_num'], session_id = session['id']) }}" method="post">
 
   <label for="email">Enter student email:
 

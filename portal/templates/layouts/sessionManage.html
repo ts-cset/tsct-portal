@@ -22,7 +22,7 @@
 
       <h4>{{ session['name'] }}</h4>
 
-      <a href="{{ url_for('session_editor.session_edit', id=session['course_id'], sessions_id=session['id']) }}">Edit</a>
+      <a href="{{ url_for('session_editor.session_edit', course_id=session['course_id'], sessions_id=session['id']) }}">Edit</a>
 
     {% endif %}
 
