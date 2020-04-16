@@ -1,0 +1,81 @@
+{% extends 'layouts/base.html' %}
+
+{% block content%}
+
+<header>
+
+  {{% if g.user['role']=='teacher' %}}
+
+  <h2>Edit assignment {{ assign['name'] }}</h2>
+
+  <a href="{{ url_for('assign.assign_manage', id=session['id']) }}">Back</a>
+
+  {{% endif %}}
+
+  {{% if g.user['role']=='student' %}}
+
+    <h2>Assignment {{ assign['name'] }}</h2>
+
+    <a href="#">Back</a>
+
+  {{% endit %}}
+
+</header>
+
+{% for message in get_flashed_messages() %}
+  <p class="flash">{{ message }}</p>
+{% endfor %}
+
+<section>
+
+  <form class="" action="{{ url_for('assign.assign_edit', id=assign['session_id'], assignments_id=assignment['id'] )}}" method="post">
+
+    <ul>
+
+      <li>
+
+        <label for="edit_name">
+          {{ assign['name']}}
+        </label>
+
+        {{% if g.user['role']=='teacher' %}}
+        <input type="text" name="edit_name">
+        {{% endif %}}
+
+      </li>
+
+      <li>
+
+        <label for="edit_desc">
+          {{ assign['description'] }}
+        </label>
+
+        {{% if g.user['role']=='teacher' %}}
+        <input type="text" name="edit_desc">
+        {{% endif %}}
+
+      </li>
+
+      <li>
+
+        <label for="edit_points">
+          {{ assign['points'] }}
+
+          {{% if g.user['role']=='teacher' %}}
+          <input type="text" name="edit_points">
+          {{% endif %}}
+
+        </label>
+
+      </li>
+
+    </ul>
+
+    <input type="submit" name="assignmentEditSumbit" value="Save">
+
+  </form>
+
+
+</section>
+
+{% endblock %}

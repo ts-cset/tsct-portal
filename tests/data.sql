@@ -28,3 +28,6 @@ VALUES (22, 'We meet every Tues-Thurs at 1:30 to 2:45', 'ENG-216-D',
       (34, 'We meet every Wends-Fri at 12:00 - 3:30', 'TIG-A', 108,
       'GreenField campus our room is right by the vending machine', 111),
       (42, 'We meet every tues-thurs at 12-4', 'CSET-180-B', '103', 'Greenfield', 180 );
+
+INSERT INTO assignments (id, sessions_id, assign_name, description, points)
+VALUES (32, 21, 'exam1', 'first exam of course', 25)

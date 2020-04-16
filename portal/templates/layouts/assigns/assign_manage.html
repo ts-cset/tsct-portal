@@ -1,0 +1,43 @@
+{% extends 'layouts/base.html' %}
+
+{% block content%}
+
+<header>
+
+  <h2>Assignment Management</h2>
+  <a href="{{ url_for('session_editor.session_manage', id=session['id'])}}">Back</a>
+
+</header>
+
+<section>
+
+  <h3>Assignements for {{ session['name'] }}</h3>
+
+  <ul>
+
+    {% for assignment in assignments %}
+
+      {% if assignment['session_id'] == session['id'] %}
+
+      <li>{{ assignment['name'] }}
+
+        <a href="{{url_for('assign.assign_edit',id= assign['session_id'], sessions_id=assign['id')}}">Edit</a>
+
+        <a href="{{url_for('assign.assign_veiw',id=assign['session_id'], sessions_id=assign['id'])}}">View</a>
+
+      </li>
+
+      {% endif %}
+
+    {% endfor %}
+
+
+  </ul>
+
+  <h4>Click the + below to create a new assignment</h4>
+
+  <a href="{{ url_for('assign.assign_create', id=session['id'])}}">+</a>
+
+</section>
+
+{% endblock %}

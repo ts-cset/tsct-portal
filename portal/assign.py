@@ -6,7 +6,7 @@ from portal.auth import login_required, teacher_required
 
 bp = Blueprint("assign", __name__)
 
-@bp.route('/assignCreate' methods = ('GET', 'POST'))
+@bp.route('/assignCreate', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
@@ -16,7 +16,7 @@ def assign_create():
 
     pass
 
-@bp.route('/assignManage' methods = ('GET', 'POST'))
+@bp.route('/assignManage', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
@@ -26,7 +26,7 @@ def assign_manage():
 
     pass
 
-@bp.route('/assignVeiw' methods = ('GET', 'POST'))
+@bp.route('/assignVeiw', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
@@ -36,7 +36,7 @@ def assign_veiw():
 
     pass
 
-@bp.route('/assignEdit' methods = ('GET', 'POST'))
+@bp.route('/assignEdit', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
