@@ -50,8 +50,11 @@ def display_roster(course_id, session_id):
 
         if error == None:
 
-            #Insert user into the roster
-            pass
+            with db.get_db() as con:
+                with con.cursor() as cur:
+
+                    cur.execute("""INSERT INTO rosters (user_id, session_id)
+                        VALUES (%s, %s)""", (user['id'], session_id,))
 
         else:
 
@@ -70,7 +73,9 @@ def display_roster(course_id, session_id):
 
             session = cur.fetchone()
 
-            cur.execute('SELECT * FROM rosters WHERE session_id = %s',
+            cur.execute("""SELECT name, email, user_id FROM users JOIN rosters
+                ON user_id = users.id
+                WHERE session_id = %s""",
                 (session_id,))
 
             students = cur.fetchall()
