@@ -10,8 +10,11 @@
 <section class="course-description">
   <h3><span class="course-view">course description:</span></h3>
     <p class="content">{{ course['description'] }} </p>
+    <form class="course-list-action" action="{{ url_for('session.view_sessions', id=course['course_id']) }}" method="get">
+      <button type="Submit" name="edit" class="course-button">sessions</button>
+    </form>
     {% if g.user['id'] == course['teacherid'] %}
-    <form class="course-list-action" action="{{ url_for('portal.edit', id=course['course_id']) }}" method="get">
+    <form class="course-list-action" action="{{ url_for('course.edit', id=course['course_id']) }}" method="get">
       <button type="Submit" name="edit" class="course-button">edit</button>
     </form>
     {% endif %}

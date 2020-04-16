@@ -44,12 +44,20 @@ def create_app(test_config=None):
 
     # Register Routes
     # ---------------
-    from . import portal
-    app.register_blueprint(portal.bp)
+    from . import main
+    app.register_blueprint(main.bp)
 
 
     from . import auth
     app.register_blueprint(auth.bp)
+
+
+    from . import course
+    app.register_blueprint(course.bp)
+
+
+    from . import session
+    app.register_blueprint(session.bp)
 
     # Return application object to be used by a WSGI server, like gunicorn
     return app
