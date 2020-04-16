@@ -16,7 +16,7 @@ VALUES (1, 1, 'A', 'now', 'here'),
        (2, 1, 'A', 'now', 'road st ave');
 
 -- student sessions
-INSERT INTO student_sessions (session_id, student_id)
-VALUES (1, 2),
-       (2, 2),
-       (3, 2);
+INSERT INTO student_sessions (course_id, section, student_id)
+VALUES (1,'A', 2),
+       (2,'A', 2),
+       (1,'B', 2);

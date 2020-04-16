@@ -51,9 +51,11 @@ def session_create():
     course_id = request.args.get('course_id')
     cur = get_db().cursor()
     # grabbing name of the course by session's fk
-    cur.execute('SELECT * FROM student_sessions Join users ON student_id =users. id  WHERE session_id = %s;',
-                (1,))
-    enrolled_students = cur.fetchall()
+
+    # ---join for grabbing enrolled_students---
+    # cur.execute('SELECT * FROM student_sessions JOIN users ON student_id =users.id  WHERE session_id = %s;',
+    #             (1,))
+    # enrolled_students = cur.fetchall()
     cur.execute('SELECT * FROM users WHERE role = %s;', ('student',))
     all_students = cur.fetchall()
 
@@ -62,8 +64,9 @@ def session_create():
         meeting_time = request.form['meeting']
         location = request.form['location']
         teacher_id = session['user'][0]
-        students = request.form['students']
-        print(students + ' ')
+        students = request.form.getlist('students')
+        print(students)
+        # TODO: take students and put them into student session and match with the course id and section
 
         # make a query that inserts into courses table with this info and teacher id
         cur = get_db().cursor()
@@ -71,7 +74,19 @@ def session_create():
         cur.execute("""INSERT INTO sessions (course_id,section, meeting_time, location, teacher_id)
                         VALUES (%s, %s, %s, %s, %s);""", (course_id, section, meeting_time, location, teacher_id))
         get_db().commit()
-        cur.close()
+
+        for student in students:
+                # find student in user db then grab it by name
+                cur = get_db().cursor()
+                cur.execute('SELECT * FROM users WHERE name = %s;', (student,))
+                student_info = cur.fetchone()
+                student_id = student_info[0]
+                print(student_id)
+                # create a new session for each student
+                cur.execute("""INSERT INTO student_sessions (course_id, section, student_id)
+                                    VALUES (%s, %s, %s);""", (course_id, section, student_id))
+                get_db().commit()
+                cur.close()
 
         return redirect(url_for('courses.courses'))
 
