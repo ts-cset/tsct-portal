@@ -51,5 +51,13 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+
+    from . import course
+    app.register_blueprint(course.bp)
+
+
+    from . import session
+    app.register_blueprint(session.bp)
+
     # Return application object to be used by a WSGI server, like gunicorn
     return app
