@@ -24,7 +24,7 @@
           <div class="about-course"> {{ course['teacher_name']}}</div>
           <div class="about-course"> {{ course['major'] }} </div>
           <div class="about-course1">
-            <form class="about-course-form" action="{{ url_for('portal.view', id=course['course_id']) }}" method="get">
+            <form class="about-course-form" action="{{ url_for('course.view', id=course['course_id']) }}" method="get">
             <button type="Submit" name="edit" class="course-button">view</button>
           </form>
           </div>
@@ -33,7 +33,7 @@
     </article>
     <section class="teacher-links">
 
-      <a class="link-button" href="{{ url_for('portal.create') }}">create new course</a>
+      <a class="link-button" href="{{ url_for('course.create') }}">create new course</a>
       <a class="link-button" href="">session rosters</a>
       <a class="link-button" href="">sessions</a>
       <a class="link-button" href="">assignments</a>

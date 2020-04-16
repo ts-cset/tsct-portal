@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<h2>Sessions</h2>
+<article class="course">
+  <header class="courses-main">
+  <div class="course-table-header1">session id:</div>
+  <div class="course-table-header">days:</div>
+  <div class="course-table-header">time:</div>
+  <div class="course-table-header1"></div>
+  </header>
+   {% for session in sessions %}
+  <section class= "courses">
+      <div class="about-course1"> {{ session['id'] }} </div>
+      <div class="about-course"> {{ session['days']}}</div>
+      <div class="about-course"> {{ session['class_time']}}</div>
+      <div class="about-course1">
+        <form class="about-course-form" action="" method="get">
+        <button type="Submit" name="edit" class="course-button">view</button>
+      </form>
+      </div>
+      <div class="about-course1">
+        <a href="{{ url_for('main.index') }}" class="course-button">Assignments</a>
+      </div>
+  </section>
+    {% endfor %}
+</article>
+
+{% endblock %}
