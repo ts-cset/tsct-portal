@@ -3,6 +3,7 @@ from flask import (
 )
 import functools
 from . import db
+from werkzeug.security import check_password_hash, generate_password_hash
 
 bp = Blueprint("auth", __name__)
 
@@ -33,7 +34,7 @@ def login():
             error = 'Enter a password'
 
         # Check if entered password matches the password in the database
-        elif not user or user['password'] != password:
+        elif not user or not check_password_hash(user['password'], password):
             error = 'Incorrect email or password'
 
         # If no errors occured, start a new session
