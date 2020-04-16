@@ -10,24 +10,55 @@ bp = Blueprint('courses', __name__, url_prefix='/portal/courses')
 @login_required
 def courses():
     cur = db.get_db().cursor()
-    cur.execute("""SELECT * FROM courses""")
-    courses = cur.fetchall()
-    cur.close()
+    if g.users['role'] == "teacher":
+        cur.execute("""SELECT * FROM courses""")
+        courses = cur.fetchall()
+        cur.close()
+    else:
+        cur.execute("""
+            SELECT DISTINCT ON (courses.id) roster.*, users.*, session.*, courses.* FROM roster
+            JOIN users ON users.id = roster.users_id
+            JOIN session ON session.id = roster.session_id
+            JOIN courses ON courses.id = session.courses_id
+            WHERE users.id = %s;""",
+            (g.users['id'],))
+        courses = cur.fetchall()
+        cur.close()
     return render_template('portal/courses/index.html', courses=courses)
 
 @bp.route('/view-course/<course_id>', methods=('GET', 'POST'))
 @login_required
 def view_course(course_id):
     cur = db.get_db().cursor()
-    cur.execute("""SELECT * FROM courses
-                   WHERE id = %s;""",
-                   (course_id,))
-    courses = cur.fetchall()
-    cur.execute("""SELECT * FROM session
-                   WHERE courses_id = %s;""",
-                   (course_id,))
-    sessions = cur.fetchall()
-    cur.close()
+    if g.users['role'] == "teacher":
+        cur.execute("""SELECT * FROM courses
+                       WHERE id = %s;""",
+                       (course_id,))
+        courses = cur.fetchall()
+        cur.execute("""SELECT * FROM session
+                       WHERE courses_id = %s;""",
+                       (course_id,))
+        sessions = cur.fetchall()
+        cur.close()
+    else:
+        cur.execute("""
+            SELECT DISTINCT ON (courses.id) courses.*, roster.id AS r_id, users.id AS u_id, session.id AS s_id FROM roster
+            JOIN users ON users.id = roster.users_id
+            JOIN session ON session.id = roster.session_id
+            JOIN courses ON courses.id = session.courses_id
+            WHERE users.id = %s and courses_id = %s;""",
+            (g.users['id'], course_id))
+        courses = cur.fetchall()
+        cur.execute("""
+            SELECT DISTINCT ON (session.id) session.*, roster.id AS r_id, users.id AS u_id, courses.id AS c_id FROM roster
+            JOIN users ON users.id = roster.users_id
+            JOIN session ON session.id = roster.session_id
+            JOIN courses ON courses.id = session.courses_id
+            WHERE users.id = %s and courses_id = %s;""",
+            (g.users['id'], course_id))
+        sessions = cur.fetchall()
+        print(sessions)
+        cur.close()
     return render_template('portal/courses/view-course.html', courses=courses, sessions=sessions)
 
 @bp.route('/create-course', methods=('GET', 'POST'))

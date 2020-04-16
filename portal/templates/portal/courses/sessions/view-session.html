@@ -3,7 +3,6 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-{% if g.users['role'] == 'teacher' %}
 <h2>Course</h2>
 <ul>
   {% for course in courses %}
@@ -18,13 +17,12 @@
   {% for session in sessions %}
   <li>
   <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
-
   </li>
-
 </ul>
 <h4>Assignments</h4>
+{% if g.users['role'] == 'teacher' %}
 <a href="{{ url_for('assignments.create_assignment', session_id=session['id']) }}"><input type="button" value="Create Assignments"></a>
-
+{% endif %}
 <ul>
   {% for assignment in assignments %}
   <p>Assignment: {{ assignment['name'] }}</p>
@@ -33,6 +31,7 @@
   {% endfor %}
 </ul>
 {% endfor %}
+{% if g.users['role'] == 'teacher' %}
 <h4>Roster</h4>
 <ul>
   {% for roster in rosters %}
@@ -40,7 +39,7 @@
   <p>{{ roster['users_id'] }}</p>
   </li>
   {% endfor %}
-  {% endfor %}
 </ul>
 {% endif %}
+{% endfor %}
 {% endblock %}
