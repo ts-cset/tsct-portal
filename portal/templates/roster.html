@@ -6,7 +6,12 @@
 
 <article class="roster">
 
-  <h2>{{ course['course_title'] + ' ' + session['name'] }} Roster</h2>
+  <header>
+
+    <h2>{{ course['course_title'] + ' ' + session['name'] }} Roster</h2>
+
+    <a class="back" href="{{ url_for('session_editor.session_manage', id=course['course_num'])}}">Back</a>
+  </header>
 
   <ul class="roster">
     {% for student in students %}
