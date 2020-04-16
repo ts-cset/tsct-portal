@@ -18,7 +18,7 @@ def sessions():
 
     # shows student sessions
     if session['user'][4] == 'student':
-        cur.execute('SELECT * FROM sessions AS s JOIN student_sessions AS ss ON (s.id = session_id) WHERE ss.student_id = %s;',
+        cur.execute('SELECT * FROM sessions AS s JOIN student_sessions AS ss ON (s.course_id = ss.course_id and s.section = ss.section) WHERE ss.student_id = %s;',
                     (session['user'][0],))
 
     # shows teachers session according to which course they are looking at
@@ -76,17 +76,17 @@ def session_create():
         get_db().commit()
 
         for student in students:
-                # find student in user db then grab it by name
-                cur = get_db().cursor()
-                cur.execute('SELECT * FROM users WHERE name = %s;', (student,))
-                student_info = cur.fetchone()
-                student_id = student_info[0]
-                print(student_id)
-                # create a new session for each student
-                cur.execute("""INSERT INTO student_sessions (course_id, section, student_id)
+            # find student in user db then grab it by name
+            cur = get_db().cursor()
+            cur.execute('SELECT * FROM users WHERE name = %s;', (student,))
+            student_info = cur.fetchone()
+            student_id = student_info[0]
+            print(student_id)
+            # create a new session for each student
+            cur.execute("""INSERT INTO student_sessions (course_id, section, student_id)
                                     VALUES (%s, %s, %s);""", (course_id, section, student_id))
-                get_db().commit()
-                cur.close()
+            get_db().commit()
+            cur.close()
 
         return redirect(url_for('courses.courses'))
 
