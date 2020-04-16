@@ -1,6 +1,8 @@
 from flask import redirect, g, url_for, render_template, session, request, Blueprint, flash, abort
 import functools
 
+from . import session_editor
+from . import course_editor
 from . import db
 from portal.auth import login_required, teacher_required
 
@@ -16,15 +18,30 @@ def assign_create():
 
     pass
 
-@bp.route('/assignManage', methods=('GET', 'POST'))
+@bp.route('/assignManage/<int:id>/<int:sessions_id>', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
-def assign_manage():
+def assign_manage(id, sessions_id):
     """Allows teachers to see current assignments for a
     specific session"""
 
-    pass
+    session = session_editor.get_session(sessions_id)
+    #assignment = get_assignment(assign_id)
+
+    course = course_editor.get_course(id)
+
+    cur=db.get_db().cursor()
+    cur.execute(
+        'SELECT * FROM assignments WHERE sessions_id = %s',
+        (sessions_id, )
+    )
+
+    assignments = cur.fetchall()
+
+    cur.close()
+
+    return render_template("layouts/assigns/assign_manage.html", assignments = assignments, session = session)
 
 @bp.route('/assignVeiw', methods=('GET', 'POST'))
 @login_required
@@ -46,3 +63,20 @@ def assign_edit():
     specific session"""
 
     pass
+
+
+def get_assignment(assign_id):
+    """Gets the assiment from the database"""
+    with db.get_db() as con:
+        with con.cursor() as cur:
+            cur.execute(
+                'SELECT id, name, description, points, session_id'
+                ' FROM assignments WHERE id = %s',
+                (assign_id, )
+            )
+            assign = cur.fetchone()
+
+            if assign is None:
+                abort(404, "Assign id {0} doesn't exist.".format(assign_id))
+
+            return assign
