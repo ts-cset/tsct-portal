@@ -8,10 +8,10 @@
     <ul class="add-students">
       {% for student in students %}
         <li>
-          <label class="rosterCheckbox">
+          <label class="checkbox">
                 <input type="checkbox" name="{{ student['id'] }}" value="{{ student['id'] }}">
                 <!--Since checkboxes can't be styled, this span becomes the checkbox-->
-                <span class="fakeRosterCheckbox"></span>
+                <span class="fakeCheckbox"></span>
           </label>
           {{ student['last_name'] }}, {{ student['first_name'] }}
         </li>
@@ -26,10 +26,10 @@
     <ul class="roster">
       {% for student in roster %}
         <li>
-          <label class="rosterCheckbox">
+          <label class="checkbox">
                 <input type="checkbox" name="{{ student['id'] }}" value="{{ student['id'] }}">
                 <!--Since checkboxes can't be styled, this span becomes the checkbox-->
-                <span class="fakeRosterCheckbox"></span>
+                <span class="fakeCheckbox"></span>
           </label>
           {{ student['last_name'] }}, {{ student['first_name'] }}
 

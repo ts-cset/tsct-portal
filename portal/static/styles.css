@@ -189,73 +189,50 @@ li.course h2 {
 
 /***Styling checkboxes***/
 
-.courseCheckbox { 
-/* width and height are zero so the clickable area does not expand to whole cointainer size when hovering */
-  width: 0;
-  height: 0;
-  padding-bottom: 1rem;
-  display: block; 
-  position: relative; 
-  cursor: pointer; 
-  font-size: 20px; 
+.checkbox { 
+  width: 15%;
+  margin: 0;
+  display: flex;
+  cursor: pointer;
+  font-size: 20px;
 } 
   
 /* Hide the default checkbox in class.html */ 
-.courseCheckbox input[type=checkbox] { 
+.checkbox input[type=checkbox] { 
     visibility: hidden; 
     width: 0;
     height: 0;
 } 
   
-/* Creating a custom checkbox 
-based on demand */ 
-.fakeCheckbox { 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    height: 25px; 
-    width: 25px; 
-    border-right: 1px solid white;
-    border-bottom: 1px solid white;
-    border-radius: 10px 0 10px 0;
-} 
-
-.courseCheckbox input {
-  width: 50%;
-}
-  
 /* Specify the background color and border to be 
 shown when hovering over checkbox */ 
-.courseCheckbox:hover input ~ .fakeCheckbox { 
+.checkbox:hover input ~ .fakeCheckbox { 
   background-color: white; 
   border: 1px solid #a6083d;
 } 
 
 /* Specify the background color to be
 shown when hovering over checkbox*/
-.courseCheckbox:active input ~ .fakeCheckbox {
+.checkbox:active input ~ .fakeCheckbox {
   background-color: #ebebeb;
 }
   
 /* Specify the background color and border to be 
 shown when checkbox is checked */ 
-.courseCheckbox input:checked ~ .fakeCheckbox { 
+.checkbox input:checked ~ .fakeCheckbox { 
   background-color: #a6083d;
-  border-right: 1px solid white;
-  border-bottom: 1px solid white;
    
-} 
+}
   
 /* Checkmark to be shown in checkbox */ 
 /* It is not be shown when not checked */ 
 .fakeCheckbox::after { 
     content: ""; 
-    position: absolute; 
     display: none; 
 } 
   
 /* Display checkmark when checked */ 
-.courseCheckbox input:checked ~ .fakeCheckbox::after { 
+.checkbox input:checked ~ .fakeCheckbox::after { 
     display: block; 
 } 
   
@@ -263,9 +240,7 @@ shown when checkbox is checked */
 /* Rotated the rectangle by 45 degree and  
 showing only two border to make it look 
 like a tickmark */ 
-.courseCheckbox .fakeCheckbox::after { 
-    left: 8px; 
-    bottom: 5px; 
+.checkbox .fakeCheckbox::after { 
     width: 6px; 
     height: 12px; 
     border: solid white; 
@@ -293,6 +268,28 @@ like a tickmark */
   color: white;
 }
 
+/***Course Checkboxes***/
+
+
+.course .checkbox input:checked ~ .fakeCheckbox {
+  border-right: 1px solid white;
+  border-bottom: 1px solid white;
+}
+
+/* Creating a custom checkbox 
+based on demand */ 
+.course .fakeCheckbox { 
+    height: 25px; 
+    width: 25px; 
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    border-radius: 10px 0 10px 0;
+}
+
+.course .checkbox input:checked ~ .fakeCheckbox::after {
+  margin-left: .5rem;
+  margin-top: .3rem;
+}
 
 /***Create a Session***/
 
@@ -309,6 +306,7 @@ like a tickmark */
 
 .createSession ul, .editSession ul {
   display: flex;
+  flex-wrap: wrap;
   justify-content: start;
   padding: 0;
   list-style-type: none;
@@ -316,8 +314,8 @@ like a tickmark */
 
 .createSession ul li, .editSession ul li {
   display: flex;
-  flex-wrap: wrap;
   padding: 1rem;
+  width: 33%;
 }
 
 .createSession input, .editSession input {
@@ -325,78 +323,31 @@ like a tickmark */
   margin-right: 1rem;
 }
 
-/***Styling Roster checkboxes***/
+/***Roster Checkboxes***/
 
-.rosterCheckbox {
-  margin-right: .5rem;
-  display: flex;
-  cursor: pointer;
-  font-size: 20px;
-}
-
-/* Hide the default checkbox */
-.rosterCheckbox input[type=checkbox] {
-  visibility: hidden;
-  width: 0;
-  height: 0;
-}
 
 /* Creating a custom checkbox
 based on demand */
-.fakeRosterCheckbox {
-    height: 15px;
-    width: 15px;
-    border: 1px solid white;
+.createSession ul li .fakeCheckbox, .editSession ul li .fakeCheckbox {
+  height: 15px;
+  width: 15px;
+  border: 1px solid white;
 }
 
 /* Specify the background color and border to be
 shown when hovering over checkbox */
-.rosterCheckbox:hover input ~ .fakeRosterCheckbox {
+.checkbox:hover input ~ .createSession ul li .fakeCheckbox, .checkbox:hover input ~ .editSession ul li .fakeCheckbox {
   background-color: white;
   border: 1px solid #a6083d;
 }
 
-/* Specify the background color to be
-shown when hovering over checkbox*/
-.rosterCheckbox:active input ~ .fakeRosterCheckbox {
-  background-color: #ebebeb;
-}
-
-/* Specify the background color and border to be
-shown when checkbox is checked */
-.rosterCheckbox input:checked ~ .fakeRosterCheckbox {
-  background-color: #a6083d;
+.checkbox input:checked ~ .fakeCheckbox { 
   border: 1px solid white;
-
 }
 
-/* Checkmark to be shown in checkbox */
-/* It is not be shown when not checked */
-.fakeRosterCheckbox::after {
-    content: "";
-    display: none;
+.createSession ul li .checkbox input:checked ~ .fakeCheckbox::after, .editSession ul li .checkbox input:checked ~ .fakeCheckbox::after {
+  margin-left: .2rem;
 }
-
-/* Display checkmark when checked */
-.rosterCheckbox input:checked ~ .fakeRosterCheckbox::after {
-    display: block;
-}
-
-/* Styling the checkmark using webkit */
-/* Rotated the rectangle by 45 degree and
-showing only two border to make it look
-like a tickmark */
-.rosterCheckbox .fakeRosterCheckbox::after {
-    width: 6px;
-    height: 12px;
-    border: solid white;
-    border-width: 0 4px 4px 0;
-    margin-left: .2rem;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
-
 
 /*** Session management in sessions.html ***/
 
