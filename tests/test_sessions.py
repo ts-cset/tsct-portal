@@ -48,3 +48,16 @@ def test_create_session(app, client, auth):
 
         response = client.get('/sessions?course_id=1')
         assert response.data.count(b'Software Project II') == 3
+
+def test_view_sessions(app, client, auth):
+    with app.app_context():
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.teacher_login()
+
+        response = client.get('/viewsession?class=Software+Project+II&course_id=1&section=A')
+
+        assert b"Software Project I" in response.data
+        assert b"Session Time" in response.data

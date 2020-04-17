@@ -30,19 +30,30 @@ def sessions():
 
     sessions = cur.fetchall()
     classes = []
+    sections = []
+    if session['user'][4] == 'student':
+        course_id = []
     cur.close()
 
     for sess in sessions:
 
         cur = get_db().cursor()
+
         # grabbing name of the course by session's fk
         cur.execute('SELECT name FROM courses WHERE id = %s;',
                     (sess[0],))
         classname = cur.fetchall()
+        if session['user'][4] == 'student':
+            course_id.append(sess[0])
         # pulling string out of nested list
         classes.append(classname[0][0])
+        sections.append(sess[2])
+    if session['user'][4] == 'teacher':
+        return render_template('portal/sessions.html', sessions=classes, sections=sections, course_id=course_id)
 
-    return render_template('portal/sessions.html', sessions=classes, course_id=course_id)
+    if session['user'][4] == 'student':
+        return render_template('portal/sessions.html', sessions=classes, sections=sections, course_id=course_id)
+
 
 
 @bp.route('/createsession', methods=("GET", "POST"))
@@ -123,3 +134,17 @@ def session_edit(session_id):
         return render_template("portal/editcourse.html", course=course)
     else:  # if not a teacher, send them to home page
         return render_template('portal/home.html')
+
+@bp.route('/viewsession', methods=('GET', 'POST'))
+def session_view():
+    """View for seeing more session details."""
+    cur = get_db().cursor()
+    course_id = request.args.get("course_id")
+    section = request.args.get("section")
+    classname = request.args.get("class")
+
+    cur.execute("SELECT * FROM sessions WHERE course_id = %s AND section = %s;", (course_id, section))
+    session_info = cur.fetchone()
+    print(session_info)
+
+    return render_template('portal/viewsession.html', course_id=course_id, section=section,  classname=classname, session_info=session_info)
