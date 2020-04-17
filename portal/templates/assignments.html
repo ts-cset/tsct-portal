@@ -1,0 +1,16 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Manage Assignments{% endblock %}
+
+{% block content %}
+  <form action="{{ url_for('teacher.edit_assignments') }}" method="post">
+    <ul>
+      {% for assignment in assignments %}
+      <li>
+        {{ assignment['course_name']}}–{{ assignment['name'] }}
+        <button type="submit" name="edit" value="{{ assignment['id'] }}">Edit</button>
+      </li>
+      {% endfor %}
+    </ul>
+  </form>
+{% endblock %}
