@@ -18,7 +18,6 @@ def app():
     with app.app_context():
         db.init_db()
         db.mock_db()
-        db.import_csv()
 
     yield app
 
@@ -39,7 +38,7 @@ class AuthActions(object):
     def __init__(self, client):
         self._client = client
 
-    def login(self, email='doo@stevenscollege.edu', password='snacks'):
+    def login(self, email='teacher@stevenscollege.edu', password='qwerty'):
         return self._client.post(
             '/',
             data={'email': email, 'password': password}
