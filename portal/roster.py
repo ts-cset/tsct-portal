@@ -10,21 +10,25 @@ bp = Blueprint("roster", __name__)
 @auth.login_required
 @auth.teacher_required
 def display_roster(course_id, session_id):
+    """Displays the roster page for a given session and allows the teacher
+    to append the roster with a new student via email"""
 
     with db.get_db() as con:
         with con.cursor() as cur:
 
+            # Retrieve the course specified in the URL
             cur.execute('SELECT * FROM courses WHERE course_num = %s',
                 (course_id,))
 
             course = cur.fetchone()
 
+            # Retrive the session specified in the URL
             cur.execute('SELECT * FROM sessions WHERE id = %s',
                 (session_id,))
 
             session = cur.fetchone()
 
-
+    # If the logged-in teacher is not the same as the course's teacher, redirect them
     if g.user['id'] != course['teacher_id']:
         return redirect(url_for('index'))
 
@@ -83,6 +87,7 @@ def display_roster(course_id, session_id):
     with db.get_db() as con:
         with con.cursor() as cur:
 
+            # Retrieve all of the students in the roster
             cur.execute("""SELECT name, email, user_id FROM users JOIN rosters
                 ON user_id = users.id
                 WHERE session_id = %s""",
