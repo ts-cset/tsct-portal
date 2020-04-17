@@ -28,6 +28,9 @@
   <p>Due Date: {{ assignment['date'] }}</p>
   <p>Description: {{ assignment['description'] }}</p>
   <p>Points: {{ assignment['points'] }}</p>
+  {% if g.users['role'] == 'student' %}
+  <a href="{{ url_for('assignments.submit_assignment', assignment_id=assignment['id']) }}"><input type="button" value="Submit Assignment"></a>
+  {% endif %}
   </li>
   {% endfor %}
 </ul>
