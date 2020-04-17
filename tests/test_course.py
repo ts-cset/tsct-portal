@@ -35,3 +35,8 @@ def test_delete(client, auth):
     auth.login()
     response = client.post('/1/delete')
     assert response.headers['Location'] == 'http://localhost/home'
+
+def test_view(client, auth):
+    auth.login()
+    response = client.post('/2/view')
+    assert b'Course Information' in response.data
