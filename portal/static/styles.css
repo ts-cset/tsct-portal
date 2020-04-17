@@ -99,3 +99,23 @@ label {
 label input {
   width: 100%;
 }
+
+/**
+ * Nav
+ */
+.nav {
+  margin: 5px;
+}
+
+.nav a {
+  text-decoration: none;
+  border-radius: 2px 2px 0px 0px;
+  padding: .25em;
+  color: white;
+  background-color: #8b1e41;
+}
+
+.nav a:hover {
+  background-color: white;
+  color: #8b1e41;
+}

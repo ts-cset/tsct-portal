@@ -15,9 +15,10 @@ def assignments():
     # Display the student's assignments
         cur = get_db().cursor()
 
+    # pulls out all assignments for student id
         cur.execute("SELECT * FROM assignments JOIN student_sessions ON student_sessions_id = student_sessions.id WHERE student_id = %s;", (student,))
         student_assignments = cur.fetchall()
-        print(student_assignments)
+
     else:
         return render_template('portal/home.html')
 
