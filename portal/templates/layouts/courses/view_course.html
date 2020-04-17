@@ -17,6 +17,10 @@
     <form class="course-list-action" action="{{ url_for('course.edit', id=course['course_id']) }}" method="get">
       <button type="Submit" name="edit" class="course-button">edit course</button>
     </form>
+
+    <form class="course-list-action" action="{{ url_for('session.create', id=course['id']) }}" method="get">
+      <button type="Submit" name="edit" class="course-button">add session</button>
+    </form>
     {% endif %}
 </section>
 

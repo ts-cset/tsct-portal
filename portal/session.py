@@ -11,7 +11,11 @@ bp = Blueprint("session", __name__)
 def view_sessions(id):
     """Single page view of session"""
     cur = db.get_db().cursor()
-    cur.execute("""SELECT sessions.id, sessions.course, sessions.days, sessions.course_id, sessions.class_time, courses.teacherid AS teacher_id FROM sessions JOIN courses ON courses.course_id = sessions.course_id WHERE sessions.course_id = %s""",
+    cur.execute("""SELECT sessions.id, sessions.days, sessions.course_id,
+                sessions.class_time, courses.name AS course_name,
+                courses.teacherid AS teacher_id
+                FROM sessions JOIN courses ON courses.course_id = sessions.course_id
+                WHERE sessions.course_id = %s""",
                 (id,))
     sessions = cur.fetchall()
     cur.close()
@@ -19,7 +23,7 @@ def view_sessions(id):
     return render_template("layouts/sessions/view_sessions.html", sessions=sessions)
 
 
-@bp.route("/<int:id>/sessions/edit", methods=['GET', 'POST'])
+@bp.route("/sessions/<int:id>/edit", methods=['GET', 'POST'])
 @login_required
 @teacher_required
 def edit_session(id):
@@ -44,7 +48,7 @@ def edit_session(id):
         g.db.commit()
         cur.close()
 
-        return redirect(url_for('session.view_sessions', id=session['course']))
+        return redirect(url_for('session.view_sessions', id=session['course_id']))
 
     return render_template("layouts/sessions/edit_session.html", session=session)
 
@@ -77,11 +81,28 @@ def create():
         print(course, course_id, days, class_time)
         cur = db.get_db().cursor()
         cur.execute("""
-        INSERT INTO sessions (course, course_id, days, class_time)
-        VALUES (%s, %s, %s, %s)""",
-                    (course, course_id, days, class_time))
+        INSERT INTO sessions ( course_id, days, class_time)
+        VALUES ( %s, %s, %s)""",
+                    (course_id, days, class_time))
 
         g.db.commit()
         return redirect(url_for('session.view_sessions', id=course_id))
 
     return render_template("layouts/sessions/create_session.html", courses=courses)
+
+
+@bp.route("/session/<int:id>/delete", methods=['POST', 'GET'])
+@teacher_required
+@login_required
+def delete_session(id):
+    """Delete unwanted session"""
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT id, course_id FROM sessions where id = %s""",
+                (id,))
+    x = cur.fetchone()
+    course_id = x['course_id']
+    cur.execute('DELETE FROM sessions where id = %s',
+                (id,))
+    g.db.commit()
+    cur.close()
+    return redirect(url_for('session.view_sessions', id=course_id))

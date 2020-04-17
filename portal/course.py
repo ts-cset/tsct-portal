@@ -70,6 +70,7 @@ def view(id):
 
 
 # Route to delete a course
+
 @bp.route("/<int:id>/delete", methods=["POST", ])
 @teacher_required
 @login_required
@@ -77,12 +78,12 @@ def delete(id):
     """Delete unwanted courses"""
     course = get_course(id)
     cur = db.get_db().cursor()
-    cur.execute("""SELECT courses.course_id, courses.name, courses.major, courses.description, courses.teacherid, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
-                (id,))
-    course = cur.fetchone()
+    cur.execute(
+        'DELETE FROM courses WHERE course_id= %s', (id,)
+    )
+    g.db.commit()
     cur.close()
     return redirect(url_for('main.home'))
-
 
 # Route to create a course
 @bp.route("/create", methods=['GET', 'POST'])

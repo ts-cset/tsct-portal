@@ -15,12 +15,12 @@ VALUES ('ENG 101', 'GEND', 'Lorem ipsum dolor sit amet, consectetur adipiscing e
       ('CSET 280', 'CSET', 'SECOND YEAR This damn software projec Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent semper quam et quam fringilla feugiat. Donec at risus efficitur, vehicula risus et, tempor nibh. Vivamus vitae porttitor metus, ac venenatis quam. Pellentesque porttitor malesuada orci iaculis condimentum. Vestibulum sodales, purus sit amet ultricies luctus, leo arcu mattis dui, at ultrices tortor eros sit amet lorem. Duis quis metus fringilla neque ornare ornare. Sed commodo sit amet elit et dictum. Nulla eget mattis ligula. Nulla sodales enim nec leo eleifend, et feugiat felis fermentum. Cras aliquet a magna ac pellentesque. Nulla ultrices bibendum dui tristique facilisis. Nam pellentesque lobortis ultricies. In id pretium quam. Sed facilisis lacinia lectus at tristique.', 0003),
       ('DRAW 201', 'ARCH', 'SECOND YEAR Drawing basic building Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent semper quam et quam fringilla feugiat. Donec at risus efficitur, vehicula risus et, tempor nibh. Vivamus vitae porttitor metus, ac venenatis quam. Pellentesque porttitor malesuada orci iaculis condimentum. Vestibulum sodales, purus sit amet ultricies luctus, leo arcu mattis dui, at ultrices tortor eros sit amet lorem. Duis quis metus fringilla neque ornare ornare. Sed commodo sit amet elit et dictum. Nulla eget mattis ligula. Nulla sodales enim nec leo eleifend, et feugiat felis fermentum. Cras aliquet a magna ac pellentesque. Nulla ultrices bibendum dui tristique facilisis. Nam pellentesque lobortis ultricies. In id pretium quam. Sed facilisis lacinia lectus at tristique.', 0001);
 
-INSERT INTO sessions (course, course_id, days, class_time)
-VALUES ('CSET 180', 3, 'M/W/F', '9:00am'),
-      ('METAL 155', 2, 'T/Th', '10:30am'),
-      ('ENG 201', 2, 'M/W', '3:00pm'),
-      ('ENG 201', 8, 'T', '6:00pm'),
-      ('CSET 280', 7, 'M/W/F', '8:15am'),
-      ('ENG 101', 1, 'T/Th', '1:30pm'),
-      ('ENG 101', 1, 'W/F', '12:00pm'),
-      ('DRAW 201', 8, 'M', '6:00pm');
+INSERT INTO sessions ( course_id, days, class_time)
+VALUES ( 3, 'M/W/F', '9:00am'),
+      ( 2, 'T/Th', '10:30am'),
+      ( 2, 'M/W', '3:00pm'),
+      ( 8, 'T', '6:00pm'),
+      ( 7, 'M/W/F', '8:15am'),
+      ( 1, 'T/Th', '1:30pm'),
+      ( 1, 'W/F', '12:00pm'),
+      ( 8, 'M', '6:00pm');

@@ -50,23 +50,16 @@ ALTER TABLE courses
 
 CREATE TABLE sessions (
   id bigserial PRIMARY KEY,
-  course varchar(50) NOT NULL,
   course_id bigint NOT NULL,
   days varchar(20) NOT NULL,
   class_time time NOT NULL
 );
 
 ALTER TABLE sessions
-  ADD CONSTRAINT session_course_name FOREIGN KEY (course)
-    REFERENCES courses(name)
+  ADD CONSTRAINT session_course_name FOREIGN KEY (course_id)
+    REFERENCES courses(course_id)
     ON UPDATE CASCADE
     ON DELETE CASCADE;
-
-ALTER TABLE sessions
-    ADD CONSTRAINT session_course_id FOREIGN KEY (course_id)
-      REFERENCES courses(course_id)
-      ON UPDATE CASCADE
-      ON DELETE CASCADE;
 
 CREATE TABLE roster (
   student_id bigint PRIMARY KEY,

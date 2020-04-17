@@ -3,8 +3,7 @@
 {% block title %}{% endblock %}
 
 {% block content %}
-<h2>Sessions</h2>
-<h3> {{ session['course']}} </h3>
+<h2>Current Sessions</h2>
 
 <article class="course">
   <header class="courses-main">
@@ -19,24 +18,25 @@
       <div class="about-course1"> {{ session['id'] }} </div>
       <div class="about-course"> {{ session['days']}}</div>
       <div class="about-course"> {{ session['class_time']}}</div>
-      <div class="about-course"> {{ session['course']}}</div>
-
-      {% if g.user['id'] == session['teacher_id'] %}
+      <div class="about-course"> {{ session['course_name']}}</div>
 
         <div class="about-course1">
           <form  class="about-course-form" action="" method="get">
             <button type="submit" name="assignments" class="course-button2" >assignments</button>
         </div>
+
+        {% if g.user['id'] == session['teacher_id'] %}
+
         <div class="about-course1">
-          <form class="about-course-form" action="{{ url_for('session.edit_session', id = session['id']) }}" method="get">
+          <form class="about-course-form" action="{{ url_for('session.edit_session', id=session['id']) }}" method="get">
             <button type="Submit" name="edit" class="course-button">edit</button>
           </form>
-      </div>
-      <div class="about-course1">
-        <form class="about-course-form" action="{{ url_for('session.create', id=session['id']) }}" method="get">
-          <button type="Submit" name="edit" class="course-button">add</button>
-        </form>
-      </div>
+          </div>
+          <div class="about-course1">
+            <form class="about-course-form" action="{{ url_for('session.delete_session', id=session['id']) }}" method="post">
+              <button type="Submit" name="edit" class="course-button">delete</button>
+            </form>
+          </div>
 
   </section>
     {% endif %}
