@@ -50,6 +50,9 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+    from . import sessions
+    app.register_blueprint(sessions.bp)
+
     from . import courses
     app.register_blueprint(courses.bp)
 
