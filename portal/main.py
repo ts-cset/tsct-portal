@@ -11,11 +11,11 @@ def index():
     return render_template('layouts/index.html')
 
 #route for showing the home for teachers
-@bp.route("/home", methods=['GET', 'POST'])
+@bp.route("/home", methods=['GET'])
 @login_role
 @login_required
 def home():
-    user_id = session['user_id']
+    # user_id = session['user_id']
     cur = db.get_db().cursor()
     cur.execute(
         """SELECT courses.course_id, courses.name, courses.major, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id""")
