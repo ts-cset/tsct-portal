@@ -24,8 +24,18 @@ def view_assignment(course_id, session_id, assignment_id):
                    WHERE id = %s;""",
                    (assignment_id,))
     assignments = cur.fetchall()
+    if g.users['role'] == 'teacher':
+        cur.execute("""SELECT * FROM submissions
+                       WHERE assignments_id = %s;""",
+                       (assignment_id,))
+        submissions = cur.fetchall()
+    else:
+        cur.execute("""SELECT * FROM submissions
+                       WHERE assignments_id = %s and users_id = %s;""",
+                       (assignment_id, g.users['id']))
+        submissions = cur.fetchall()
     cur.close()
-    return render_template('portal/courses/sessions/assignments/view-assignment.html', courses=courses, sessions=sessions, assignments=assignments)
+    return render_template('portal/courses/sessions/assignments/view-assignment.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions)
 
 @bp.route('<assignment_id>/submit-assignment', methods=('GET', 'POST'))
 @login_required
