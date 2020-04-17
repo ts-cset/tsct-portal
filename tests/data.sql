@@ -16,9 +16,9 @@ VALUES ('zach fedor', 1,'teacher@stevenscollege.edu', 'qwerty',  'teacher'),
 INSERT INTO courses (course_num, course_title, description, credits, teacher_id, major_id)
 VALUES (180, 'Software Project 2', 'Recreation of the portal', 3, 1, 1),
         (216, 'Technical Writing', 'The practice of proffesional writing',
-         3, 3, 2),
+         3, 4, 2),
          (111, 'Tig Welding Basics', 'Learning how to operate and use the TIG welder',
-         3, 4, 3);
+         3, 3, 3);
 
 INSERT INTO sessions (times, name, room_number, location, course_id)
 VALUES ('We meet every Tues-Thurs at 1:30 to 2:45', 'ENG-216-D',

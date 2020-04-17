@@ -1,12 +1,32 @@
-from flask import render_template, Blueprint, session, g, flash, request, redirect
-
+from flask import (
+    render_template, Blueprint, session, g, flash, request, redirect, url_for
+)
 from . import db
+from . import auth
 
 bp = Blueprint("roster", __name__)
 
-
 @bp.route('/courses/<int:course_id>/sessions/<int:session_id>/roster', methods=('GET', 'POST'))
+@auth.login_required
+@auth.teacher_required
 def display_roster(course_id, session_id):
+
+    with db.get_db() as con:
+        with con.cursor() as cur:
+
+            cur.execute('SELECT * FROM courses WHERE course_num = %s',
+                (course_id,))
+
+            course = cur.fetchone()
+
+            cur.execute('SELECT * FROM sessions WHERE id = %s',
+                (session_id,))
+
+            session = cur.fetchone()
+
+
+    if g.user['id'] != course['teacher_id']:
+        return redirect(url_for('index'))
 
     if request.method == 'POST':
 
@@ -63,22 +83,11 @@ def display_roster(course_id, session_id):
     with db.get_db() as con:
         with con.cursor() as cur:
 
-            cur.execute('SELECT * FROM courses WHERE course_num = %s',
-                (course_id,))
-
-            course = cur.fetchone()
-
-            cur.execute('SELECT * FROM sessions WHERE id = %s',
-                (session_id,))
-
-            session = cur.fetchone()
-
             cur.execute("""SELECT name, email, user_id FROM users JOIN rosters
                 ON user_id = users.id
                 WHERE session_id = %s""",
                 (session_id,))
 
             students = cur.fetchall()
-
 
     return render_template('roster.html', course=course, session=session, students=students)
