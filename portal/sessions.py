@@ -78,7 +78,6 @@ def session_create():
             cur.execute('SELECT * FROM users WHERE name = %s;', (student,))
             student_info = cur.fetchone()
             student_id = student_info[0]
-            print(student_id)
             # create a new session for each student
             cur.execute("""INSERT INTO student_sessions (course_id, section, student_id)
                                     VALUES (%s, %s, %s);""", (course_id, section, student_id))
@@ -88,3 +87,39 @@ def session_create():
         return redirect(url_for('courses.courses'))
 
     return render_template('portal/createsession.html', all_students=all_students)
+
+
+@bp.route('/<int:session_id>/editsession', methods=("GET", "POST"))
+def session_edit(session_id):
+    """Edits the course name/info"""
+    cur = get_db().cursor()
+    teacher = session['user'][0]
+    cur.execute("SELECT * FROM sessions WHERE teacher_id = %s AND id = %s;",
+                (teacher, session_id))
+    selected_session = cur.fetchone()
+
+    if session['user'][4] == 'teacher':
+
+        if request.method == "POST":
+            section = request.form['section']
+            meeting_time = request.form['meeting']
+            location = request.form['location']
+            teacher_id = session['user'][0]
+            students = request.form.getlist('students')
+
+            cur.execute("DELETE FROM student_sessions WHERE session_id = %s;",
+                        (session_id,))
+            # Update the course
+
+            cur.execute(
+                """UPDATE courses SET (major, name, num, credits, description) = (%s, %s, %s, %s, %s)
+                    WHERE id = %s AND teacher_id = %s ;""", (cour_maj, cour_name, cour_num, cour_cred, cour_desc, cour_id, teacher)
+            )
+            get_db().commit()
+            cur.close()
+
+            return redirect(url_for('courses.courses'))
+
+        return render_template("portal/editcourse.html", course=course)
+    else:  # if not a teacher, send them to home page
+        return render_template('portal/home.html')

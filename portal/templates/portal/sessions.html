@@ -12,6 +12,9 @@
 {% for class in sessions %}
 <li class=" ">
   {{ class }}
+  <div class="button-group">
+    <a class="fake-button" href="{{ url_for('sessions.session_edit', session_id=course_id) }}">Edit</a>
+  </div>
   {% endfor %}
 
   {% endblock %}
