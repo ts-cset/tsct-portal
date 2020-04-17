@@ -40,7 +40,6 @@ def courses_create():
             if len(cour_maj) > 4:
                 error = 'course major name can only be 4 letters'
                 flash(error)
-                print(error)
                 return render_template('portal/createcourse.html')
             # make a query that inserts into courses table with this info and teacher id
             cur = get_db().cursor()
@@ -116,10 +115,9 @@ def courses_edit(cour_id):
             cour_cred = request.form['cour_cred']
             cour_desc = request.form['cour_desc']
 
-            if len(cour_maj) < 3:
-                error = 'course major name can oly be 3 letters'
+            if len(cour_maj) > 4:
+                error = 'course major name can only be 4 letters'
                 flash(error)
-                print(error)
                 return render_template("portal/editcourse.html")
 
             # Update the course
