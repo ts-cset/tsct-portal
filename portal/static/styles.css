@@ -442,6 +442,10 @@ like a tickmark */
   margin: 0.5rem 2rem;
 }
 
+.createCourse label input {
+  color: black;
+}
+
 select {
 	display: block;
 	font-size: 16px;
