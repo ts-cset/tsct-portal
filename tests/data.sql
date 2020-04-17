@@ -10,6 +10,12 @@ VALUES ('180', 'Big Software Energy', 'CSET', 'A class that really makes you FEE
 INSERT INTO sessions (session_name, meeting_days, course_id)
 VALUES ('A', 'MTWThF', 1);
 
+INSERT INTO assignments (name, description, points, course_id)
+VALUES ('Big Software', 'You need to create some big software with lots of big software energy', 200, 1);
+
+INSERT INTO session_assignments (session_id, assignment_id, due_date)
+VALUES (1, 1, '4/25/2020');
+
 -- ID,EMAIL,PASSWORD,NAME,ROLE,MAJOR
 -- 42267,duck@stevenscollege.edu,looney,Daffy Duck,teacher,CSET
 -- 53114,--email doo@stevenscollege.edu --password snacks --first Scooby --last Doo --role teacher --major ARCH
