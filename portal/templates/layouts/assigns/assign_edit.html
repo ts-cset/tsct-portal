@@ -4,21 +4,10 @@
 
 <header>
 
-  {{% if g.user['role']=='teacher' %}}
 
-  <h2>Edit assignment {{ assign['name'] }}</h2>
+  <h2>Edit assignment {{ assignment['assign_name'] }}</h2>
 
-  <a href="{{ url_for('assign.assign_manage', id=session['id']) }}">Back</a>
-
-  {{% endif %}}
-
-  {{% if g.user['role']=='student' %}}
-
-    <h2>Assignment {{ assign['name'] }}</h2>
-
-    <a href="#">Back</a>
-
-  {{% endit %}}
+  <a href="{{ url_for('assign.assign_manage', id=session['course_id'], sessions_id=session['id'] )}}">Back</a>
 
 </header>
 
@@ -28,44 +17,39 @@
 
 <section>
 
-  <form class="" action="{{ url_for('assign.assign_edit', id=assign['session_id'], assignments_id=assignment['id'] )}}" method="post">
+  <form class="" action="{{ url_for('assign.assign_edit', sessions_id=session['id'], assign_id=assignment['id'] )}}" method="post">
 
     <ul>
 
       <li>
 
         <label for="edit_name">
-          {{ assign['name']}}
+          {{ assignment['assign_name']}}
         </label>
 
-        {{% if g.user['role']=='teacher' %}}
         <input type="text" name="edit_name">
-        {{% endif %}}
 
       </li>
+
 
       <li>
 
         <label for="edit_desc">
-          {{ assign['description'] }}
+          {{ assignment['description'] }}
         </label>
 
-        {{% if g.user['role']=='teacher' %}}
         <input type="text" name="edit_desc">
-        {{% endif %}}
 
       </li>
 
       <li>
 
         <label for="edit_points">
-          {{ assign['points'] }}
+          {{ assignment['points'] }}
+          </label>
 
-          {{% if g.user['role']=='teacher' %}}
           <input type="text" name="edit_points">
-          {{% endif %}}
 
-        </label>
 
       </li>
 

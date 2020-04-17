@@ -82,24 +82,56 @@ def assign_veiw():
 
     pass
 
-@bp.route('/assignEdit', methods=('GET', 'POST'))
+@bp.route('/assignEdit/<int:sessions_id>/<int:assign_id>', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
-
-def assign_edit():
+def assign_edit(assign_id, sessions_id):
     """Allows teachers to edit current assignments for a
     specific session"""
 
-    pass
+    session = session_editor.get_session(sessions_id)
+    assignment = get_assignment(assign_id)
 
+    if request.method == 'POST':
+
+        name = request.form['edit_name']
+        points = request.form['edit_points']
+        description = request.form['edit_desc']
+        error = None
+
+        with db.get_db() as con:
+            with con.cursor() as cur:
+
+                if not name:
+                    error = 'Name is required.'
+                if not points:
+                    error = 'Points are required.'
+
+                if error is None:
+
+                    cur.execute("""UPDATE assignments SET
+                    assign_name = %s,
+                    description = %s,
+                    points = %s
+                    WHERE id = %s AND sessions_id = %s
+                    """,
+                    (name, description, points, assign_id, sessions_id,)
+                    )
+                    con.commit()
+
+                    return redirect(url_for("assign.assign_manage",id=session['course_id'], sessions_id=session['id']))
+
+                flash(error)
+
+    return render_template('layouts/assigns/assign_edit.html', session=session, assignment= assignment)
 
 def get_assignment(assign_id):
     """Gets the assiment from the database"""
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute(
-                'SELECT id, name, description, points, sessions_id'
+                'SELECT id, assign_name, description, points, sessions_id'
                 ' FROM assignments WHERE id = %s',
                 (assign_id, )
             )

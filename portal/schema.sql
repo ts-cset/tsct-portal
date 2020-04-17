@@ -55,7 +55,8 @@ CREATE TABLE assignments (
   sessions_id bigint REFERENCES sessions (id),
   assign_name text NOT NULL,
   description text NOT NULL,
-  points text NOT NULL
+  points text NOT NULL,
+  due_date timestamp with time zone
 );
 
 -- Rosters
