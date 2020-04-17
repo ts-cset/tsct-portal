@@ -23,6 +23,8 @@ def login():
                 cur.execute('SELECT * FROM users WHERE email = %s', (email,))
                 user = cur.fetchone()
 
+                
+
         error = None
 
         # Check for empty email form
@@ -36,6 +38,7 @@ def login():
         # Check if entered password matches the password in the database
         elif not user or not check_password_hash(user['password'], password):
             error = 'Incorrect email or password'
+
 
         # If no errors occured, start a new session
         if error == None:

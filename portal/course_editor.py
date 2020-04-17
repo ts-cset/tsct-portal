@@ -8,7 +8,7 @@ from portal.auth import login_required, teacher_required
 bp = Blueprint("course_editor", __name__)
 
 
-@bp.route("/courseManagement", methods=('GET', 'POST'))  # Management Page
+@bp.route("/courses", methods=('GET', 'POST'))  # Management Page
 @login_required
 @teacher_required
 def course_manage():
@@ -24,7 +24,7 @@ def course_manage():
     return render_template("layouts/courseMan.html", courses=courses)
 
 
-@bp.route("/courseCreate", methods=('GET', 'POST'))  # Course Create
+@bp.route("/courses/create", methods=('GET', 'POST'))  # Course Create
 @login_required
 @teacher_required
 def course_create():
@@ -42,13 +42,11 @@ def course_create():
         result = isinstance(course_major, int)
 
         if not course_title:
-            error = 'You are missing a required field'
+            error = 'Title of course is required'
         if not course_credit:
-            error = 'You are missing a required field'
-        if not course_description:
-            error = 'You are missing a required field'
+            error = 'Credit amount is required'
         if not course_major:
-            error = 'You are missing a required field'
+            error = 'Major is required'
 
         if error is None:
             with db.get_db() as con:
@@ -70,13 +68,13 @@ def course_create():
 
 
 # Needs new template
-@bp.route("/courseEdit/<int:id>", methods=('GET', 'POST'))
+@bp.route("/courses/<int:id>/edit", methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
 
 def course_edit(id):
-    """Allows user to edit the course"""
+    """Allows teachers to edit the course"""
     course = get_course(id)
     if g.user['id'] != course['teacher_id']:
         return redirect(url_for('index'))
@@ -88,11 +86,9 @@ def course_edit(id):
         error = None
 
         if not credit:
-            error = 'All fields must be filled in to edit course.'
+            error = 'Credit amount is required'
         if not title:
-            error = 'All fields must be filled in to edit course.'
-        if not desc:
-            error = 'All fields must be filled in to edit course.'
+            error = 'Title of course is required'
 
         if error is None:
 

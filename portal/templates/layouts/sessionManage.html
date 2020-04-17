@@ -1,0 +1,51 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}TSCT Portal - Sessions{% endblock %}
+
+{% block content %}
+
+<header>
+
+  <h2>Sessions for course {{ course['course_title']}}</h2>
+
+  <a class="back" href="{{ url_for('course_editor.course_manage')}}">Back</a>
+
+</header>
+
+<section class='courseSession'><!--Start section edit sessions-->
+
+
+<h3>Sessions</h3>
+
+  <ul>
+
+    {% for session in sessions %}<!--For a session in the object sessions-->
+
+      {% if session['course_id'] == course['course_num'] %}<!--Display if only session cours_id is = to course course_num-->
+
+        <li>
+          <h4>{{ session['name'] }}</h4>
+
+          <div class="links">
+
+            <a href="{{ url_for('roster.display_roster', course_id=session['course_id'], session_id=session['id']) }}">Roster</a>
+
+            <a href="{{ url_for('session_editor.session_edit', course_id=session['course_id'], sessions_id=session['id']) }}">Edit</a>
+          </div>
+        </li>
+      {% endif %}
+
+    {% endfor %}
+  </ul>
+
+
+  <!--Below is for create Session link and info-->
+  <h3>Click the + below to create a new session</h3>
+
+  <a href="{{ url_for('session_editor.session_create', id=course['course_num'] )}}">+</a>
+
+
+</section><!--End section-->
+
+
+{% endblock %}
