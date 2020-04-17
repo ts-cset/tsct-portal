@@ -4,13 +4,18 @@
 
 {% block content %}
   <form method="post" class="login">
-    <label for="email">Email
-      <input type="email" name="email" />
-    </label>
-    <label for="password">Password
-      <input type="password" name="password" />
-    </label>
-    <input type="submit" value="Login" class="loginSubmit" />
+    <!--divs are being used purely for style-->
+    <div>
+      <div class="email">
+        <span class="glyphicon glyphicon-user"></span> 
+        <input type="email" name="email" placeholder="Email" />
+      </div>
+      <div class="password">
+        <span class="glyphicon glyphicon-asterisk"></span>
+        <input type="password" name="password" placeholder="Password" />
+      </div>
+      <input type="submit" value="Login" class="loginSubmit" />
+    </div>
   </form>
 {% endblock %}
 
