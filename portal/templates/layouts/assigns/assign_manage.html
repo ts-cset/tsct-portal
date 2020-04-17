@@ -22,8 +22,6 @@
       <li>{{ assignment['assign_name'] }}
         <a href="{{url_for('assign.assign_edit', assign_id=assignment['id'], sessions_id=assignment['sessions_id'])}}">Edit</a>
 
-        <a href="{{url_for('assign.assign_veiw', id=assignment['sessions_id'], sessions_id=assignment['id'])}}">View</a>
-
       </li>
 
       {% if not loop.last %}

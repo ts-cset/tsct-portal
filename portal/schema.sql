@@ -56,7 +56,7 @@ CREATE TABLE assignments (
   assign_name text NOT NULL,
   description text NOT NULL,
   points text NOT NULL,
-  due_date timestamp with time zone
+  due_date timestamp
 );
 
 -- Rosters

@@ -48,7 +48,7 @@ def test_create_errors(client, name, description, points, error):
 
     response = client.post('/assignCreate/180/21', data={'name': name,
      'description': description, 'points': points})
-    
+
     assert error in response.data
 
     rv = logout(client)
@@ -71,25 +71,6 @@ def test_assign_manage(client):
     assert b'Assignments for CSET-180-A' in response.data
     assert b'Click the + below to create a new assignment' in response.data
      #logout
-    rv = logout(client)
-    assert b'TSCT Portal Login' in rv.data
-
-def test_assign_veiw(client):
-
-    #test getting assign veiw
-    assert client.get('/assignVeiw/32/180/21').status_code == 302
-    #can login
-    rv = login(
-     client, 'teacher@stevenscollege.edu', 'qwerty')
-    assert b'Logged in' in rv.data
-    #can we access after login
-    assert client.get('/assignVeiw/32/180/21').status_code == 200
-    #check the veiw of page
-    response = client.get('/assignVeiw/32/180/21')
-    assert b'details of exam1' in response.data
-    assert b'first exam of course' in response.data
-    assert b'points out of 100' in response.data
-    #logout
     rv = logout(client)
     assert b'TSCT Portal Login' in rv.data
 

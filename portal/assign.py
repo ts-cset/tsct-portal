@@ -1,6 +1,7 @@
 from flask import redirect, g, url_for, render_template, session, request, Blueprint, flash, abort
 import functools
 
+import datetime
 from . import session_editor
 from . import course_editor
 from . import db
@@ -8,7 +9,7 @@ from portal.auth import login_required, teacher_required
 
 bp = Blueprint("assign", __name__)
 
-@bp.route('/assignCreate/<int:id>/<int:sessions_id>', methods=('GET', 'POST'))
+@bp.route('/course/<int:id>/session/<int:sessions_id>/assignment/', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
@@ -24,6 +25,7 @@ def assign_create(id, sessions_id):
         name = request.form['name']
         points = request.form['points']
         description = request.form['description']
+        due_date = request.form['due_date']
         error = None
 
         with db.get_db() as con:
@@ -33,13 +35,17 @@ def assign_create(id, sessions_id):
                     error = 'Name is required.'
                 if not points:
                     error = 'Points are required.'
+                if not due_date:
+                    error = 'Due Date is required.'
 
                 if error is None:
 
-                    cur.execute("""INSERT INTO assignments (sessions_id, assign_name, description, points)
-                        VALUES (%s, %s, %s, %s)
+                    now = datetime.datetime.utcnow()
+
+                    cur.execute("""INSERT INTO assignments (sessions_id, assign_name, description, points, due_date)
+                        VALUES (%s, %s, %s, %s, %s)
                     """,
-                    (sessions_id, name, description, points, )
+                    (sessions_id, name, description, points, now.strftime(due_date) )
                     )
                     con.commit()
 
@@ -49,7 +55,7 @@ def assign_create(id, sessions_id):
 
     return render_template('layouts/assigns/assign_create.html', session=session)
 
-@bp.route('/assignManage/<int:id>/<int:sessions_id>', methods=('GET', 'POST'))
+@bp.route('/course/<int:id>/session/<int:sessions_id>/assignments', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
@@ -72,17 +78,7 @@ def assign_manage(id, sessions_id):
 
     return render_template("layouts/assigns/assign_manage.html", assignments=assignments, session=session)
 
-@bp.route('/assignVeiw', methods=('GET', 'POST'))
-@login_required
-@teacher_required
-
-def assign_veiw():
-    """Allows teachers to see current assignments details for a
-    specific assignment in a specific session"""
-
-    pass
-
-@bp.route('/assignEdit/<int:sessions_id>/<int:assign_id>', methods=('GET', 'POST'))
+@bp.route('/session/<int:sessions_id>/Edit/assignment/<int:assign_id>', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
@@ -98,6 +94,7 @@ def assign_edit(assign_id, sessions_id):
         name = request.form['edit_name']
         points = request.form['edit_points']
         description = request.form['edit_desc']
+        due_date = request.form['edit_date']
         error = None
 
         with db.get_db() as con:
@@ -107,16 +104,21 @@ def assign_edit(assign_id, sessions_id):
                     error = 'Name is required.'
                 if not points:
                     error = 'Points are required.'
+                if not due_date:
+                    error = 'Due Date is required.'
 
                 if error is None:
+
+                    now = datetime.datetime.utcnow()
 
                     cur.execute("""UPDATE assignments SET
                     assign_name = %s,
                     description = %s,
                     points = %s
+                    due_date = %s
                     WHERE id = %s AND sessions_id = %s
                     """,
-                    (name, description, points, assign_id, sessions_id,)
+                    (name, description, points, now.strftime(due_date), assign_id, sessions_id, )
                     )
                     con.commit()
 
