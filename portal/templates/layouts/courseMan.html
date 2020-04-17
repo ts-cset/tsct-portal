@@ -15,10 +15,10 @@
 
 <ul>
 
-  {% for course in courses %}<!--Start of courses loop-->
+  {% for course in courses %}
 
-    {% if g.user['id'] == course['teacher_id'] %}<!--Only display if
-    the course has users teacher_id -->
+    {% if g.user['id'] == course['teacher_id'] %}
+
 
   <li>
 
@@ -36,11 +36,11 @@
       {% if not loop.last %}
     <hr>
 
-      {% endif %}<!--End style if-->
+      {% endif %}
 
-    {% endif %}<!--End g.user if-->
+    {% endif %}
 
-  {% endfor %}<!--End of courses loop-->
+  {% endfor %}
 
 </ul>
 

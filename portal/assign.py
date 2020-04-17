@@ -17,7 +17,7 @@ def assign_create(id, sessions_id):
     specific session"""
 
     session = session_editor.get_session(sessions_id)
-    course = course_editor.get_course(id)
+    # course = course_editor.get_course(id)
 
     if request.method == 'POST':
 
@@ -32,24 +32,22 @@ def assign_create(id, sessions_id):
                 if not name:
                     error = 'Name is required.'
                 if not points:
-                    error = 'Points is required.'
-                if not description:
-                    error = 'Description is required.'
+                    error = 'Points are required.'
 
                 if error is None:
 
-                    cur.execute("""INSERT INTO assignments (course_id, sessions_id, assign_name, description, points)
-                        VALUES (%s, %s, %s, %s, %s )
+                    cur.execute("""INSERT INTO assignments (sessions_id, assign_name, description, points)
+                        VALUES (%s, %s, %s, %s)
                     """,
-                    (id, sessions_id, name, description, points, )
+                    (sessions_id, name, description, points, )
                     )
                     con.commit()
 
-                    return redirect(url_for("assign.assign_manage", sessions_id=session['id'], id=course['course_num']))
+                    return redirect(url_for("assign.assign_manage",id=session['course_id'], sessions_id=session['id']))
 
                 flash(error)
 
-    return render_template('layouts/assigns/assign_create.html', course=course, session=session)
+    return render_template('layouts/assigns/assign_create.html', session=session)
 
 @bp.route('/assignManage/<int:id>/<int:sessions_id>', methods=('GET', 'POST'))
 @login_required
@@ -60,7 +58,7 @@ def assign_manage(id, sessions_id):
     specific session"""
 
     session = session_editor.get_session(sessions_id)
-    course = course_editor.get_course(id)
+    #course = course_editor.get_course(id)
 
     cur=db.get_db().cursor()
     cur.execute(
@@ -72,7 +70,7 @@ def assign_manage(id, sessions_id):
 
     cur.close()
 
-    return render_template("layouts/assigns/assign_manage.html", assignments=assignments, session=session, course=course)
+    return render_template("layouts/assigns/assign_manage.html", assignments=assignments, session=session)
 
 @bp.route('/assignVeiw', methods=('GET', 'POST'))
 @login_required
@@ -101,7 +99,7 @@ def get_assignment(assign_id):
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute(
-                'SELECT id, name, description, points, session_id'
+                'SELECT id, name, description, points, sessions_id'
                 ' FROM assignments WHERE id = %s',
                 (assign_id, )
             )

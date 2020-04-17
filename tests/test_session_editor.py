@@ -3,7 +3,7 @@ import pytest
 from portal.db import get_db
 import os
 import tempfile
-from test_course_editor import login, logout
+from .test_course_editor import login, logout
 
 
 def test_edit_session(client):

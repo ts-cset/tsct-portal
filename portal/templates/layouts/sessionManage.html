@@ -15,16 +15,20 @@
 
 <h3>Sessions</h3>
 
-  {% for session in sessions %}<!--For a session in the object sessions-->
+  {% for session in sessions %}
 
 
-    {% if session['course_id'] == course['course_num'] %}<!--Display if only session cours_id is = to course course_num-->
+    {% if session['course_id'] == course['course_num'] %}
 
       <h4>{{ session['name'] }}</h4>
 
       <a href="{{ url_for('session_editor.session_edit', id=session['course_id'], sessions_id=session['id']) }}">Edit</a>
 
       <a href="{{ url_for('assign.assign_manage', id=session['course_id'], sessions_id=session['id']) }}">Assignments</a>
+    {% endif %}
+
+    {% if not loop.last %}
+      <hr>
     {% endif %}
 
   {% endfor %}

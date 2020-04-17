@@ -11,21 +11,24 @@
 
 <section>
 
-  <h3>Assignements for {{ session['name'] }}</h3>
+  <h3>Assignments for {{ session['name'] }}</h3>
 
   <ul>
 
     {% for assignment in assignments %}
 
-      {% if assignment['session_id'] == session['id'] %}
+      {% if assignment['sessions_id'] == session['id'] %}
 
-      <li>{{ assignment['name'] }}
+      <li>{{ assignment['assign_name'] }}
+        <a href="{{url_for('assign.assign_edit',id=assignment['session_id'], sessions_id=assignment['id'])}}">Edit</a>
 
-        <a href="{{url_for('assign.assign_edit',id=assign['session_id'], sessions_id=assign['id'])}}">Edit</a>
-
-        <a href="{{url_for('assign.assign_veiw',id=assign['session_id'], sessions_id=assign['id'])}}">View</a>
+        <a href="{{url_for('assign.assign_veiw',id=assignment['session_id'], sessions_id=assignment['id'])}}">View</a>
 
       </li>
+
+      {% if not loop.last %}
+        <hr>
+      {% endif %}
 
       {% endif %}
 
@@ -36,7 +39,7 @@
 
   <h4>Click the + below to create a new assignment</h4>
 
-  <a href="{{ url_for('assign.assign_create', id=course['course_num'], sessions_id=session['id'])}}">+</a>
+  <a href="{{ url_for('assign.assign_create', id=session['course_id'], sessions_id=session['id'])}}">+</a>
 
 </section>
 
