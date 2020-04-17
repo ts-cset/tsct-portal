@@ -28,12 +28,12 @@
             <button type="submit" name="assignments" class="course-button2" >assignments</button>
         </div>
         <div class="about-course1">
-          <form class="about-course-form" action="{{ url_for('session.edit_session', id=session['id']) }}" method="get">
+          <form class="about-course-form" action="{{ url_for('session.edit_session', id = session['id']) }}" method="get">
             <button type="Submit" name="edit" class="course-button">edit</button>
           </form>
       </div>
       <div class="about-course1">
-        <form class="about-course-form" action="{{ url_for('session.create', id=session['course']) }}" method="get">
+        <form class="about-course-form" action="{{ url_for('session.create', id=session['id']) }}" method="get">
           <button type="Submit" name="edit" class="course-button">add</button>
         </form>
       </div>
