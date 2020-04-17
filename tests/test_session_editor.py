@@ -71,7 +71,7 @@ def test_course_sessions(client):
     with client:
         response = client.get('/courses/180/sessions')
         assert b'<h2>Sessions for course Software Project 2' in response.data
-        assert b'<h4>Click the + below to create a new session</h4>' in response.data
+        assert b'<h3>Click the + below to create a new session</h3>' in response.data
         assert b'CSET-180-A' in response.data
 
         rv = logout(client)

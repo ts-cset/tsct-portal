@@ -5,7 +5,7 @@
 {% block content %}
 <header>
 
-  <h2>{{ session['name'] }}</h2>
+  <h2>Edit Session {{ session['name'] }}</h2>
 
   <a class="back" href="{{ url_for('session_editor.session_manage', id=course['course_num']) }}">Back</a>
 
