@@ -39,7 +39,7 @@ def test_delete(client, auth):
 
 def test_view(client, auth):
     # login to the page
-    auth.login()]
+    auth.login()
     #get the course by clicking the view button
     response = client.post('/2/view')
     assert b'Course Information' in response.data
