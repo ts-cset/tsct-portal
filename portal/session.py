@@ -1,7 +1,7 @@
 from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
 
 from . import db
-from portal.auth import login_required, login_role
+from portal.auth import login_required, teacher_required
 
 bp = Blueprint("session", __name__)
 
@@ -11,7 +11,7 @@ bp = Blueprint("session", __name__)
 def view_sessions(id):
     """Single page view of session"""
     cur = db.get_db().cursor()
-    cur.execute("""SELECT sessions.id, sessions.course, sessions.days, sessions.class_time, courses.teacherid AS teacher_id FROM sessions FULL JOIN courses ON courses.course_id = sessions.course WHERE sessions.course = %s""",
+    cur.execute("""SELECT sessions.id, sessions.course, sessions.days, sessions.course_id, sessions.class_time, courses.teacherid AS teacher_id FROM sessions JOIN courses ON courses.course_id = sessions.course_id WHERE sessions.course_id = %s""",
                 (id,))
     sessions = cur.fetchall()
     cur.close()
@@ -21,7 +21,7 @@ def view_sessions(id):
 
 @bp.route("/<int:id>/sessions/edit", methods=['GET', 'POST'])
 @login_required
-@login_role
+@teacher_required
 def edit_session(id):
     """Edit a session"""
     cur = db.get_db().cursor()
@@ -44,28 +44,44 @@ def edit_session(id):
         g.db.commit()
         cur.close()
 
-        return redirect(url_for('portal.view_sessions', id=session['course']))
+        return redirect(url_for('session.view_sessions', id=session['course']))
 
     return render_template("layouts/sessions/edit_session.html", session=session)
 
 
 @bp.route("/sessions/create", methods=['GET', 'POST'])
-@login_role
+@teacher_required
 @login_required
-def create(id):
+def create():
+
+    teacherid = session['user_id']
+    cur = db.get_db().cursor()
+    cur.execute("""
+        SELECT course_id, name FROM courses where teacherid=%s""",
+                (teacherid,))
+    courses = cur.fetchall()
+    cur.close()
 
     if request.method == 'POST':
 
-        teacherid = session['user_id']
-        session_days = request.form['session_days']
-        session_time = request.form['session_time']
+        course = request.form['courses']
         cur = db.get_db().cursor()
         cur.execute("""
-        INSERT INTO sessions (course, teacher, days, class_time)
+            SELECT course_id FROM courses where name=%s""",
+                    (course,))
+        x = cur.fetchone()
+        cur.close()
+        course_id = x['course_id']
+        days = request.form['session_days']
+        class_time = request.form['class_time']
+        print(course, course_id, days, class_time)
+        cur = db.get_db().cursor()
+        cur.execute("""
+        INSERT INTO sessions (course, course_id, days, class_time)
         VALUES (%s, %s, %s, %s)""",
-                    (id, teacherid, session_days, session_time,))
+                    (course, course_id, days, class_time))
 
         g.db.commit()
-        return redirect(url_for('portal.view', id=id))
+        return redirect(url_for('session.view_sessions', id=course_id))
 
-    return render_template("layouts/sessions/create_sessions.html")
+    return render_template("layouts/sessions/create_session.html", courses=courses)

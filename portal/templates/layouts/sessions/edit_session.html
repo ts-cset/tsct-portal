@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}Edit Session{% endblock %}
+{% block title %}Edit Session {{ session['id']}} {% endblock %}
 
 {% block content %}
-
 <section class="teacher_forms">
 <form class="teacher_home_form" method="post">
 

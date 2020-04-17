@@ -1,4 +1,4 @@
-from portal.auth import login_required, login_role
+from portal.auth import login_required, teacher_required
 
 from . import db
 
@@ -28,7 +28,7 @@ def get_course(id, check_teacher=True):
 
 # route to edit the course description
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))
-@login_role
+@teacher_required
 @login_required
 def edit(id):
     """Edits the description of the courses"""
@@ -56,7 +56,7 @@ def edit(id):
 
 # Route to view the course, and information about it
 @bp.route('/<int:id>/view', methods=('GET', 'POST'))
-@login_role
+@teacher_required
 @login_required
 def view(id):
     """Single page view of a course"""
@@ -71,7 +71,7 @@ def view(id):
 
 # Route to delete a course
 @bp.route("/<int:id>/delete", methods=["POST", ])
-@login_role
+@teacher_required
 @login_required
 def delete(id):
     """Delete unwanted courses"""
@@ -86,7 +86,7 @@ def delete(id):
 
 # Route to create a course
 @bp.route("/create", methods=['GET', 'POST'])
-@login_role
+@teacher_required
 @login_required
 def create():
     cur = db.get_db().cursor()
