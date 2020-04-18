@@ -17,7 +17,6 @@ def get_session(id, check_teacher=True):
                 (user_id, id,))
     class_session = cur.fetchone()
     cur.close()
-    g.db.close()
 
     if session is None:
         abort(403)
@@ -63,7 +62,6 @@ def session_edit(id):
             (session_days, session_time, id)
         )
         g.db.commit()
-        cur.close()
 
         return redirect(url_for('session.view_sessions', id=session['course_id']))
 
