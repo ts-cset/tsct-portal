@@ -2,7 +2,7 @@ from portal.auth import login_required, teacher_required
 
 from . import db
 
-from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
+from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session, abort
 
 bp = Blueprint("course", __name__)
 
@@ -18,10 +18,10 @@ def get_course(id, check_teacher=True):
     cur.close()
 
     if course is None:
-        abort(404)
+        abort(400, 'This course does not exist')
 
     if check_teacher and course['teacherid'] != g.user['id']:
-        abort(403)
+        abort(400, 'User does not have acces to this course')
 
     return course
 
@@ -81,7 +81,9 @@ def delete(id):
     cur.execute(
         'DELETE FROM courses WHERE course_id= %s', (id,)
     )
-    con.commit()
+    g.db.commit()
+    cur.close()
+
     return redirect(url_for('main.home'))
 
 # Route to create a course
@@ -108,8 +110,8 @@ def create():
         VALUES (%s, %s, %s, %s)""",
                     (course_name, major, course_description, teacherId,))
 
-        con.commit()
-        close_db()
+        g.db.commit()
+        cur.close()
         return redirect(url_for('main.home'))
 
     return render_template("layouts/courses/create_courses.html", majors=majors)

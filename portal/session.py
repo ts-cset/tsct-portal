@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
+from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session, abort
 
 from . import db
 from portal.auth import login_required, teacher_required
@@ -19,10 +19,10 @@ def get_session(id, check_teacher=True):
     cur.close()
 
     if session is None:
-        abort(403)
+        abort(400, 'This session does not exist')
 
     if check_teacher and class_session['course_teacher'] != g.user['id']:
-        abort(404)
+        abort(400, 'User does not have acces to this session')
 
     return class_session
 
