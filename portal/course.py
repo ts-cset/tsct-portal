@@ -18,7 +18,7 @@ def get_course(id, check_teacher=True):
     cur.close()
 
     if course is None:
-        abort(404, "Course id {0} doesn't exist.".format(id))
+        abort(404)
 
     if check_teacher and course['teacherid'] != g.user['id']:
         abort(403)

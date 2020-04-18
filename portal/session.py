@@ -11,21 +11,21 @@ def get_session(id, check_teacher=True):
     user_id = session['user_id']
     cur = db.get_db().cursor()
     cur.execute("""SELECT sessions.id, sessions.course_id, sessions.class_time,
-                sessions.days, courses.teacherid AS course_teacher
+                sessions.days, courses.teacherid AS course_teacher, courses.course_id
                 FROM sessions JOIN courses on sessions.course_id = courses.course_id
-                WHERE course_teacher = %s AND sessions.id = %s""",
+                WHERE courses.teacherid = %s AND sessions.id = %s""",
                 (user_id, id,))
-    session = cur.fetchone()
+    class_session = cur.fetchone()
     cur.close()
-    db.close()
+    g.db.close()
 
     if session is None:
-        pass
+        abort(403)
 
-    if check_teacher and course['teacherid'] != g.user['id']:
-        pass
+    if check_teacher and class_session['course_teacher'] != g.user['id']:
+        abort(404)
 
-    return session
+    return class_session
 
 # Route for viewing sessions
 @bp.route("/<int:id>/sessions", methods=['GET', 'POST'])
@@ -50,12 +50,7 @@ def view_sessions(id):
 @bp.route("/sessions/<int:id>/edit", methods=['GET', 'POST'])
 def session_edit(id):
     """Edit a session"""
-    cur = db.get_db().cursor()
-    cur.execute("""SELECT days, class_time, course_id FROM sessions WHERE id = %s""",
-                (id,))
-    session = cur.fetchone()
-    cur.close()
-
+    session = get_session(id)
     if request.method == 'POST':
 
         session_days = request.form['session_days']
