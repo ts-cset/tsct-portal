@@ -3,7 +3,7 @@
 INSERT INTO users (id, email, password, name, role, major)
 VALUES (0001, 'teacher@stevenscollege.edu', '$2b$12$xVtl1ZGJBEW4gxQOm9UzW.P.UOq/cR7/TEv.G3l3x.TmV29yX8a5y', 'Test Teacher', 'teacher', 1),
        (0002, 'student@stevenscollege.edu', '$2b$12$PE/vM8jOb6Og84zdJ9GvKe8177OZ8EhMRzEwAONF1R8R6qeJ6PAsm', 'Test Student', 'student', 10),
-       (0003, 'teacher2@stevenscollege.edu', '$2b$12$xVtl1ZGJBEW4gxQOm9UzW.P.UOq/cR7/TEv.G3l3x.TmV29yX8a5y', 'Test Teacher 2', 'teacher', 2)
+       (0003, 'teacher2@stevenscollege.edu', '$2b$12$xVtl1ZGJBEW4gxQOm9UzW.P.UOq/cR7/TEv.G3l3x.TmV29yX8a5y', 'Test Teacher 2', 'teacher', 2),
        (0004, 'student2@stevenscollege.edu', '$2b$12$PE/vM8jOb6Og84zdJ9GvKe8177OZ8EhMRzEwAONF1R8R6qeJ6PAsm', 'Test Student 2', 'student', 3);
 
 INSERT INTO courses (name, major, description, teacherid)
