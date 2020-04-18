@@ -26,10 +26,10 @@ def test_create_session(client, auth):
 
 def test_edit_session(client, auth):
     auth.login()
-    response = client.get('/1/sessions/edit')
+    response = client.get('/sessions/1/edit')
     assert b'Edit Session' in response.data
 
-    response = client.post('/6/sessions/edit', data={
+    response = client.post('/sessions/1/edit', data={
         'session_days': 'S/Su',
         'session_time': '3:00pm'})
 

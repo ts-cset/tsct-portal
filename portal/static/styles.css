@@ -266,7 +266,7 @@ label input {
   background-color: #fac0c0;
   text-decoration: none;
   color: black;
-  margin-top: 4px;
+  margin: 4px 0 8px 0;
   padding-bottom: 3px;
   font-variant: small-caps;
   text-align: center;

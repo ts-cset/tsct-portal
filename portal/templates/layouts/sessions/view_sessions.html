@@ -20,10 +20,9 @@
       <div class="about-course"> {{ session['class_time']}}</div>
       <div class="about-course"> {{ session['course_name']}}</div>
 
-        <div class="about-course1">
-          <form  class="about-course-form" action="" method="get">
-            <button type="submit" name="assignments" class="course-button2" >assignments</button>
-        </div>
+      <div class="about-course1">
+        <a class="session-link" href=""><div class="session-button">assignments</div></a>
+      </div>
 
         {% if g.user['id'] == session['teacher_id'] %}
 
