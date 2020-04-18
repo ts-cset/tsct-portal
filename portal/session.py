@@ -62,6 +62,7 @@ def session_edit(id):
             (session_days, session_time, id)
         )
         g.db.commit()
+        g.db.close()
 
         return redirect(url_for('session.view_sessions', id=session['course_id']))
 
