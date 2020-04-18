@@ -5,6 +5,28 @@ from portal.auth import login_required, teacher_required
 
 bp = Blueprint("session", __name__)
 
+
+def get_session(id, check_teacher=True):
+
+    user_id = session['user_id']
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT sessions.id, sessions.course_id, sessions.class_time,
+                sessions.days, courses.teacherid AS course_teacher
+                FROM sessions JOIN courses on sessions.course_id = courses.course_id
+                WHERE course_teacher = %s AND sessions.id = %s""",
+                (user_id, id,))
+    session = cur.fetchone()
+    cur.close()
+    db.close()
+
+    if course is None:
+        abort(404, "Post id {0} doesn't exist.".format(id))
+
+    if check_teacher and course['teacherid'] != g.user['id']:
+        abort(403)
+
+    return session
+
 # Route for viewing sessions
 @bp.route("/<int:id>/sessions", methods=['GET', 'POST'])
 @login_required
@@ -23,32 +45,28 @@ def view_sessions(id):
     return render_template("layouts/sessions/view_sessions.html", sessions=sessions)
 
 
-@bp.route("/sessions/<int:id>/edit", methods=['GET', 'POST'])
+@bp.route("/<int:id>/sessions/edit", methods=['GET', 'POST'])
 @login_required
 @teacher_required
-def edit_session(id):
+def session_edit(id):
     """Edit a session"""
-    cur = db.get_db().cursor()
-    cur.execute("""SELECT * FROM sessions WHERE id = %s""",
-                (id,))
-    session = cur.fetchone()
-    cur.close()
+    session = get_session(id)
 
-    if request.method == 'POST':
-
-        session_days = request.form['session_days']
-        session_time = request.form['session_time']
-
-        cur = db.get_db().cursor()
-        cur.execute(
-            'UPDATE sessions SET days = %s, class_time = %s'
-            ' WHERE id = %s ',
-            (session_days, session_time, id)
-        )
-        g.db.commit()
-        cur.close()
-
-        return redirect(url_for('session.view_sessions', id=session['course_id']))
+    # if request.method == 'POST':
+    #
+    #     session_days = request.form['session_days']
+    #     session_time = request.form['session_time']
+    #
+    #     cur = db.get_db().cursor()
+    #     cur.execute(
+    #         'UPDATE sessions SET days = %s, class_time = %s'
+    #         ' WHERE id = %s ',
+    #         (session_days, session_time, id)
+    #     )
+    #     g.db.commit()
+    #     cur.close()
+    #
+    #     return redirect(url_for('session.view_sessions', id=session['course_id']))
 
     return render_template("layouts/sessions/edit_session.html", session=session)
 
@@ -86,6 +104,7 @@ def create():
                     (course_id, days, class_time))
 
         g.db.commit()
+        cur.close()
         return redirect(url_for('session.view_sessions', id=course_id))
 
     return render_template("layouts/sessions/create_session.html", courses=courses)

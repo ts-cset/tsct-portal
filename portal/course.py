@@ -46,10 +46,10 @@ def edit(id):
             ' WHERE course_id = %s ',
             (course_name, course_description, id)
         )
-        g.db.commit()
-        cur.close()
+        con.commit()
+        db.close_db()
 
-        return redirect(url_for('main.home'))
+        return redirect(url_for('course.view', id=course['course_id']))
 
     return render_template("layouts/courses/edit.html", course=course)
 
@@ -81,8 +81,7 @@ def delete(id):
     cur.execute(
         'DELETE FROM courses WHERE course_id= %s', (id,)
     )
-    g.db.commit()
-    cur.close()
+    con.commit()
     return redirect(url_for('main.home'))
 
 # Route to create a course
@@ -109,7 +108,8 @@ def create():
         VALUES (%s, %s, %s, %s)""",
                     (course_name, major, course_description, teacherId,))
 
-        g.db.commit()
+        con.commit()
+        close_db()
         return redirect(url_for('main.home'))
 
     return render_template("layouts/courses/create_courses.html", majors=majors)
