@@ -19,11 +19,11 @@ def get_session(id, check_teacher=True):
     cur.close()
     db.close()
 
-    if course is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
+    if session is None:
+        pass
 
     if check_teacher and course['teacherid'] != g.user['id']:
-        abort(403)
+        pass
 
     return session
 
@@ -45,12 +45,18 @@ def view_sessions(id):
     return render_template("layouts/sessions/view_sessions.html", sessions=sessions)
 
 
-@bp.route("/<int:id>/sessions/edit", methods=['GET', 'POST'])
 @login_required
 @teacher_required
+@bp.route("/<int:course_id>/sessions/<int:id>/edit", methods=['GET', 'POST'])
 def session_edit(id):
     """Edit a session"""
-    session = get_session(id)
+    user_id = session['user_id']
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT id, days, class_time FROM sessions WHERE id = %s""",
+                (id,))
+    session = cur.fetchone()
+    cur.close()
+    g.db.close()
 
     # if request.method == 'POST':
     #

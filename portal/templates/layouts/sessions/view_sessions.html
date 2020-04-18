@@ -28,7 +28,7 @@
         {% if g.user['id'] == session['teacher_id'] %}
 
         <div class="about-course1">
-          <form class="about-course-form" action="{{ url_for('session.session_edit', id=session['id']) }}" method="get">
+          <form class="about-course-form" action="{{ url_for('session.session_edit', id=session['id'], course_id=session['course_id']) }}" method="get">
             <button type="Submit" name="edit" class="course-button">edit</button>
           </form>
           </div>

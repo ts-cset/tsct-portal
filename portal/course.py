@@ -18,7 +18,7 @@ def get_course(id, check_teacher=True):
     cur.close()
 
     if course is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
+        abort(404, "Course id {0} doesn't exist.".format(id))
 
     if check_teacher and course['teacherid'] != g.user['id']:
         abort(403)
@@ -46,7 +46,7 @@ def edit(id):
             ' WHERE course_id = %s ',
             (course_name, course_description, id)
         )
-        con.commit()
+        g.db.commit()
         db.close_db()
 
         return redirect(url_for('course.view', id=course['course_id']))
