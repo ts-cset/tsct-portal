@@ -47,32 +47,30 @@ def view_sessions(id):
 
 @login_required
 @teacher_required
-@bp.route("/<int:course_id>/sessions/<int:id>/edit", methods=['GET', 'POST'])
+@bp.route("/sessions/<int:id>/edit", methods=['GET', 'POST'])
 def session_edit(id):
     """Edit a session"""
-    user_id = session['user_id']
     cur = db.get_db().cursor()
-    cur.execute("""SELECT id, days, class_time FROM sessions WHERE id = %s""",
+    cur.execute("""SELECT days, class_time, course_id FROM sessions WHERE id = %s""",
                 (id,))
     session = cur.fetchone()
     cur.close()
-    g.db.close()
 
-    # if request.method == 'POST':
-    #
-    #     session_days = request.form['session_days']
-    #     session_time = request.form['session_time']
-    #
-    #     cur = db.get_db().cursor()
-    #     cur.execute(
-    #         'UPDATE sessions SET days = %s, class_time = %s'
-    #         ' WHERE id = %s ',
-    #         (session_days, session_time, id)
-    #     )
-    #     g.db.commit()
-    #     cur.close()
-    #
-    #     return redirect(url_for('session.view_sessions', id=session['course_id']))
+    if request.method == 'POST':
+
+        session_days = request.form['session_days']
+        session_time = request.form['session_time']
+
+        cur = db.get_db().cursor()
+        cur.execute(
+            'UPDATE sessions SET days = %s, class_time = %s'
+            ' WHERE id = %s ',
+            (session_days, session_time, id)
+        )
+        g.db.commit()
+        cur.close()
+
+        return redirect(url_for('session.view_sessions', id=session['course_id']))
 
     return render_template("layouts/sessions/edit_session.html", session=session)
 

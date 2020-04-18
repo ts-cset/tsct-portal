@@ -259,3 +259,17 @@ label input {
 .link-something {
   display: block;
 }
+.session-link{
+  text-decoration: none;
+}
+.session-button {
+  background-color: #fac0c0;
+  text-decoration: none;
+  color: black;
+  margin-top: 4px;
+  padding-bottom: 3px;
+  font-variant: small-caps;
+  text-align: center;
+  border: 1px solid black;
+  width: 100px;
+}
