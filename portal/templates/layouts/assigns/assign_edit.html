@@ -1,0 +1,76 @@
+{% extends 'layouts/base.html' %}
+
+{% block content%}
+
+<header>
+
+
+  <h2>Edit assignment {{ assignment['assign_name'] }}</h2>
+
+  <a href="{{ url_for('assign.assign_manage', id=session['course_id'], sessions_id=session['id'] )}}" class='back'>Back</a>
+
+</header>
+
+{% for message in get_flashed_messages() %}
+  <p class="flash">{{ message }}</p>
+{% endfor %}
+
+<section class='assignments'>
+
+  <form class="assign" action="{{ url_for('assign.assign_edit', sessions_id=session['id'], assign_id=assignment['id'] )}}" method="post">
+
+    <ul>
+
+      <li>
+
+        <label for="edit_name">Name</label>
+
+        {{ assignment['assign_name']}}
+
+        <input type="text" name="edit_name">
+
+      </li>
+
+
+      <li>
+
+        <label for="edit_desc">Description</label>
+
+        {{ assignment['description'] }}
+
+        <input type="text" name="edit_desc">
+
+      </li>
+
+      <li>
+
+        <label for="edit_points">Points</label>
+
+          {{ assignment['points'] }}
+
+          <input type="number" name="edit_points">
+
+
+      </li>
+
+      <li>
+
+        <label for="edit_date">Due Date</label>
+
+        {{ assignment['due_date'] }}
+
+          <input type="datetime" name="edit_date">
+
+
+      </li>
+
+    </ul>
+
+    <input type="submit" name="assignmentEditSumbit" value="Save">
+
+  </form>
+
+
+</section>
+
+{% endblock %}

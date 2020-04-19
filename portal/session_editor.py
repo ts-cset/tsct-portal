@@ -119,7 +119,6 @@ def session_manage(id):
 
     return render_template("layouts/sessionManage.html", course=course, sessions=sessions)
 
-
 def get_session(sessions_id):
     """Gets the session from the database"""
     with db.get_db() as con:
