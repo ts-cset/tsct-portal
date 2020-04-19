@@ -18,10 +18,9 @@ def get_course(id, check_teacher=True):
     cur.close()
 
     if course is None:
-        abort(400, 'This course does not exist')
-
-    if check_teacher and course['teacherid'] != g.user['id']:
-        abort(400, 'User does not have acces to this course')
+        abort(400, """System has prevented this action. \n
+              Either this course does not exist,\n
+              or you do not have acces to it.""")
 
     return course
 

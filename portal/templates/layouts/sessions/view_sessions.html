@@ -7,45 +7,32 @@
 
 <article class="course">
   <header class="courses-main">
-  <div class="course-table-header1">session id:</div>
-  <div class="course-table-header">days:</div>
-  <div class="course-table-header">time:</div>
-  <div class="course-table-header">course:</div>
-  <div class="course-table-header2"></div>
+    <ul class="session-table-header">
+      <li class="session-header">session id:</li>
+      <li class="session-header">days:</li>
+      <li class="session-header">time:</li>
+      <li class="session-header">course:</li>
+    </ul>
   </header>
    {% for session in sessions %}
-  <section class= "courses">
-      <div class="about-course1"> {{ session['id'] }} </div>
-      <div class="about-course"> {{ session['days']}}</div>
-      <div class="about-course"> {{ session['class_time']}}</div>
-      <div class="about-course"> {{ session['course_name']}}</div>
+   <section class= "courses">
+   <ul class="session-info">
+      <li class="session-stuff"> {{ session['id'] }}
+      <li class="session-stuff"> {{ session['days']}}
+      <li class="session-stuff"> {{ session['class_time']}}
+      <li class="session-stuff"> {{ session['course_name']}}
+      <li class="session-stuff2"><a href="">assignments</a>
 
-      <div class="about-course1">
-        <a class="session-link" href=""><div class="session-button">assignments</div></a>
-      </div>
+    {% if g.user['id'] == session['teacher_id'] %}
+      <li class="session-stuff2"><a href="{{ url_for('session.session_edit', id=session['id'], course_id=session['course_id']) }}">edit</a>
+      <li class="session-stuff2"><a href="{{ url_for('session.delete_session', id=session['id']) }}">delete</a>
+      <li class="session-stuff2"><a href="{{ url_for('session.create', id=session['course_id']) }}">add session</a>
+    {% endif %}
 
-        {% if g.user['id'] == session['teacher_id'] %}
-
-      <div class="about-course1">
-        <a class="session-link" href="{{ url_for('session.session_edit', id=session['id'], course_id=session['course_id']) }}"><div class="session-button">edit</div></a>
-      </div>
-      <div class="about-course1" class="about-course1">
-        <a class="session-link" href="{{ url_for('session.delete_session', id=session['id']) }}"><div class="session-button">delete</div></a>
-      </div>
-      <div class="about-course1">
-        <a class="session-link" href="{{ url_for('session.create', id=session['course_id']) }}"><div class="session-button">add session</div></a>
-      </div>
-
-          {% else %}
-      <div class="about-course1">
-      </div>
-      <div class="about-course1">
-      </div>
-      <div class="about-course1">
-      </div>
+    </ul>
     </section>
 
-          {% endif %}
+
           {% endfor %}
 
 

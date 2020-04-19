@@ -6,7 +6,7 @@ from portal.auth import login_required, teacher_required
 bp = Blueprint("session", __name__)
 
 
-def get_session(id, check_teacher=True):
+def get_session(id):
 
     user_id = session['user_id']
     cur = db.get_db().cursor()
@@ -19,10 +19,9 @@ def get_session(id, check_teacher=True):
     cur.close()
 
     if session is None:
-        abort(400, 'This session does not exist')
-
-    if check_teacher and class_session['course_teacher'] != g.user['id']:
-        abort(400, 'User does not have acces to this session')
+        abort(400, """System has prevented this action. \n
+              Either this session does not exist,\n
+              or you do not have acces to it.""")
 
     return class_session
 
@@ -113,11 +112,9 @@ def create():
 @login_required
 def delete_session(id):
     """Delete unwanted session"""
-    cur = db.get_db().cursor()
-    cur.execute("""SELECT id, course_id FROM sessions where id = %s""",
-                (id,))
-    x = cur.fetchone()
+    x = get_session(id)
     course_id = x['course_id']
+    cur = db.get_db().cursor()
     cur.execute('DELETE FROM sessions where id = %s',
                 (id,))
     g.db.commit()

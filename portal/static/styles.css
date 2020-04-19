@@ -60,6 +60,11 @@ label input {
   width: 100%;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .namebar {
   align-items: center;
   background-color: maroon;
@@ -174,31 +179,72 @@ label input {
   display: flex;
   flex-direction: row;
 }
-.courses {
+
+.courses-table-header {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
-  width:100%;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0;
+  width: 100%;
 }
 
-.course-table-header {
-  color: black;
-  background-color: white;
-  width: 24%;
-  margin: 5px;
+.courses-header {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  list-style-type: none;
 }
-.course-table-header1 {
-  color: black;
-  background-color: white;
-  width: 120px;
-  margin: 5px;
+.courses-header2 {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  list-style-type: none;
 }
-.course-table-header2 {
-  color: black;
-  background-color: white;
-  width: 35%;
-  margin: 5px;
+
+.courses {
+  display: block;
 }
+
+.course-info {
+  background-color: lightgrey;
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0;
+  width: 100%;
+}
+
+.course-stuff {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+.course-stuff2 {
+  list-style-type: none;
+  background-color: #fac0c0;
+  text-decoration: none;
+  color: black;
+  font-variant: small-caps;
+  text-align: center;
+  border: 1px solid black;
+  width: 150px;
+  padding: 5px;
+}
+
 
 .about-course1 {
   width: 150px;
@@ -210,15 +256,8 @@ label input {
 
 }
 .about-course {
+  display: inline-block;
   width: 30%;
-  border: 1px solid black;
-  background-color: lightgrey;
-  padding: 9px 0 0 5px;
-  align-items: center;
-}
-
-.about-course2 {
-  width: 40%;
   border: 1px solid black;
   background-color: lightgrey;
   padding: 9px 0 0 5px;
@@ -275,17 +314,54 @@ label input {
 .link-something {
   display: block;
 }
-.session-link{
-  text-decoration: none;
+
+.session-table-header {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0;
 }
-.session-button {
+.session-header {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  list-style-type: none;
+}
+
+.session-info {
+  background-color: lightgrey;
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0;
+}
+
+.session-stuff {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+.session-stuff2 {
+  list-style-type: none;
   background-color: #fac0c0;
   text-decoration: none;
   color: black;
-  margin: 4px 0 8px 0;
-  padding-bottom: 3px;
   font-variant: small-caps;
   text-align: center;
   border: 1px solid black;
-  width: 100px;
+  width: 150px;
+  padding: 5px;
 }
