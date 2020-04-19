@@ -24,7 +24,7 @@ def test_assign_create(client):
     #make post request to test functionality of test created
     #test redirection to assign manage
     response_2 = client.post('/course/180/session/2/create/assignment/', data={'name': 'portal creation',
-     'description': 'testing_description', 'points': '100', 'due_date': '2020-06-22 19:10:25-07'}, follow_redirects=True)
+     'description': 'testing_description', 'points': 100, 'due_date': '2020-06-22 19:10:25-07'}, follow_redirects=True)
     #in assign manage data make sure assign manage is there
     assert b'Assignments for CSET-180-A' in response_2.data
     assert b'portal creation' in response_2.data
@@ -36,8 +36,8 @@ def test_assign_create(client):
 
 @pytest.mark.parametrize(('name', 'description', 'points', 'due_date', 'error'), (
     ('testing exam', 'enter discription', '', '2020-06-22 19:10:25-07', b'Points are required.'),
-    ('', 'enter description', '90', '2020-06-22 19:10:25-07', b'Name is required.'),
-    ('testing exam again', 'description', '10',"", b'Due Date is required.')
+    ('', 'enter description', 90, '2020-06-22 19:10:25-07', b'Name is required.'),
+    ('testing exam again', 'description', 10,"", b'Due Date is required.')
     ))
 
 def test_create_errors(client, name, description, points, due_date, error):
@@ -102,8 +102,8 @@ def test_assign_edit(client):
 
 @pytest.mark.parametrize(('name', 'description', 'points', 'edit_date', 'error'),(
     ('testing exam', 'enter discription', '', '2020-06-22 19:10:25-07', b'Points are required.'),
-    ('', 'enter description', '90', '2020-06-22 19:10:25-07', b'Name is required.'),
-    ('testing exam again', 'description', '10',"", b'Due Date is required.')
+    ('', 'enter description', 90, '2020-06-22 19:10:25-07', b'Name is required.'),
+    ('testing exam again', 'description', 10,"", b'Due Date is required.')
     ))
 
 def test_edit_errors(client, name, description, points, edit_date, error):

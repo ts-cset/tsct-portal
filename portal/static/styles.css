@@ -22,8 +22,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-
-
+article.home_page h2 {
+   background-color:#8B1E41;
+   margin: 2rem auto;
+   text-align: center;
+}
 
 /**
  * Layout
@@ -205,6 +208,14 @@ div.links {
   div.links {
     margin: 0;
   }
+
+  article.home_page h2 {
+     background-color:#8B1E41;
+     margin: 2rem auto;
+     text-align: justify;
+  }
+
+
 }
 
 
