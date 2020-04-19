@@ -184,15 +184,22 @@ label input {
 .course-table-header {
   color: black;
   background-color: white;
-  width: 28%;
+  width: 24%;
   margin: 5px;
 }
 .course-table-header1 {
   color: black;
   background-color: white;
-  width: 110px;
+  width: 120px;
   margin: 5px;
 }
+.course-table-header2 {
+  color: black;
+  background-color: white;
+  width: 35%;
+  margin: 5px;
+}
+
 .about-course1 {
   width: 150px;
   border: 1px solid black;
@@ -209,6 +216,15 @@ label input {
   padding: 9px 0 0 5px;
   align-items: center;
 }
+
+.about-course2 {
+  width: 40%;
+  border: 1px solid black;
+  background-color: lightgrey;
+  padding: 9px 0 0 5px;
+  align-items: center;
+}
+
 .about-course-form {
   width: 100%;
   background-color: lightgrey;
