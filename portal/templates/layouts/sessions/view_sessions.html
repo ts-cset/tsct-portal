@@ -21,9 +21,12 @@
         <button type="Submit" name="edit" class="course-button">view</button>
       </form>
       </div>
+      {% if g.user['id'] == course['teacherid'] %}
       <div class="about-course1">
-        <a href="{{ url_for('main.index') }}" class="course-button">Assignments</a>
+        <a href="{{ url_for('assignment.view_assignments', id=session['id']) }}" class="course-button">Assignments</a>
       </div>
+      {% endif %}
+
   </section>
     {% endfor %}
 </article>

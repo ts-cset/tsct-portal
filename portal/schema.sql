@@ -82,7 +82,8 @@ CREATE TABLE assignments(
   assignment_id bigserial PRIMARY KEY,
   session_id bigserial REFERENCES sessions(id),
   name text,
-  description text
+  description text,
+  due_date date
 );
 
 INSERT INTO majors (name, description)

@@ -1,7 +1,7 @@
 -- Mock Data For Tests
 
 INSERT INTO users (id, email, password, name, role, major)
-VALUES (0001, 'teacher@stevenscollege.edu', 'qwerty', 'test', 'teacher', 1),
+VALUES (0001, 'teacher@stevenscollege.edu', '$2b$12$xVtl1ZGJBEW4gxQOm9UzW.P.UOq/cR7/TEv.G3l3x.TmV29yX8a5y', 'test', 'teacher', 1),
        (0002, 'student@stevenscollege.edu', 'password', 'test', 'student', 10);
 
 INSERT INTO courses (name, major, description, teacherid)
@@ -21,3 +21,9 @@ VALUES (1, 'M/W/F', '9:00am'),
       (2, 'T', '6:00pm'),
       (3, 'M/W/F', '8:15am'),
       (3, 'T/Th', '1:30pm');
+
+INSERT INTO assignments (session_id, name, description)
+VALUES (1, 'Exam_1', 'Chapter 1 Exam'),
+       (1, 'Exam_2', 'Chapter 2 Exam'),
+       (2, 'Essay', 'Biographical Essay'),
+       (2, 'Essay', 'Persuasive Essay');
