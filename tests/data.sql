@@ -12,8 +12,10 @@ VALUES ('A', 'MTWThF', 1);
 
 INSERT INTO assignments (name, description, points, course_id)
 VALUES ('Big Software', 'You need to create some big software with lots of big software energy', 200, 1),
-('Big Software', 'You need to create some big software with lots of big software energy', 200, 1),
-('Big Software', 'You need to create some big software with lots of big software energy', 200, 1);
+('Bigger Software', 'You need to create some big software with lots of big software energy', 300, 1),
+('Biggest Software', 'You need to create some big software with lots of big software energy', 400, 1);
 
 INSERT INTO session_assignments (session_id, assignment_id, due_date)
-VALUES (1, 1, '4/25/2020');
+VALUES (1, 1, '4/25/2020'),
+       (1, 2, '4/30/2020'),
+       (1, 3, '5/02/2020');
