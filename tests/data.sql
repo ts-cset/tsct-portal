@@ -36,4 +36,5 @@ VALUES (5, 1);
 
 
 INSERT INTO assignments (sessions_id, assign_name, description, points, due_time)
-VALUES (2, 'exam1', 'first exam of course', 25, '2016-06-22 19:10:25-07')
+VALUES (2, 'exam1', 'first exam of course', 25, '2020-06-22 19:10:25-07'),
+        (1, 'test1', 'first test of course', 30, '2020-07-24 10:05:25-07');

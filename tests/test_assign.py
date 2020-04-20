@@ -119,3 +119,18 @@ def test_edit_errors(client, name, description, points, edit_date, error):
 
     rv = logout(client)
     assert b'TSCT Portal Login' in rv.data
+
+#check that only teacher who own a specific session can access specific assignments
+def test_teacher(client):
+    assert client.get('/course/180/session/2/Edit/assignment/2/').status_code == 302
+
+    rv = login(
+        client, 'teacher@stevenscollege.edu', 'qwerty')
+    assert b'Logged in' in rv.data
+
+    assert client.get('/course/180/session/2/Edit/assignment/2/').status_code == 403
+    response = client.get('/course/180/session/2/Edit/assignment/2/',follow_redirects = True)
+    assert b'Home' in response.data
+
+    rv = logout(client)
+    assert b'TSCT Portal Login' in rv.data
