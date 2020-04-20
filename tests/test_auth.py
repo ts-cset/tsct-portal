@@ -1,9 +1,6 @@
 import pytest
-import psycopg2
 
-from portal.db import get_db
-from portal import db
-from flask import g, session
+from flask import  session
 
 def test_login(client, auth):
     assert client.get('/').status_code == 200
