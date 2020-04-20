@@ -33,6 +33,7 @@ CREATE TABLE courses (
   name varchar(50) UNIQUE NOT NULL,
   major varchar(50) NOT NULL,
   description text,
+  credits int,
   teacherid bigint NOT NULL
 );
 
@@ -52,7 +53,8 @@ CREATE TABLE sessions (
   id bigserial PRIMARY KEY,
   course_id bigint NOT NULL,
   days varchar(20) NOT NULL,
-  class_time time NOT NULL
+  class_time time NOT NULL,
+  location varchar(50)
 );
 
 ALTER TABLE sessions

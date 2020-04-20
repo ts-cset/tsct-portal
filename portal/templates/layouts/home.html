@@ -22,11 +22,11 @@
        {% for course in courses %}
       <section class= "courses">
         <ul class="course-info">
-           <li class="course-stuff"> {{ course['course_id'] }}
-           <li class="course-stuff"> {{ course['name'] }}
-           <li class="course-stuff"> {{ course['teacher_name'] }}
-           <li class="course-stuff"> {{ course['major'] }}
-           <li class="course-stuff2"><a href="{{ url_for('course.view', id=course['course_id']) }}">view</a>
+           <li class="course-list"> {{ course['course_id'] }}
+           <li class="course-list"> {{ course['name'] }}
+           <li class="course-list"> {{ course['teacher_name'] }}
+           <li class="course-list"> {{ course['major'] }}
+           <li class="course-list2"><a href="{{ url_for('course.view', id=course['course_id']) }}">view</a>
          </ul>
       </section>
         {% endfor %}

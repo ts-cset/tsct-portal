@@ -21,6 +21,17 @@ h1, h2, h3, h4, h5, h6 {
 /**
  * Layout
  */
+
+ ul {
+   display: block;
+   list-style-type: none;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-inline-start: 0;
+ }
+ 
 body {
   justify-content: space-between;
   display: flex;
@@ -102,17 +113,23 @@ a {
   border: 1px solid darkgrey;
   font-size: 18px;
   font-variant: small-caps;
-  margin-left: 10px;
+  padding-top: 2px;
+  margin-right: 20px;
+}
+
+.home-buttons {
+  display: inline-block;
 }
 .home-button {
   color: black;
   background-color: lightgrey;
   border: 1px solid darkgrey;
-  margin-left: 20px;
-  padding: 0px 2px 1.5px 2px;
+  margin-top: 3px;
+  padding: 0px 18.5px 1.5px 18.5px;
   font-size: 18px;
   font-variant: small-caps;
   text-decoration: none;
+
 }
 
 .teacher_forms {
@@ -224,7 +241,7 @@ a {
   width: 100%;
 }
 
-.course-stuff {
+.course-list {
   padding: 5px;
   justify-content: center;
   align-items: center;
@@ -233,7 +250,7 @@ a {
   border: 1px solid black;
 }
 
-.course-stuff2 {
+.course-list2 {
   list-style-type: none;
   background-color: #fac0c0;
   text-decoration: none;
@@ -245,24 +262,33 @@ a {
   padding: 5px;
 }
 
-
-.about-course1 {
-  width: 150px;
-  border: 1px solid black;
-  background-color: lightgrey;
-  padding: 5px 5px 0 5px;
-  align-items: center;
-  justify-content: center;
-
+.home-options{
+  height: 30px;
 }
-.about-course {
-  display: inline-block;
-  width: 30%;
-  border: 1px solid black;
-  background-color: lightgrey;
-  padding: 9px 0 0 5px;
-  align-items: center;
+aside {
+  display: block;
 }
+
+.course-options {
+  display: flex;
+  flex-direction: row;
+  padding-top: 20px;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0;
+}
+
+.course-options-item {
+  background-color: #fac0c0;
+  font-variant: small-caps;
+  border: 1px solid darkgrey;
+  padding: 3px 5px 3px 5px;
+  margin: 5px 5px 5px 0px;
+}
+
 
 .about-course-form {
   width: 100%;
@@ -278,14 +304,6 @@ a {
   border: 1px solid black;
   font-variant: small-caps;
   width: 80px;
-  margin: 5px;
-}
-
-.course-button2 {
-  background-color: #fac0c0;
-  border: 1px solid black;
-  font-variant: small-caps;
-  width: 120px;
   margin: 5px;
 }
 
@@ -311,10 +329,6 @@ a {
   padding: 5px;
 }
 
-.link-something {
-  display: block;
-}
-
 .session-table-header {
   display: flex;
   flex-direction: row;
@@ -324,8 +338,17 @@ a {
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   padding-inline-start: 0;
+  width:100%;
 }
 .session-header {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  list-style-type: none;
+}
+
+.session-header2 {
   padding: 5px;
   justify-content: center;
   align-items: center;
@@ -345,7 +368,37 @@ a {
   padding-inline-start: 0;
 }
 
-.session-stuff {
+.session-list {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 18%;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+.session-list1 {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 75px;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+.session-list2 {
+  list-style-type: none;
+  background-color: #fac0c0;
+  text-decoration: none;
+  color: black;
+  font-variant: small-caps;
+  text-align: center;
+  border: 1px solid black;
+  width: 120px;
+  padding: 5px;
+}
+
+.session-list3 {
   padding: 5px;
   justify-content: center;
   align-items: center;
@@ -354,14 +407,9 @@ a {
   border: 1px solid black;
 }
 
-.session-stuff2 {
-  list-style-type: none;
-  background-color: #fac0c0;
-  text-decoration: none;
-  color: black;
+.id {
+  font-size: 20px;
+  margin-right: 10px;
+  color: maroon;
   font-variant: small-caps;
-  text-align: center;
-  border: 1px solid black;
-  width: 150px;
-  padding: 5px;
 }

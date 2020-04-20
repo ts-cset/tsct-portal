@@ -23,7 +23,7 @@ def get_session(id, check_teacher=True):
                     or you do not have acces to it.""")
     else:
         cur = db.get_db().cursor()
-        cur.execute("""SELECT id, class_time, days, course_id
+        cur.execute("""SELECT id, class_time, days, course_id, location
                     FROM sessions WHERE id = %s """,
                     (id,))
         class_session = cur.fetchone()
@@ -38,7 +38,7 @@ def view_sessions(id):
     """Single page view of session"""
     cur = db.get_db().cursor()
     cur.execute("""SELECT sessions.id, sessions.days, sessions.course_id,
-                sessions.class_time, courses.name AS course_name,
+                sessions.class_time, sessions.location, courses.name AS course_name,
                 courses.teacherid AS teacher_id
                 FROM sessions JOIN courses ON courses.course_id = sessions.course_id
                 WHERE sessions.course_id = %s""",
@@ -59,12 +59,13 @@ def session_edit(id):
 
         session_days = request.form['session_days']
         session_time = request.form['session_time']
+        location = request.form['location']
 
         cur = db.get_db().cursor()
         cur.execute(
-            'UPDATE sessions SET days = %s, class_time = %s'
+            'UPDATE sessions SET days = %s, class_time = %s, location = %s'
             ' WHERE id = %s ',
-            (session_days, session_time, id)
+            (session_days, session_time, location, id)
         )
         g.db.commit()
         g.db.close()
@@ -103,11 +104,12 @@ def create():
         days = request.form['session_days']
         class_time = request.form['class_time']
         print(course, course_id, days, class_time)
+        location = request.form['location']
         cur = db.get_db().cursor()
         cur.execute("""
-        INSERT INTO sessions ( course_id, days, class_time)
-        VALUES ( %s, %s, %s)""",
-                    (course_id, days, class_time))
+        INSERT INTO sessions ( course_id, days, class_time, location)
+        VALUES ( %s, %s, %s, %s)""",
+                    (course_id, days, class_time, location))
 
         g.db.commit()
         cur.close()

@@ -12,7 +12,7 @@ def get_course(id, check_teacher=True):
 
     user_id = session.get('user_id')
     cur = db.get_db().cursor()
-    cur.execute("""SELECT course_id, name, description, teacherid FROM courses WHERE teacherid = %s AND course_id = %s""",
+    cur.execute("""SELECT course_id, name, description, credits, teacherid FROM courses WHERE teacherid = %s AND course_id = %s""",
                 (user_id, id,))
     course = cur.fetchone()
     cur.close()
@@ -60,7 +60,7 @@ def edit(id):
 def view(id):
     """Single page view of a course"""
     cur = db.get_db().cursor()
-    cur.execute("""SELECT courses.course_id, courses.name, courses.major, courses.description, courses.teacherid, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
+    cur.execute("""SELECT courses.course_id, courses.name, courses.major, courses.credits, courses.description, courses.teacherid, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
                 (id,))
     course = cur.fetchone()
     cur.close()
@@ -104,6 +104,7 @@ def create():
         major = request.form['majors']
         course_name = request.form['new_course']
         course_description = request.form['course_description']
+        credits = request.form['credits']
         cur = db.get_db().cursor()
         cur.execute("""
         INSERT INTO courses (name, major, description, teacherId)
