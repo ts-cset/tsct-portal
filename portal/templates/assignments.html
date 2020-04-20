@@ -3,14 +3,16 @@
 {% block title %}Manage Assignments{% endblock %}
 
 {% block content %}
-  <form action="{{ url_for('teacher.edit_assignments') }}" method="post">
+  <form method="post">
     <ul>
       {% for assignment in assignments %}
       <li>
         {{ assignment['course_name']}}–{{ assignment['name'] }}
-        <button type="submit" name="edit" value="{{ assignment['id'] }}">Edit</button>
+        <input type="checkbox" name="id" value="{{ assignment['id'] }}">
+        <button type="submit" formaction="{{ url_for('teacher.edit_assignments') }}" name="edit" value="{{ assignment['id'] }}">Edit</button>
       </li>
       {% endfor %}
     </ul>
+    <button type="submit">Delete Selected</button>
   </form>
 {% endblock %}

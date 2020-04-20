@@ -26,7 +26,16 @@ def courses():
                                              WHERE course_id = %s)
                     """, (request.form[item],))
                     cur.execute("""
+                        DELETE FROM session_assignments
+                        WHERE session_id in (SELECT id from sessions
+                                             WHERE course_id = %s)
+                    """, (request.form[item],))
+                    cur.execute("""
                         DELETE FROM sessions
+                        WHERE course_id = %s
+                    """, (request.form[item],))
+                    cur.execute("""
+                        DELETE FROM assignments
                         WHERE course_id = %s
                     """, (request.form[item],))
                     cur.execute("""
@@ -65,10 +74,27 @@ def create():
         return redirect(url_for('teacher.courses'))
     return render_template('course-creation.html')
 
-@bp.route('/session')
+@bp.route('/session', methods=('GET', 'POST'))
 @login_required
 @admin
 def sessions():
+    if request.method == 'POST':
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                for item in request.form.getlist('id'):
+                    cur.execute("""
+                        DELETE FROM roster
+                        WHERE session_id = %s
+                    """, (item,))
+                    cur.execute("""
+                        DELETE FROM session_assignments
+                        WHERE session_id = %s
+                    """, (item,))
+                    cur.execute("""
+                        DELETE FROM sessions
+                        WHERE id = %s
+                    """, (item,))
+
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute("""
@@ -128,6 +154,7 @@ def make_session():
         return render_template('create-sessions.html', students=students, roster=roster)
     else:
         return redirect(url_for('teacher.home'))
+
 
 @bp.route('/session/add', methods=('GET', 'POST'))
 @login_required
