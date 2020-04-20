@@ -70,6 +70,9 @@ def create_assignment(session_id):
             course_id = courses[0]
             print('course id HI IM RIGHT HERE GOD DAMN IT', course_id)
             cur.close()
+
+            
+
             return redirect(url_for('assignments.view_assignment', course_id=course_id, session_id=session_id, assignment_id=assignment_id))
         else:
             return redirect(url_for('assignments.create_assignment', session_id=session_id))
