@@ -3,7 +3,11 @@
 {% block title %}Manage Assignments{% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
   <form method="post">
+=======
+  <form action="{{ url_for('teacher.assignments') }}" method="post">
+>>>>>>> 5896bd3a3dd81ef1bdebcf9596f89f9ad957a2a7
     <ul>
       {% for assignment in assignments %}
       <li>
