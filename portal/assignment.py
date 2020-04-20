@@ -5,10 +5,19 @@ from . import db
 from portal.auth import login_required, admin
 from portal.teacher import bp
 
-@bp.route('/assignments')
+@bp.route('/assignments', methods=('GET', 'POST'))
 @login_required
 @admin
 def assignments():
+    if request.method == 'POST':
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                for item in request.form.getlist('id'):
+                    cur.execute("""
+                        DELETE FROM assignments
+                        WHERE id = %s
+                    """, (item,))
+
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute("""
