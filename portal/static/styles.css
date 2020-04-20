@@ -21,6 +21,17 @@ h1, h2, h3, h4, h5, h6 {
 /**
  * Layout
  */
+
+ ul {
+   display: block;
+   list-style-type: none;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-inline-start: 0;
+ }
+ 
 body {
   justify-content: space-between;
   display: flex;
@@ -60,6 +71,11 @@ label input {
   width: 100%;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .namebar {
   align-items: center;
   background-color: maroon;
@@ -97,17 +113,23 @@ label input {
   border: 1px solid darkgrey;
   font-size: 18px;
   font-variant: small-caps;
-  margin-left: 10px;
+  padding-top: 2px;
+  margin-right: 20px;
+}
+
+.home-buttons {
+  display: inline-block;
 }
 .home-button {
   color: black;
   background-color: lightgrey;
   border: 1px solid darkgrey;
-  margin-left: 20px;
-  padding: 0px 2px 1.5px 2px;
+  margin-top: 3px;
+  padding: 0px 18.5px 1.5px 18.5px;
   font-size: 18px;
   font-variant: small-caps;
   text-decoration: none;
+
 }
 
 .teacher_forms {
@@ -136,11 +158,11 @@ label input {
 }
 
 .form-label {
+  margin-top: 10px;
   font-variant: small-caps;
   background-color: #fac0c0;
-  margin: 10px 0 10px 0;
-  padding: 5px;
 }
+
 .course-list-action {
   width: 100px;
   border: none;
@@ -153,7 +175,7 @@ label input {
 }
 
 .major-dropdown {
-  width: 100px;
+  width: 200px;
   font-size: 18px;
 }
 
@@ -174,40 +196,100 @@ label input {
   display: flex;
   flex-direction: row;
 }
-.courses {
+
+.courses-table-header {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
-  width:100%;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0;
+  width: 100%;
 }
 
-.course-table-header {
-  color: black;
-  background-color: white;
-  width: 28%;
-  margin: 5px;
-}
-.course-table-header1 {
-  color: black;
-  background-color: white;
-  width: 110px;
-  margin: 5px;
-}
-.about-course1 {
-  width: 120px;
-  border: 1px solid black;
-  background-color: lightgrey;
-  padding: 5px 5px 0 5px;
+.courses-header {
+  padding: 5px;
+  justify-content: center;
   align-items: center;
-
-}
-.about-course {
   width: 30%;
-  border: 1px solid black;
-  background-color: lightgrey;
-  padding: 9px 0 0 5px;
-  align-items: center;
+  list-style-type: none;
 }
+.courses-header2 {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  list-style-type: none;
+}
+
+.courses {
+  display: block;
+}
+
+.course-info {
+  background-color: lightgrey;
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0;
+  width: 100%;
+}
+
+.course-list {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+.course-list2 {
+  list-style-type: none;
+  background-color: #fac0c0;
+  text-decoration: none;
+  color: black;
+  font-variant: small-caps;
+  text-align: center;
+  border: 1px solid black;
+  width: 150px;
+  padding: 5px;
+}
+
+.home-options{
+  height: 30px;
+}
+aside {
+  display: block;
+}
+
+.course-options {
+  display: flex;
+  flex-direction: row;
+  padding-top: 20px;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0;
+}
+
+.course-options-item {
+  background-color: #fac0c0;
+  font-variant: small-caps;
+  border: 1px solid darkgrey;
+  padding: 3px 5px 3px 5px;
+  margin: 5px 5px 5px 0px;
+}
+
+
 .about-course-form {
   width: 100%;
   background-color: lightgrey;
@@ -247,6 +329,87 @@ label input {
   padding: 5px;
 }
 
-.link-something {
-  display: block;
+.session-table-header {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0;
+  width:100%;
+}
+.session-header {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  list-style-type: none;
+}
+
+.session-header2 {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  list-style-type: none;
+}
+
+.session-info {
+  background-color: lightgrey;
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0;
+}
+
+.session-list {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 18%;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+.session-list1 {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 75px;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+.session-list2 {
+  list-style-type: none;
+  background-color: #fac0c0;
+  text-decoration: none;
+  color: black;
+  font-variant: small-caps;
+  text-align: center;
+  border: 1px solid black;
+  width: 120px;
+  padding: 5px;
+}
+
+.session-list3 {
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+.id {
+  font-size: 20px;
+  margin-right: 10px;
+  color: maroon;
+  font-variant: small-caps;
 }
