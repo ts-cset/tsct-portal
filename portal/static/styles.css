@@ -163,6 +163,7 @@ main a:hover, .deleteCourse:hover {
 }
 
 .courseList {
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
