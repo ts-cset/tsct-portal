@@ -18,7 +18,8 @@ def test_create_session(client, auth):
     response = client.post('/sessions/create', data={
         'courses': 'ENG 201',
         'session_days': 'M/W/F',
-        'class_time': '7:00am'})
+        'class_time': '7:00am',
+        'location': 'Main Campus'})
     # return to view list of sessions
     assert '5/sessions' in response.headers['Location']
     response = client.get('5/sessions')
@@ -34,7 +35,8 @@ def test_edit_session(client, auth):
     # editing session information for that session of that course
     response = client.post('/sessions/2/edit?course_id=2', data={
         'session_days': 'S/Su',
-        'session_time': '7:00am'})
+        'session_time': '7:00am',
+        'location': 'Branch Campus'})
     # return to view of list of sessions
     assert '/2/sessions' in response.headers['Location']
     response = client.get('/2/sessions')

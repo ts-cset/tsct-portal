@@ -11,7 +11,8 @@ def test_create_course(client, auth):
     response = client.post('/create', data={
         'majors': 'BUSA',
         'new_course': 'MATH 122',
-        'course_description': 'Enter description here'})
+        'course_description': 'Enter description here',
+        'credits': '3'})
     # if it work redirect to the Home
     assert '/home' in response.headers['Location']
     response = client.get('/home')
