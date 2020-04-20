@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Session{% endblock %}
+
+{% block content %}
+<section class="teacher_forms">
+<form class="teacher_home_form" method="post">
+
+  <label class="form-label" for="session_days">days:</label>
+    <input type="text" name="session_days" value="{{ session['days']}}" required />
+    <label class="form-label" for="location">location:</label>
+      <input type="text" name="location" value="{{ session['location']}}" required />
+    <label class="form-label" for="session_time">time:</label>
+      <input type="time" name="session_time" value="{{ session['time']}}" required />
+      <input class="submit" type="submit" value="submit changes"/>
+  </form>
+</section>
+{% endblock %}

@@ -34,6 +34,7 @@ def runner(app):
     """Using test app, create and return a CLI runner object."""
 
     return app.test_cli_runner()
+
 class AuthActions(object):
     def __init__(self, client):
         self._client = client
