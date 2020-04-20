@@ -1,9 +1,7 @@
 from flask import redirect, g, url_for, render_template, session, request, Blueprint, flash, abort
 import functools
-
 from . import db
 from portal.auth import login_required, teacher_required
-
 
 bp = Blueprint("course_editor", __name__)
 
@@ -68,14 +66,14 @@ def course_create():
 
 
 # Needs new template
-@bp.route("/courses/<int:id>/edit", methods=('GET', 'POST'))
+@bp.route("/courses/<int:course_id>/edit", methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
 
-def course_edit(id):
+def course_edit(course_id):
     """Allows teachers to edit the course"""
-    course = get_course(id)
+    course = get_course(course_id)
     if g.user['id'] != course['teacher_id']:
         return redirect(url_for('index'))
     if request.method == "POST":
@@ -101,7 +99,7 @@ def course_edit(id):
                     credits = %s
                     WHERE course_num = %s
                     """,
-                                (title, desc, credit, id)
+                                (title, desc, credit, course_id,)
                                 )
                     con.commit()
 
@@ -112,7 +110,7 @@ def course_edit(id):
     return render_template("layouts/courseEdit.html", course=course)
 
 
-def get_course(id):
+def get_course(course_id):
     """Gets the course from the database"""
     with db.get_db() as con:
         with con.cursor() as cur:
@@ -120,7 +118,7 @@ def get_course(id):
             cur.execute(
                 'SELECT course_num, credits, description, course_title, teacher_id'
                 ' FROM courses WHERE course_num = %s',
-                (id,))
+                (course_id,))
 
             course = cur.fetchone()
 

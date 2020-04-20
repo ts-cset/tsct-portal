@@ -78,20 +78,20 @@ def test_assign_manage(client):
 def test_assign_edit(client):
 
     #test getting assignemnt edit
-    assert client.get('/session/2/Edit/assignment/1/').status_code == 302
+    assert client.get('/course/180/session/2/Edit/assignment/1/').status_code == 302
     rv = login(
      client, 'teacher@stevenscollege.edu', 'qwerty')
     assert b'Logged in' in rv.data
     #test the assign edit after login
-    assert client.get('/session/2/Edit/assignment/1/').status_code == 200
+    assert client.get('/course/180/session/2/Edit/assignment/1/').status_code == 200
     #get response data on page
-    response = client.get('/session/2/Edit/assignment/1/')
+    response = client.get('/course/180/session/2/Edit/assignment/1/')
     #getting data on edit page
     assert b'Name' in response.data
     assert b'Description' in response.data
     assert b'Points' in response.data
     #editing the page with request
-    response_2 = client.post('/session/2/Edit/assignment/1/', data={'edit_name': 'first portal creation',
+    response_2 = client.post('/course/180/session/2/Edit/assignment/1/', data={'edit_name': 'first portal creation',
      'edit_desc': 'first test', 'edit_points': 90, 'edit_date': '2020-06-22 19:10:25-07'},follow_redirects=True)
     assert b'Assignments for CSET-180-A' in response_2.data
     assert b'first portal creation' in response_2.data
@@ -113,7 +113,7 @@ def test_edit_errors(client, name, description, points, edit_date, error):
      client, 'teacher@stevenscollege.edu', 'qwerty')
     assert b'Logged in' in rv.data
 
-    response = client.post('/session/2/Edit/assignment/1/', data={'edit_name': name,
+    response = client.post('/course/180/session/2/Edit/assignment/1/', data={'edit_name': name,
      'edit_desc': description, 'edit_points': points, 'edit_date': edit_date },follow_redirects = True)
     assert error in response.data
 

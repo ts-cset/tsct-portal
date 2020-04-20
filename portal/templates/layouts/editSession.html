@@ -7,7 +7,7 @@
 
   <h2>Edit Session {{ session['name'] }}</h2>
 
-  <a class="back" href="{{ url_for('session_editor.session_manage', id=course['course_num']) }}">Back</a>
+  <a class="back" href="{{ url_for('session_editor.session_manage', course_id=course['course_num']) }}">Back</a>
 
 </header>
 

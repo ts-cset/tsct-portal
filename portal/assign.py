@@ -9,18 +9,21 @@ from portal.auth import login_required, teacher_required
 
 bp = Blueprint("assign", __name__)
 
-@bp.route('/course/<int:id>/session/<int:sessions_id>/create/assignment/', methods=('GET', 'POST'))
+@bp.route('/course/<int:course_id>/session/<int:sessions_id>/create/assignment/', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
-def assign_create(id, sessions_id):
+def assign_create(sessions_id, course_id):
     """Allows teachers to create new assignments for a
     specific session"""
 
+    course = course_editor.get_course(course_id)
+
+    if g.user['id'] != course['teacher_id']:
+        return redirect(url_for('index'))
+
     session = session_editor.get_session(sessions_id)
     # course = course_editor.get_course(id)
-    if session['id'] is not sessions_id:
-        redirect(url_for('index'))
 
     if request.method == 'POST':
 
@@ -41,31 +44,35 @@ def assign_create(id, sessions_id):
                     error = 'Due Date is required.'
 
                 if error is None:
-
+                    print(due_date)
                     now = datetime.datetime.utcnow()
 
                     cur.execute("""INSERT INTO assignments (sessions_id, assign_name, description, points, due_date)
                         VALUES (%s, %s, %s, %s, %s)
                     """,
-                    (sessions_id, name, description, points, now.strftime(due_date) )
+                    (sessions_id, name, description, points, due_date )
                     )
                     con.commit()
 
-                    return redirect(url_for("assign.assign_manage",id=session['course_id'], sessions_id=session['id']))
+                    return redirect(url_for("assign.assign_manage", sessions_id=session['id'], course_id=course['course_num'] ))
 
                 flash(error)
 
-    return render_template('layouts/assigns/assign_create.html', session=session)
+    return render_template('layouts/assigns/assign_create.html', session=session, course=course)
 
-@bp.route('/course/<int:id>/session/<int:sessions_id>/assignments/', methods=('GET', 'POST'))
+@bp.route('/course/<int:course_id>/session/<int:sessions_id>/assignments/', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
-def assign_manage(id, sessions_id):
+def assign_manage(course_id, sessions_id):
     """Allows teachers to see current assignments for a
     specific session"""
 
+    course = course_editor.get_course(course_id)
     session = session_editor.get_session(sessions_id)
+    if g.user['id'] != course['teacher_id']:
+        print('hello?')
+        return redirect(url_for('index'))
     #course = course_editor.get_course(id)
 
     cur=db.get_db().cursor()
@@ -78,18 +85,23 @@ def assign_manage(id, sessions_id):
 
     cur.close()
 
-    return render_template("layouts/assigns/assign_manage.html", assignments=assignments, session=session)
+    return render_template("layouts/assigns/assign_manage.html", assignments=assignments, session=session, course=course)
 
-@bp.route('/session/<int:sessions_id>/Edit/assignment/<int:assign_id>/', methods=('GET', 'POST'))
+@bp.route('/course/<int:course_id>/session/<int:sessions_id>/Edit/assignment/<int:assign_id>/', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
-def assign_edit(assign_id, sessions_id):
+def assign_edit(course_id, assign_id, sessions_id):
     """Allows teachers to edit current assignments for a
     specific session"""
 
     session = session_editor.get_session(sessions_id)
     assignment = get_assignment(assign_id)
+    course = course_editor.get_course(course_id)
+
+    if g.user['id'] != course['teacher_id']:
+        print('hello')
+        return redirect(url_for('index'))
 
     if request.method == 'POST':
 
@@ -101,7 +113,7 @@ def assign_edit(assign_id, sessions_id):
 
         with db.get_db() as con:
             with con.cursor() as cur:
-
+                print(due_date)
                 if not name:
                     error = 'Name is required.'
                 if not points:
@@ -112,7 +124,6 @@ def assign_edit(assign_id, sessions_id):
                 if error is None:
 
                     now = datetime.datetime.utcnow()
-                    hello = now.strftime(due_date)
                     cur.execute("""UPDATE assignments SET
                     assign_name = %s,
                     description = %s,
@@ -124,11 +135,11 @@ def assign_edit(assign_id, sessions_id):
                     )
                     con.commit()
 
-                    return redirect(url_for("assign.assign_manage",id=session['course_id'], sessions_id=session['id']))
+                    return redirect(url_for("assign.assign_manage",course_id=course['course_num'], sessions_id=session['id']))
 
                 flash(error)
 
-    return render_template('layouts/assigns/assign_edit.html', session=session, assignment= assignment)
+    return render_template('layouts/assigns/assign_edit.html', session=session, assignment= assignment, course=course)
 
 def get_assignment(assign_id):
     """Gets the assiment from the database"""
@@ -145,3 +156,20 @@ def get_assignment(assign_id):
                 abort(404, "Assign id {0} doesn't exist.".format(assign_id))
 
             return assign
+
+def get_course_2(course_id):
+    """Gets the course from the database"""
+    with db.get_db() as con:
+        with con.cursor() as cur:
+
+            cur.execute(
+                'SELECT course_num, credits, description, course_title, teacher_id'
+                ' FROM courses WHERE course_num = %s',
+                (course_id,))
+
+            course = cur.fetchone()
+
+            if course is None:
+                abort(404, "Course id {0} doesn't exist.".format(id))
+
+            return course

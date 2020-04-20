@@ -6,7 +6,7 @@
   <!--The title of each session-->
   <h2>Create a new Session for {{ course['course_title'] }}</h2>
 
-  <a class="back" href="{{ url_for('session_editor.session_manage', id=course['course_num'] )}}">Back</a>
+  <a class="back" href="{{ url_for('session_editor.session_manage', course_id=course['course_num'] )}}">Back</a>
 
 </header>
 
@@ -20,7 +20,7 @@
 
 
   <!--Creates the session via the form info then updates-->
-  <form class="" action="{{ url_for('session_editor.session_create', id=course['course_num']) }}" method="post">
+  <form class="" action="{{ url_for('session_editor.session_create', course_id=course['course_num']) }}" method="post">
 
 
 <label for="sessionTitle">Session Title</label>

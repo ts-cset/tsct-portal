@@ -30,9 +30,9 @@
 
           <div class="links">
 
-            <a href="{{ url_for('course_editor.course_edit', id=course['course_num']) }}">Edit</a>
+            <a href="{{ url_for('course_editor.course_edit', course_id=course['course_num']) }}">Edit</a>
 
-            <a href="{{ url_for('session_editor.session_manage', id=course['course_num'])}}">Sessions</a>
+            <a href="{{ url_for('session_editor.session_manage', course_id=course['course_num'])}}">Sessions</a>
           </div>
         </li>
 
