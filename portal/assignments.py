@@ -24,8 +24,42 @@ def view_assignment(course_id, session_id, assignment_id):
                    WHERE id = %s;""",
                    (assignment_id,))
     assignments = cur.fetchall()
+    if g.users['role'] == 'teacher':
+        cur.execute("""SELECT * FROM submissions
+                       WHERE assignments_id = %s;""",
+                       (assignment_id,))
+        submissions = cur.fetchall()
+    else:
+        cur.execute("""SELECT * FROM submissions
+                       WHERE assignments_id = %s and users_id = %s;""",
+                       (assignment_id, g.users['id']))
+        submissions = cur.fetchall()
     cur.close()
-    return render_template('portal/courses/sessions/assignments/view-assignment.html', courses=courses, sessions=sessions, assignments=assignments)
+    return render_template('portal/courses/sessions/assignments/view-assignment.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions)
+
+@bp.route('<assignment_id>/submit-assignment', methods=('GET', 'POST'))
+@login_required
+def submit_assignment(assignment_id):
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT * FROM assignments
+                   WHERE id = %s;""",
+                   (assignment_id,))
+    assignments = cur.fetchall()
+    cur.close()
+
+    if request.method == 'POST':
+        answer = request.form['answer']
+        error = None
+        cur = db.get_db().cursor()
+        cur.execute("""
+        UPDATE submissions SET answer = %s
+        WHERE users_id = %s and assignments_id = %s;""",
+        (answer, g.users['id'], assignment_id))
+        db.get_db().commit()
+
+        if error is None:
+            return redirect(url_for('portal.userpage'))
+    return render_template('portal/courses/sessions/assignments/submit-assignments.html', assignments=assignments)
 
 @bp.route('/<session_id>/create-assignment', methods=('GET', 'POST'))
 @login_required
@@ -55,6 +89,27 @@ def create_assignment(session_id):
              """,
              (session_id, name, date, description, points))
             db.get_db().commit()
+            cur.execute("""
+            SELECT id FROM assignments
+            WHERE name = %s and session_id = %s;
+            """,
+            (name, session_id))
+            assignments = cur.fetchone()
+            assignment_id = assignments[0]
+            cur.execute("""
+            SELECT users.id FROM users
+            JOIN roster ON roster.users_id = users.id
+            JOIN session ON session.id = roster.session_id
+            WHERE session_id = %s;
+            """,
+            (session_id,))
+            students = cur.fetchall()
+            for student in students:
+                cur.execute("""INSERT INTO submissions (users_id, assignments_id)
+                VALUES (%s, %s);
+                 """,
+                 (student[0], assignment_id))
+                db.get_db().commit()
             cur.close()
 
 
