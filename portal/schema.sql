@@ -30,7 +30,7 @@ CREATE TABLE majors (
 
 CREATE TABLE courses (
   course_id bigserial PRIMARY KEY,
-  name varchar(50) NOT NULL,
+  name varchar(50) UNIQUE NOT NULL,
   major varchar(50) NOT NULL,
   description text,
   teacherid bigint NOT NULL
@@ -50,13 +50,13 @@ ALTER TABLE courses
 
 CREATE TABLE sessions (
   id bigserial PRIMARY KEY,
-  course bigint NOT NULL,
-  days varchar(20),
+  course_id bigint NOT NULL,
+  days varchar(20) NOT NULL,
   class_time time NOT NULL
 );
 
 ALTER TABLE sessions
-  ADD CONSTRAINT session_course FOREIGN KEY (course)
+  ADD CONSTRAINT session_course_name FOREIGN KEY (course_id)
     REFERENCES courses(course_id)
     ON UPDATE CASCADE
     ON DELETE CASCADE;

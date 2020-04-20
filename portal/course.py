@@ -1,14 +1,16 @@
-from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
+from portal.auth import login_required, teacher_required
 
 from . import db
-from portal.auth import login_required, login_role
+
+from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session, abort
 
 bp = Blueprint("course", __name__)
 
-#Function used to get a specific course
+
+# Function used to get a specific course
 def get_course(id, check_teacher=True):
 
-    user_id = session['user_id']
+    user_id = session.get('user_id')
     cur = db.get_db().cursor()
     cur.execute("""SELECT course_id, name, description, teacherid FROM courses WHERE teacherid = %s AND course_id = %s""",
                 (user_id, id,))
@@ -16,18 +18,16 @@ def get_course(id, check_teacher=True):
     cur.close()
 
     if course is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
-
-    if check_teacher and course['teacherid'] != g.user['id']:
-        abort(403)
+        abort(400, """System has prevented this action. \n
+              Either this course does not exist,\n
+              or you do not have acces to it.""")
 
     return course
 
 
-
-#route to edit the course description
+# route to edit the course description
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))
-@login_role
+@teacher_required
 @login_required
 def edit(id):
     """Edits the description of the courses"""
@@ -46,16 +46,16 @@ def edit(id):
             (course_name, course_description, id)
         )
         g.db.commit()
-        cur.close()
+        db.close_db()
 
-        return redirect(url_for('main.home'))
+        return redirect(url_for('course.view', id=course['course_id']))
 
     return render_template("layouts/courses/edit.html", course=course)
 
 
-#Route to view the course, and information about it
+# Route to view the course, and information about it
 @bp.route('/<int:id>/view', methods=('GET', 'POST'))
-@login_role
+@teacher_required
 @login_required
 def view(id):
     """Single page view of a course"""
@@ -68,25 +68,27 @@ def view(id):
     return render_template("layouts/courses/view_course.html", course=course)
 
 
-#Route to delete a course
+# Route to delete a course
+
 @bp.route("/<int:id>/delete", methods=["POST", ])
-@login_role
+@teacher_required
 @login_required
 def delete(id):
     """Delete unwanted courses"""
     course = get_course(id)
+    id = course['course_id']
     cur = db.get_db().cursor()
     cur.execute(
         'DELETE FROM courses WHERE course_id= %s', (id,)
     )
     g.db.commit()
     cur.close()
+
     return redirect(url_for('main.home'))
 
-
-#Route to create a course
+# Route to create a course
 @bp.route("/create", methods=['GET', 'POST'])
-@login_role
+@teacher_required
 @login_required
 def create():
     cur = db.get_db().cursor()
@@ -109,6 +111,7 @@ def create():
                     (course_name, major, course_description, teacherId,))
 
         g.db.commit()
+        cur.close()
         return redirect(url_for('main.home'))
 
     return render_template("layouts/courses/create_courses.html", majors=majors)

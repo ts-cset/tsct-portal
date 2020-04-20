@@ -3,29 +3,39 @@
 {% block title %}{% endblock %}
 
 {% block content %}
-<h2>Sessions</h2>
+<h2>Current Sessions</h2>
+
 <article class="course">
   <header class="courses-main">
-  <div class="course-table-header1">session id:</div>
-  <div class="course-table-header">days:</div>
-  <div class="course-table-header">time:</div>
-  <div class="course-table-header1"></div>
+    <ul class="session-table-header">
+      <li class="session-header">session id:</li>
+      <li class="session-header">days:</li>
+      <li class="session-header">time:</li>
+      <li class="session-header">course:</li>
+    </ul>
   </header>
    {% for session in sessions %}
-  <section class= "courses">
-      <div class="about-course1"> {{ session['id'] }} </div>
-      <div class="about-course"> {{ session['days']}}</div>
-      <div class="about-course"> {{ session['class_time']}}</div>
-      <div class="about-course1">
-        <form class="about-course-form" action="" method="get">
-        <button type="Submit" name="edit" class="course-button">view</button>
-      </form>
-      </div>
-      <div class="about-course1">
-        <a href="{{ url_for('main.index') }}" class="course-button">Assignments</a>
-      </div>
-  </section>
-    {% endfor %}
+   <section class= "courses">
+   <ul class="session-info">
+      <li class="session-stuff"> {{ session['id'] }}
+      <li class="session-stuff"> {{ session['days']}}
+      <li class="session-stuff"> {{ session['class_time']}}
+      <li class="session-stuff"> {{ session['course_name']}}
+      <li class="session-stuff2"><a href="">assignments</a>
+
+    {% if g.user['id'] == session['teacher_id'] %}
+      <li class="session-stuff2"><a href="{{ url_for('session.session_edit', id=session['id'], course_id=session['course_id']) }}">edit</a>
+      <li class="session-stuff2"><a href="{{ url_for('session.delete_session', id=session['id']) }}">delete</a>
+      <li class="session-stuff2"><a href="{{ url_for('session.create', id=session['course_id']) }}">add session</a>
+    {% endif %}
+
+    </ul>
+    </section>
+
+
+          {% endfor %}
+
+
 </article>
 
 {% endblock %}
