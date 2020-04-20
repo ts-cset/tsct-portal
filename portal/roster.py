@@ -16,6 +16,7 @@ def roster():
     students = cur.fetchall()
     cur.close()
     if request.method == 'POST':
+        message = ""
         #cur=con.cursor()
         #cur.execute(
         #"""SELECT name FROM users """
@@ -26,23 +27,30 @@ def roster():
         #namesb = []is not
         #for name in range(len(names)):
         #    namesb.append(name)
-
         studentname = request.form['sname']
-        con = db.get_db()
         cur = con.cursor()
         cur.execute('SELECT name, id FROM users WHERE name = %s',(studentname,))
         bname = cur.fetchone()
-        con.commit()
-        cur.close()
         if bname is not None:
-            con = db.get_db()
-            cur= con.cursor()
-            newid = bname['id']
-            print(newid)
-            cur.execute(
-            """INSERT INTO roster (student_id , session_id)
-            VALUES (%s, %s)""",
-            (newid,'1'))
-            con.commit()
-            cur.close()
-    return render_template("layouts/sessions/roster.html", students=students, bname=bname)
+            bid = bname['id']
+            cur.execute('SELECT student_id, session_id FROM roster WHERE student_id = %s AND session_id = %s',
+            (bid, '1'))
+            matching = cur.fetchall()
+            if matching is None:
+                message = "{} added".format(studentname)
+                cur= con.cursor()
+                newid = bname['id']
+                print(newid)
+                cur.execute(
+                """INSERT INTO roster (student_id , session_id)
+                VALUES (%s, %s)""",
+                (newid,'1'))
+                con.commit()
+                cur.close()
+            else:
+                message ="{} is already in the roster".format(studentname)
+        else:
+            message = "Error: student not found"
+        cur.close()
+        con.close()
+    return render_template("layouts/sessions/roster.html", students=students, message=message)

@@ -11,12 +11,12 @@
   </ol>
 
   <form method = 'POST'>
-    <label for="sname">Student Name
+    <label for="sname">Add Student
       <input type="text" name="sname">
     </label>
     <input type="submit" value="submit">
   </form>
-{% if bname['name'] != Nonetype %}
-  <p>{{ bname['name'] }} added<p>
-{% endif %}
+
+  <p>{{ message }}<p>
+
 {% endblock %}
