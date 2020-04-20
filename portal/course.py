@@ -10,7 +10,7 @@ bp = Blueprint("course", __name__)
 # Function used to get a specific course
 def get_course(id, check_teacher=True):
 
-    user_id = session['user_id']
+    user_id = session.get('user_id')
     cur = db.get_db().cursor()
     cur.execute("""SELECT course_id, name, description, teacherid FROM courses WHERE teacherid = %s AND course_id = %s""",
                 (user_id, id,))
@@ -76,6 +76,7 @@ def view(id):
 def delete(id):
     """Delete unwanted courses"""
     course = get_course(id)
+    id = course['course_id']
     cur = db.get_db().cursor()
     cur.execute(
         'DELETE FROM courses WHERE course_id= %s', (id,)

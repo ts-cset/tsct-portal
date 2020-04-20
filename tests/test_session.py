@@ -41,3 +41,21 @@ def test_edit_session(client, auth):
     # make sure new information is displayed for that session
     assert b'Current Sessions' in response.data
     assert b'S/Su' and b'07:00:00' in response.data
+
+
+def test_get_session_edit(client, auth):
+    # login as a teacher who does not own the course
+    auth.login()
+    # attempt to go to the edit page of a session of that course
+    response = client.get('/sessions/6/edit?course_id=1')
+    # make sure the abort message displays
+    assert b'Bad Request' in response.data
+
+
+# def test_delete_session(client, auth):
+#     # login as a teacher who does not own the course/session
+#     auth.login()
+#     # attempt to delete a session not owned by user
+#     response = client.get('/sessions/6/delete')
+#     # make sure system aborts attempt
+#     assert b'Bad Request' in response.data

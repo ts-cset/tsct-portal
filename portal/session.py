@@ -6,24 +6,30 @@ from portal.auth import login_required, teacher_required
 bp = Blueprint("session", __name__)
 
 
-def get_session(id):
+def get_session(id, check_teacher=True):
 
-    user_id = session['user_id']
+    user_id = session.get('user_id')
     cur = db.get_db().cursor()
-    cur.execute("""SELECT sessions.id, sessions.course_id, sessions.class_time,
-                sessions.days, courses.teacherid AS course_teacher, courses.course_id
-                FROM sessions JOIN courses on sessions.course_id = courses.course_id
-                WHERE courses.teacherid = %s AND sessions.id = %s""",
-                (user_id, id,))
-    class_session = cur.fetchone()
+    cur.execute("""SELECT sessions.id, sessions.course_id, courses.teacherid
+                FROM sessions LEFT JOIN courses on sessions.course_id = courses.course_id
+                WHERE courses.teacherid = %s AND sessions.id = %s """,
+                (user_id, id))
+    x = cur.fetchone()
     cur.close()
 
-    if session is None:
+    if x is None:
         abort(400, """System has prevented this action. \n
-              Either this session does not exist,\n
-              or you do not have acces to it.""")
+                    Either this session does not exist,\n
+                    or you do not have acces to it.""")
+    else:
+        cur = db.get_db().cursor()
+        cur.execute("""SELECT id, class_time, days, course_id
+                    FROM sessions WHERE id = %s """,
+                    (id,))
+        class_session = cur.fetchone()
+        cur.close()
 
-    return class_session
+        return class_session
 
 # Route for viewing sessions
 @bp.route("/<int:id>/sessions", methods=['GET', 'POST'])
@@ -73,13 +79,16 @@ def session_edit(id):
 @login_required
 def create():
 
-    teacherid = session['user_id']
+    user_id = session.get('user_id')
     cur = db.get_db().cursor()
     cur.execute("""
         SELECT course_id, name FROM courses where teacherid=%s""",
-                (teacherid,))
+                (user_id,))
     courses = cur.fetchall()
     cur.close()
+
+    if courses == None:
+        abort(400, 'Either the course does not exist, or you do not have permission to create session for this course.')
 
     if request.method == 'POST':
 
@@ -114,6 +123,7 @@ def delete_session(id):
     """Delete unwanted session"""
     x = get_session(id)
     course_id = x['course_id']
+    id = x['id']
     cur = db.get_db().cursor()
     cur.execute('DELETE FROM sessions where id = %s',
                 (id,))
