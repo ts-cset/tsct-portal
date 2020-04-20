@@ -3,21 +3,25 @@
 {% block title %}Course Selection{% endblock %}
 
 {% block content %}
-    <section>
+    <section class="classSec">
       <form method="post">
-        <ul>
+        <ul class="courseList">
           {% for course in courses %}
-            <li>
+            <li class="course">
+              <label class="checkbox"> 
+                <input type="checkbox" value="{{ course['id'] }}" name="{{ course['id'] }}"/>
+                <!--Since checkboxes can't be styled, this span becomes the checkbox-->
+                <span class="fakeCheckbox"></span> 
+              </label> 
               <h2>{{ course['major'] }}</h2>
               <p>{{ course['course_name'] }}</p>
               <p>{{ course['description'] }}</p>
-              <input type="checkbox" value="{{ course['id'] }}" name="{{ course['id'] }}"/>
               <button formaction="{{ url_for('teacher.make_session') }}" type="submit" name="session" value="{{ course['id'] }}">Create Session</button>
             </li>
           {% endfor %}
         </ul>
         {% if courses %}
-          <button type="submit">Delete Selected</button>
+          <button type="submit" class="deleteCourse">Delete Selected</button>
         {% else %}
           <p>No courses to show</p>
         {% endif %}
