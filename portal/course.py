@@ -112,22 +112,3 @@ def create():
         return redirect(url_for('main.home'))
 
     return render_template("layouts/courses/create_courses.html", majors=majors)
-@bp.route("/roster", methods= ('GET', 'POST'))
-def roster():
-    cur = db.get_db().cursor()
-    cur.execute(
-    "SELECT name"
-    " FROM users"
-    " ORDER BY name DESC"
-    )
-    students = cur.fetchall()
-    bname = 'boi'
-
-    if request.method == 'POST':
-        studentname = request.form['sname']
-        for aname in students:
-            if aname == studentname:
-                cur.execute('SELECT name FROM users WHERE name = %s',(studentname,))
-                bname = cur.fetchone()
-                cur.close()
-    return render_template("roster.html", students=students, bname=bname)
