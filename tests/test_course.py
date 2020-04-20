@@ -31,7 +31,15 @@ def test_edit(client, auth):
     assert '/home' in response.headers['Location']
     response = client.get('/home')
     assert b'CSET 180'in response.data
-# def test_delete(client, auth):
-#     auth.login()
-#     response = client.post('/1/delete')
-#     assert response.headers['Location'] == 'http://localhost/home'
+def test_delete(client, auth):
+    # login to the page
+    auth.login()
+    response = client.post('/1/delete')
+    assert response.headers['Location'] == 'http://localhost/home'
+
+def test_view(client, auth):
+    # login to the page
+    auth.login()
+    #get the course by clicking the view button
+    response = client.post('/2/view')
+    assert b'Course Information' in response.data
