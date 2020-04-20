@@ -35,16 +35,17 @@ def get_session(id, check_teacher=True):
 @bp.route("/<int:id>/sessions", methods=['GET', 'POST'])
 @login_required
 def view_sessions(id):
-<<<<<<< HEAD
-    """Single page view of course"""
-    con = db.get_db()
-    cur = con.cursor()
-
-    cur.execute("""SELECT * FROM sessions where course = %s""",
+    """Single page view of session"""
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT sessions.id, sessions.days, sessions.course_id,
+                sessions.class_time, sessions.location, courses.name AS course_name,
+                courses.teacherid AS teacher_id
+                FROM sessions JOIN courses ON courses.course_id = sessions.course_id
+                WHERE sessions.course_id = %s""",
                 (id,))
     sessions = cur.fetchall()
     cur.close()
-    con.close()
+
     return render_template("layouts/sessions/view_sessions.html", sessions=sessions)
 
 

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
 
 from . import db
-from portal.auth import login_required, login_role
+from portal.auth import login_required,teacher_required
 
 bp = Blueprint("roster", __name__)
 
