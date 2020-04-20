@@ -73,7 +73,7 @@ def login_required(view):
     return wrapped_view
 
 
-def login_role(view):
+def teacher_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user['role'] != 'teacher':

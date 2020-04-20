@@ -11,23 +11,23 @@
     <h2>Course List</h2>
     <article class="course">
       <header class="courses-main">
-      <div class="course-table-header1">course id:</div>
-      <div class="course-table-header">course name:</div>
-      <div class="course-table-header">teacher:</div>
-      <div class="course-table-header">major id:</div>
-      <div class="course-table-header1"></div>
+        <ul class="courses-table-header">
+          <li class="courses-header">course id:</li>
+          <li class="courses-header">course name:</li>
+          <li class="courses-header">teacher:</li>
+          <li class="courses-header">major:</li>
+          <li class="courses-header2"></li>
+        </ul>
       </header>
        {% for course in courses %}
       <section class= "courses">
-          <div class="about-course1"> {{ course['course_id'] }} </div>
-          <div class="about-course"> {{ course['name']}}</div>
-          <div class="about-course"> {{ course['teacher_name']}}</div>
-          <div class="about-course"> {{ course['major'] }} </div>
-          <div class="about-course1">
-            <form class="about-course-form" action="{{ url_for('course.view', id=course['course_id']) }}" method="get">
-            <button type="Submit" name="edit" class="course-button">view</button>
-          </form>
-          </div>
+        <ul class="course-info">
+           <li class="course-list"> {{ course['course_id'] }}
+           <li class="course-list"> {{ course['name'] }}
+           <li class="course-list"> {{ course['teacher_name'] }}
+           <li class="course-list"> {{ course['major'] }}
+           <li class="course-list2"><a href="{{ url_for('course.view', id=course['course_id']) }}">view</a>
+         </ul>
       </section>
         {% endfor %}
     </article>
