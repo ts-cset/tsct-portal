@@ -5,7 +5,7 @@
 <header>
 
   <h2>Assignment Management</h2>
-  <a href="{{ url_for('session_editor.session_manage', course_id=course['course_num'], session_id=session['id'])}}" class='back'>Back</a>
+  <a href="{{ url_for('session_editor.session_manage', course_id=session['course_id'], session_id=session['id'])}}" class='back'>Back</a>
 
 </header>
 
@@ -25,7 +25,7 @@
 
         <div class="links">
 
-          <a href="{{url_for('assign.assign_edit', assign_id=assignment['id'], sessions_id=assignment['sessions_id'], course_id=course['course_num'] )}}">Edit</a>
+          <a href="{{url_for('assign.assign_edit', assign_id=assignment['id'], sessions_id=assignment['sessions_id'], course_id=session['course_id'] )}}">Edit</a>
 
         </div>
 
@@ -45,7 +45,7 @@
 
   <h3>Click the + below to create a new assignment</h3>
 
-  <a href="{{ url_for('assign.assign_create', course_id=course['course_num'], sessions_id=session['id'])}}">+</a>
+  <a href="{{ url_for('assign.assign_create', course_id=session['course_id'], sessions_id=session['id'])}}">+</a>
 
 </section>
 

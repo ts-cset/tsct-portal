@@ -6,7 +6,7 @@
 
   <h2>Create a New Assignment for {{ session['name'] }}</h2>
 
-<a href="{{ url_for('assign.assign_manage', sessions_id=session['id'], course_id=course['course_num'] )}}" class='back'>Back</a>
+<a href="{{ url_for('assign.assign_manage', sessions_id=session['id'], course_id=session['course_id'] )}}" class='back'>Back</a>
 
 </header>
 
@@ -16,7 +16,7 @@
 
 <section class='assignments'>
 
-  <form class="assign" action="{{ url_for('assign.assign_create', sessions_id=session['id'], course_id=course['course_num'] )}}" method="post">
+  <form class="assign" action="{{ url_for('assign.assign_create', sessions_id=session['id'], course_id=session['course_id'] )}}" method="post">
     <!--createing a assignment name-->
     <label for="name">Name
       <input type="text" name="name">
@@ -34,7 +34,7 @@
 
     <!--adding due_date-->
     <label for="due_date">Due Date
-      <input type="text" name="due_date">
+      <input type="datetime-local" name="due_date">
     </label>
 
     <input type="submit" name="assign_creation_button" value="Save">
