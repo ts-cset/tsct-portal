@@ -35,7 +35,7 @@
       <h1>{{ self.title() }}</h1>
       {% if g.user %}
       <nav class="home-buttons">
-        <ul class="course-options">
+        <ul class=>
           <li class="home-options"><button class="return" onclick="goBack()">previous</button></li>
         {% if g.user['role'] == 'teacher' %}
           <li class="home-options"><a class="home-button" href="{{ url_for('main.home') }}">home</a></li>
