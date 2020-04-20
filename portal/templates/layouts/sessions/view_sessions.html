@@ -6,27 +6,21 @@
 <h2>Current Sessions</h2>
 
 <article class="course">
-  <header class="courses-main">
-    <ul class="session-table-header">
-      <li class="session-header">session id:</li>
-      <li class="session-header">days:</li>
-      <li class="session-header">time:</li>
-      <li class="session-header">course:</li>
-    </ul>
-  </header>
+
    {% for session in sessions %}
    <section class= "courses">
    <ul class="session-info">
-      <li class="session-stuff"> {{ session['id'] }}
-      <li class="session-stuff"> {{ session['days']}}
-      <li class="session-stuff"> {{ session['class_time']}}
-      <li class="session-stuff"> {{ session['course_name']}}
-      <li class="session-stuff2"><a href="">assignments</a>
+      <li class="session-list1"><span class="id">id:</span> {{ session['id'] }}
+      <li class="session-list3"><span class="id">days:</span> {{ session['days']}}
+      <li class="session-list"><span class="id">time:</span> {{ session['class_time']}}
+      <li class="session-list"><span class="id">course:</span> {{ session['course_name']}}
+      <li class="session-list"><span class="id">loca:</span> {{ session['location']}}
+      <li class="session-list2"><a href="">assignments</a>
 
     {% if g.user['id'] == session['teacher_id'] %}
-      <li class="session-stuff2"><a href="{{ url_for('session.session_edit', id=session['id'], course_id=session['course_id']) }}">edit</a>
-      <li class="session-stuff2"><a href="{{ url_for('session.delete_session', id=session['id']) }}">delete</a>
-      <li class="session-stuff2"><a href="{{ url_for('session.create', id=session['course_id']) }}">add session</a>
+      <li class="session-list2"><a href="{{ url_for('session.session_edit', id=session['id'], course_id=session['course_id']) }}">edit</a>
+      <li class="session-list2"><a href="{{ url_for('session.delete_session', id=session['id']) }}">delete</a>
+      <li class="session-list2"><a href="{{ url_for('session.create', id=session['course_id']) }}">add session</a>
     {% endif %}
 
     </ul>

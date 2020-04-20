@@ -9,6 +9,8 @@
 
   <label class="form-label" for="new_course">edit course name:</label>
     <input type="new_course" name="new_course" value="{{ course['name']}}" required />
+  <label  class="form-label" for="credits">credit hours:
+    <input type="int" name="credits" value="{{ course['credits']}}" required>
     <span class="form-label">course description:</span>
     <textarea class="course-description" name="course_description">{{ course['description']}}</textarea>
     <input class="submit" type="submit" value="submit changes"/>
