@@ -1,5 +1,5 @@
 import pytest
-import psycopg2
+
 
 
 def test_create_course(client, auth):
