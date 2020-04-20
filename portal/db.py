@@ -110,7 +110,7 @@ def import_csv():
                         VALUES (%s, %s, %s, %s, %s, %s) """,
                                 row
                                 )
-                    con.commit()
+                    g.db.commit()
 
                 cur.execute(
                     "SELECT id, password FROM users"
@@ -125,7 +125,8 @@ def import_csv():
                         'UPDATE users SET password = %s WHERE id = %s',
                         (hashed, password[0]))
 
-                    con.commit()
+                    g.db.commit()
+                    cur.close()
 
 
 @click.command("import-csv")
