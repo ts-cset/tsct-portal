@@ -1,25 +1,37 @@
-from portal import create_app
 import pytest
 
 def test_create_assignment(client, auth):
     auth.login()
     #check the main assignment page works
-    response = client.get('/1/assignments')
-    assert b'Create new assignment for 1' in response.data
+    response = client.get('/2/assignments')
+    assert b'Assignments' in response.data
     #check the create page works
-    response = client.get('/1/create_assignment')
-    assert b'Save new assignment' in response.data
-    response = client.post('/1/assignments', data={
-    'name': 'Magic Class',
+    response = client.get('/2/create_assignment')
+    assert b'Create Assignment' in response.data
+    response = client.post('/2/create_assignment', data={
+    'name': 'Magic',
     'description': 'It is leviOsa not LevioSA',
-    'due_date': '11/28/2001'
-    })
-    assert b'Create new assignment for 1' in response.data
-    #check that the user must enter all fields before submitting
-    #response = client.get('/1/create_assignment')
-    #response = client.post('/1/assignments', data={
-    #'name': 'Magic Class',
-    #'description': '',
-    #'due_date': '11/28/2001'
-    #})
-    #assert 'Description cannot be empty' in response.data
+    'date': '2020-05-25'})
+    assert '/2/assignments' in response.headers['location']
+
+def test_edit_assignment(client, auth):
+    auth.login()
+    #Make sure the link to the edit works
+    response = client.get('/3/edit-assignment')
+    assert b'Edit your assignment' in response.data
+    #Edit some data with other data
+    response = client.post('/3/edit-assignment', data={
+    'name': 'Magic2',
+    'description': 'Who is this?',
+    'date': '2020-05-25'})
+    assert '/2/assignments' in response.headers['Location']
+    response = client.get('/2/assignments')
+    assert b'Magic2' in response.data
+
+# def test_delete_assignment(client, auth):
+#     auth.login()
+#     response = client.post('/3/delete')
+#     assert '/2/assignments' in response.headers['Location']
+#     #failed delete
+#     response = client.get('/6/delete_assignments')
+#     assert b'Method Not Allowed' in response.data
