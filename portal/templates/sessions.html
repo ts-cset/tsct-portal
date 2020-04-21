@@ -3,14 +3,16 @@
 {% block title %}Manage Sessions{% endblock %}
 
 {% block content %}
-  <form action="{{ url_for('teacher.session_edit') }}" method="post">
-    <ul>
+  <form method="post">
+    <ul class="manageSessions">
       {% for item in sessions %}
-        <li>
+        <li class="manageSession">
           {{ item['major'] }}{{ item['course_code']}} {{ item['session_name']}} - {{ item['course_name']}}
-          <button type="submit" name="edit" value="{{ item['id'] }}">Edit</button>
+          <input type="checkbox" name="id" value="{{ item['id'] }}">
+          <button type="submit" formaction="{{ url_for('teacher.session_edit') }}" name="edit" value="{{ item['id'] }}">Edit</button>
         </li>
       {% endfor %}
     </ul>
+    <button type="submit">Delete Selected</button>
   </form>
 {% endblock %}

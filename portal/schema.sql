@@ -9,6 +9,8 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS courses CASCADE;
 DROP TABLE IF EXISTS sessions CASCADE;
 DROP TABLE IF EXISTS roster;
+DROP TABLE IF EXISTS assignments CASCADE;
+DROP TABLE IF EXISTS session_assignments;
 
 -- Users
 CREATE TABLE users (
@@ -48,4 +50,24 @@ CREATE TABLE roster (
   student_id bigint REFERENCES users(id) NOT NULL,
   -- Create a one-to-many relationship between course sessions and the students that belong to it
   session_id bigint REFERENCES sessions(id) NOT NULL
+);
+
+-- Assignments
+CREATE TABLE assignments (
+  id bigserial PRIMARY KEY,
+  name varchar(100) NOT NULL,
+  description text NOT NULL,
+  points bigint NOT NULL,
+  -- Create a one-to-many relationship between courses and assignments that belong to it
+  course_id bigint REFERENCES courses(id) NOT NULL
+);
+
+-- Session Assignments
+-- Create a many-to-many relationship between course sessions and assignments for those sessions
+CREATE TABLE session_assignments (
+  -- Create a one-to-many relationship between sessions and assignments
+  session_id bigint REFERENCES sessions(id) NOT NULL,
+  -- Create a one-to-many relationship between assignments and sessions
+  assignment_id bigint REFERENCES assignments(id) NOT NULL,
+  due_date date
 );
