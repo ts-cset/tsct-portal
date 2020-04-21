@@ -31,7 +31,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-inline-end: 0;
     padding-inline-start: 0;
  }
- 
+
 body {
   justify-content: space-between;
   display: flex;
@@ -286,7 +286,7 @@ aside {
   font-variant: small-caps;
   border: 1px solid darkgrey;
   padding: 3px 5px 3px 5px;
-  margin: 5px 5px 5px 0px;
+  margin: 5px 5px 5px 5px;
 }
 
 
@@ -412,4 +412,66 @@ aside {
   margin-right: 10px;
   color: maroon;
   font-variant: small-caps;
+}
+
+.view-assignment-link {
+  font-variant: small-caps;
+  display: inline-block;
+  background-color: #fac0c0;
+  border: 1px solid darkgrey;
+  text-decoration: none;
+  text-align: center;
+  width: 300px;
+  margin: 10px 0 10px 0;
+  color: black;
+  padding: 5px 2px 7px 2px;
+
+}
+
+.assignment-link {
+  background-color: #fac0c0;
+  text-decoration: none;
+  padding: 5px;
+  text-align: center;
+  color: black;
+}
+
+.assignment_forms {
+  display: flex;
+  flex-direction: column;
+  background-color: lightgrey;
+  border: 1px solid black;
+}
+
+.assignment_header {
+  margin-bottom: 20px;
+}
+
+.assignment-title {
+  margin-block-start: 5px;
+  margin-block-end: 0;
+  margin-inline-start: 5px;
+  margin-inline-end: 0px;
+  font-size: 28px;
+  font-weight: bold;
+  border-bottom: 1px solid black;
+  padding-bottom: 5px;
+}
+
+.assignment-item {
+  margin-block-start: 5px;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding: 5px;
+}
+
+.assignment-date {
+  font-size: 28px;
+  font-weight: bold;
+  font-variant: small-caps;
+  margin-block-start: 5px;
+  margin-block-end: 0;
+
+
 }
