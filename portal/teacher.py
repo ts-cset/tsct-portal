@@ -41,7 +41,6 @@ def courses():
                 WHERE teacher_id = %s
             """, (g.user['id'],))
             courses = cur.fetchall()
-            print(courses)
     return render_template('class.html', courses=courses)
 @bp.route('/courses/create', methods=('GET', 'POST'))
 #Checks if the user is log in and if they are an admin role

@@ -1,7 +1,6 @@
 import pytest
 from flask import g, session, url_for, request
 from portal.db import get_db
-from urllib.parse import urlparse
 def test_home(client, auth):
     # Attempt to visit page without logging in
     response = client.get('/teacher/home')
@@ -41,28 +40,32 @@ def test_creation(client, auth):
 
 def test_course_edit(client,auth,app):
     auth.teacher_login()
-    #assert client.get('/teacher/courses/edit').status_code == 200
-    #response = client.post(
-        ##data={'course_code': '5527', 'course_name': 'CSET-180', 'major': 'CSET', 'description': 'Not empty.'}
-    ##assert 'http://localhost/teacher/courses' == response.headers['Location']
+    #Get the elements of the edit page
     response = client.get('teacher/courses/1/edit')
+    #Make sure the title 'Course-Edit' is inside.
     assert b'Course-Edit' in response.data
+    #Using App context to execute commands, so that the database has a context to work off of.
     with app.app_context():
+        #Post data to edit
         res = client.post(
             '/teacher/courses/1/edit',
             data={'code': 500, 'name': 'Ice-Cream', 'major': 'CSET',
             'description': 'A basic introduction to Ice-Cream'}
         )
+        #Select data from DB
         with get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
                 SELECT * FROM courses
                 WHERE id = %s
                 """,
-                (1, )
+                (1,)
                 )
+                #Store all of it in results
                 result = cur.fetchone()
+                #Assert that the course name is the same as the course-name that was updated.
                 assert result['course_name'] == 'Ice-Cream'
+                #Assert that it returned to the courses page.
                 assert res.headers['Location'] == 'http://localhost/teacher/courses'
 def test_sessions(client, auth):
     auth.teacher_login()
