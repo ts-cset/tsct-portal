@@ -14,13 +14,10 @@ def assignments():
             with con.cursor() as cur:
                 for item in request.form.getlist('id'):
                     cur.execute("""
-<<<<<<< HEAD
                         DELETE FROM session_assignments
                         WHERE assignment_id = %s
                     """, (item,))
                     cur.execute("""
-=======
->>>>>>> 5896bd3a3dd81ef1bdebcf9596f89f9ad957a2a7
                         DELETE FROM assignments
                         WHERE id = %s
                     """, (item,))
