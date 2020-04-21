@@ -479,3 +479,12 @@ aside {
   background-color: lightgrey;
   border: 1px solid black;
 }
+
+.student-name{
+padding: 5px;
+justify-content: center;
+align-items: center;
+width: 300px;
+list-style-type: none;
+border: 1px solid black;
+}

@@ -66,7 +66,8 @@ ALTER TABLE sessions
 CREATE TABLE roster (
   count bigserial PRIMARY KEY,
   student_id bigint,
-  session_id bigint
+  session_id bigint,
+  UNIQUE (student_id, session_id)
 );
 
 ALTER TABLE roster

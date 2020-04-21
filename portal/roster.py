@@ -9,8 +9,7 @@ bp = Blueprint("roster", __name__)
 # Route to roster
 @bp.route("/<int:id>/roster", methods=('GET', 'POST'))
 def view(id):
-    class_session = get_session(id)
-    session_id = class_session['id']
+    # session_id = class_session['id']
     bname = ''
     con = db.get_db()
     cur = con.cursor()
@@ -42,23 +41,19 @@ def view(id):
             student_id = student['id']
             student_name = student['name']
 
-            cur.execute('SELECT count, student_id, session_id FROM roster WHERE student_id = %s AND session_id = %s',
-                        (student_id, id))
-            matching = cur.fetchone()
+            # cur.execute('SELECT count, student_id, session_id FROM roster WHERE student_id = %s AND session_id = %s',
+            #             (student_id, id))
+            # matching = cur.fetchone()
+            # cur.close()
+
+            con = db.get_db()
+            cur = con.cursor()
+            cur.execute(
+                """INSERT INTO roster (student_id , session_id)
+                    VALUES (%s, %s)""",
+                (student_id, id))
+            g.db.commit()
             cur.close()
-
-            if matching == False:
-                con = db.get_db()
-                cur = con.cursor()
-                cur.execute(
-                    """INSERT INTO roster (student_id , session_id)
-                        VALUES (%s, %s)""",
-                    (student_id, id))
-                g.db.commit()
-                cur.close()
-
-            else:
-                message = "{} is already in the roster".format(studentname)
 
         else:
             message = "Error: student not found"
