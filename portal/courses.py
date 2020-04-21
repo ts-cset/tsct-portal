@@ -123,5 +123,11 @@ def update_course(course_id):
              (course_number, g.users['major'], name, description, credits, g.users['id'], course_id))
             db.get_db().commit()
             cur.close()
-            return redirect(url_for('portal.userpage'))
+
+            #START OF NEW CODE 
+
+
+            
+
+            return redirect(url_for('courses.view_course'))
     return render_template('portal/courses/update-course.html')

@@ -73,6 +73,8 @@ def create_assignment(session_id):
 
             
 
+            
+
             return redirect(url_for('assignments.view_assignment', course_id=course_id, session_id=session_id, assignment_id=assignment_id))
         else:
             return redirect(url_for('assignments.create_assignment', session_id=session_id))
