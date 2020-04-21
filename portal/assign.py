@@ -18,6 +18,13 @@ def assign_create(sessions_id, course_id):
     specific session"""
 
     session = session_editor.get_session(sessions_id)
+    course = course_editor.get_course(course_id)
+
+    if g.user['id'] != course['teacher_id']:
+        return redirect(url_for('index'))
+
+    if course['course_num'] != session['course_id']:
+        return redirect(url_for('index'))
 
     if request.method == 'POST':
 
@@ -26,20 +33,22 @@ def assign_create(sessions_id, course_id):
         description = request.form['description']
         due_date = request.form['due_date']
         error = None
-
         with db.get_db() as con:
             with con.cursor() as cur:
 
                 if not name:
                     error = 'Name is required.'
-                if not points:
-                    error = 'Points are required.'
-                if not due_date:
-                    error = 'Due Date is required.'
+                try:
+                    int(points)
+                except ValueError:
+                    error = 'Points are numbers only, check your values.'
+                try:
+                    datetime.datetime.strptime(due_date, '%Y-%m-%dT%H:%M')
+                except ValueError:
+                    error = 'Due Date only allows time data, check your values.'
 
                 if error is None:
                     now = datetime.datetime.utcnow()
-                    print(due_date)
                     cur.execute("""INSERT INTO assignments (sessions_id, assign_name, description, points, due_time)
                         VALUES (%s, %s, %s, %s, %s)
                     """,
@@ -62,6 +71,13 @@ def assign_manage(course_id, sessions_id):
     specific session"""
 
     session = session_editor.get_session(sessions_id)
+    course = course_editor.get_course(course_id)
+
+    if g.user['id'] != course['teacher_id']:
+        return redirect(url_for('index'))
+
+    if course['course_num'] != session['course_id']:
+        return redirect(url_for('index'))
 
     cur=db.get_db().cursor()
     cur.execute(
@@ -83,10 +99,18 @@ def assign_edit(course_id, assign_id, sessions_id):
     """Allows teachers to edit current assignments for a
     specific session"""
 
+    course = course_editor.get_course(course_id)
     session = session_editor.get_session(sessions_id)
     assignment = get_assignment(assign_id)
-    check_session = unique_session_check(sessions_id)
-    check_assign = unique_assignment_check(assign_id)
+
+    if g.user['id'] != course['teacher_id']:
+        return redirect(url_for('index'))
+
+    if course['course_num'] != session['course_id']:
+        return redirect(url_for('index'))
+
+    if session['id'] != assignment['sessions_id']:
+        return redirect(url_for('index'))
 
     if request.method == 'POST':
 
@@ -94,16 +118,21 @@ def assign_edit(course_id, assign_id, sessions_id):
         points = request.form['edit_points']
         description = request.form['edit_desc']
         due_date = request.form['edit_date']
+        print(due_date)
         error = None
 
         with db.get_db() as con:
             with con.cursor() as cur:
                 if not name:
                     error = 'Name is required.'
-                if not points:
-                    error = 'Points are required.'
-                if not due_date:
-                    error = 'Due Date is required.'
+                try:
+                    int(points)
+                except ValueError:
+                    error = 'Points are numbers only, check your values.'
+                try:
+                    datetime.datetime.strptime(due_date, '%Y-%m-%dT%H:%M')
+                except ValueError:
+                    error = 'Due Date only allows time data, check your values.'
 
                 if error is None:
 
@@ -140,37 +169,3 @@ def get_assignment(assign_id):
                 abort(404, "Assign id {0} doesn't exist.".format(assign_id))
 
             return assign
-
-def unique_session_check(sessions_id):
-    """Compairs session course id to course number, and gets associated columns."""
-    with db.get_db() as con:
-        with con.cursor() as cur:
-            cur.execute(
-            'SELECT * FROM sessions JOIN courses ON sessions.course_id = courses.course_num'
-            ' WHERE sessions.id = %s;',
-            (sessions_id, )
-            )
-            check_session = cur.fetchone()
-            print(check_session)
-
-            if check_session is None:
-                abort(404, "Assign id {0} doesn't exist.".format(sessions_id))
-
-            return check_session
-
-def unique_assignment_check(assign_id):
-    """Compairs assignment data to session data."""
-    with db.get_db() as con:
-        with con.cursor() as cur:
-            cur.execute(
-            'SELECT * FROM sessions JOIN assignments ON sessions.id = assignments.sessions_id'
-            ' WHERE assignments.id = %s;',
-            (assign_id, )
-            )
-            check_assign = cur.fetchone()
-            print(check_assign)
-
-            if check_assign is None:
-                abort(404, "Assign id {0} dpesn't exist.".format(assign_id))
-
-            return check_assign

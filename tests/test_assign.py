@@ -24,8 +24,9 @@ def test_assign_create(client):
     #make post request to test functionality of test created
     #test redirection to assign manage
     response_2 = client.post('/course/180/session/2/create/assignment/', data={'name': 'portal creation',
-     'description': 'testing_description', 'points': 100, 'due_date': '2020-06-22 19:10:25-07'}, follow_redirects=True)
+     'description': 'testing_description', 'points': 100, 'due_date': '2020-06-22T19:10'}, follow_redirects=True)
     #in assign manage data make sure assign manage is there
+    print(response_2.data)
     assert b'Assignments for CSET-180-A' in response_2.data
     assert b'portal creation' in response_2.data
 
@@ -35,9 +36,9 @@ def test_assign_create(client):
 
 
 @pytest.mark.parametrize(('name', 'description', 'points', 'due_date', 'error'), (
-    ('testing exam', 'enter discription', '', '2020-06-22 19:10:25-07', b'Points are required.'),
-    ('', 'enter description', 90, '2020-06-22 19:10:25-07', b'Name is required.'),
-    ('testing exam again', 'description', 10,"", b'Due Date is required.')
+    ('testing exam', 'enter discription', '', '2020-06-22T19:10', b'Points are numbers only, check your values.'),
+    ('', 'enter description', 90, '2020-06-22T19:10', b'Name is required.'),
+    ('testing exam again', 'description', 10,"", b'Due Date only allows time data, check your values.')
     ))
 
 def test_create_errors(client, name, description, points, due_date, error):
@@ -92,7 +93,7 @@ def test_assign_edit(client):
     assert b'Points' in response.data
     #editing the page with request
     response_2 = client.post('/course/180/session/2/Edit/assignment/1/', data={'edit_name': 'first portal creation',
-     'edit_desc': 'first test', 'edit_points': 90, 'edit_date': '2020-06-22 19:10:25-07'},follow_redirects=True)
+     'edit_desc': 'first test', 'edit_points': 90, 'edit_date': '2020-06-22T19:10'},follow_redirects=True)
     assert b'Assignments for CSET-180-A' in response_2.data
     assert b'first portal creation' in response_2.data
     #logout
@@ -101,9 +102,9 @@ def test_assign_edit(client):
 
 
 @pytest.mark.parametrize(('name', 'description', 'points', 'edit_date', 'error'),(
-    ('testing exam', 'enter discription', '', '2020-06-22 19:10:25-07', b'Points are required.'),
-    ('', 'enter description', 90, '2020-06-22 19:10:25-07', b'Name is required.'),
-    ('testing exam again', 'description', 10,"", b'Due Date is required.')
+    ('testing exam', 'enter discription', '', '2020-06-22T19:10', b'Points are numbers only, check your values.'),
+    ('', 'enter description', 90, '2020-06-22T19:10', b'Name is required.'),
+    ('testing exam again', 'description', 10,"", b'Due Date only allows time data, check your values.')
     ))
 
 def test_edit_errors(client, name, description, points, edit_date, error):
@@ -128,7 +129,6 @@ def test_teacher(client):
         client, 'teacher@stevenscollege.edu', 'qwerty')
     assert b'Logged in' in rv.data
 
-    assert client.get('/course/180/session/2/Edit/assignment/2/').status_code == 403
     response = client.get('/course/180/session/2/Edit/assignment/2/',follow_redirects = True)
     assert b'Home' in response.data
 

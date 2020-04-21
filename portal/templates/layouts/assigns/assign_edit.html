@@ -25,9 +25,7 @@
 
         <label for="edit_name">Name</label>
 
-        {{ assignment['assign_name']}}
-
-        <input type="text" name="edit_name">
+        <input type="text" name="edit_name" value="{{ assignment['assign_name']}}">
 
       </li>
 
@@ -36,9 +34,7 @@
 
         <label for="edit_desc">Description</label>
 
-        {{ assignment['description'] }}
-
-        <input type="text" name="edit_desc">
+        <input type="text" name="edit_desc" value="{{ assignment['description'] }}">
 
       </li>
 
@@ -46,10 +42,7 @@
 
         <label for="edit_points">Points</label>
 
-          {{ assignment['points'] }}
-
-          <input type="number" name="edit_points">
-
+          <input type="number" name="edit_points" value="{{ assignment['points'] }}">
 
       </li>
 
@@ -60,7 +53,6 @@
         {{ assignment['due_time'] }}
 
           <input type="datetime-local" name="edit_date">
-
 
       </li>
 
