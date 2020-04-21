@@ -19,13 +19,13 @@ def view_session(course_id, session_id):
                    WHERE id = %s;""",
                    (session_id,))
     sessions = cur.fetchall()
-    
+
     cur = db.get_db().cursor()
     cur.execute("""SELECT * FROM assignments
                    WHERE session_id = %s;""",
                    (session_id,))
     assignments = cur.fetchall()
-    
+
     cur.execute("""SELECT * FROM roster
                    WHERE session_id = %s;""",
                    (session_id,))
@@ -58,17 +58,23 @@ def create_session(course_id):
 
         if session != None:
             error = "That session already exists"
+            return render_template('error.html', error=error)
 
         if error is None:
-            cur.execute("""INSERT INTO session (courses_id, times, name)
-            VALUES (%s, %s, %s);
-             """,
-             (course_id, times, name))
-            db.get_db().commit()
-            cur.execute("""SELECT id FROM session
-                           WHERE courses_id = %s and name = %s and times = %s""",
-                           (course_id, name, times))
-            session = cur.fetchone()
+            try:
+                cur.execute("""INSERT INTO session (courses_id, times, name)
+                VALUES (%s, %s, %s);
+                 """,
+                 (course_id, times, name))
+                db.get_db().commit()
+            except:
+                error = "There was a problem creating that session"
+                return render_template('error.html', error=error)
+            else:
+                cur.execute("""SELECT id FROM session
+                               WHERE courses_id = %s and name = %s and times = %s""",
+                               (course_id, name, times))
+                session = cur.fetchone()
 
             for student in students:
                 cur.execute("""INSERT INTO roster (users_id, session_id)
@@ -81,3 +87,9 @@ def create_session(course_id):
         else:
             return redirect(url_for('sessions.create_session', course_id=course_id))
     return render_template('portal/courses/sessions/create-session.html', students=students)
+
+@bp.route('/<route>/')
+@login_required
+def error(route=None):
+    error = "404 Not found"
+    return render_template('error.html', error=error)
