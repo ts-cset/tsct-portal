@@ -24,10 +24,14 @@ VALUES (1,'A', 2),
        (2,'A', 2),
        (1,'B', 2);
 
-
 -- Assignments
 INSERT INTO assignments (course_id,section, name, type, points, due_date, student_sessions_id)
 VALUES (1, 'A', 'homework', 'paper', 10, 'now', 1),
        (1,'B', 'website', 'final', 50, 'now', 2),
        (1,'A', 'application', 'final', 100, 'now', 1),
        (2,'A', 'homework', 'paper', 10, 'now', 3);
+
+-- Grades
+INSERT INTO grades (student_session_id, assignment_id, points_earned)
+VALUES (1, 1, 10),
+       (2, 2, 40);

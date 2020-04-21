@@ -5,14 +5,12 @@
 -- command in your terminal.
 
 -- Drop existing tables
+DROP TABLE IF EXISTS grades;
 DROP TABLE IF EXISTS assignments;
 DROP TABLE IF EXISTS student_sessions;
 DROP TABLE IF EXISTS sessions;
 DROP TABLE IF EXISTS courses;
 DROP TABLE IF EXISTS users;
-
-
-
 
 -- Users
 CREATE TABLE users (
@@ -35,8 +33,6 @@ CREATE TABLE courses (
   teacher_id bigint REFERENCES users (id) -- One teacher owns many courses
 
 );
-
-
 
 -- Session
 CREATE TABLE sessions (
@@ -68,4 +64,12 @@ CREATE TABLE assignments (
   points integer NOT NULL,
   due_date date NOT NULL,
   student_sessions_id bigint REFERENCES student_sessions (id) -- One student session owns many Assignments
+);
+
+-- Grades
+CREATE TABLE grades (
+  id bigserial PRIMARY KEY,
+  student_session_id bigint REFERENCES student_sessions (id) NOT NULL,
+  assignment_id integer REFERENCES assignments (id) NOT NULL,
+  points_earned integer NOT NULL
 );

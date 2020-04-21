@@ -145,6 +145,5 @@ def session_view():
 
     cur.execute("SELECT * FROM sessions WHERE course_id = %s AND section = %s;", (course_id, section))
     session_info = cur.fetchone()
-    print(session_info)
 
     return render_template('portal/viewsession.html', course_id=course_id, section=section,  classname=classname, session_info=session_info)
