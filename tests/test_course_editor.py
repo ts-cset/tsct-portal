@@ -62,18 +62,19 @@ def test_edit(client):
         assert b'TSCT Portal Login' in rv.data
 
 # Test a few faliure edits an feedback a error
-@pytest.mark.parametrize(('editTitle', 'editCredit',  'error'),
-( ('', '4', b'Title of course is required'),
-('wow_a_title','', b'Credit amount is required')
+@pytest.mark.parametrize(('editTitle', 'editCredit',  'error'), (
+    ('', '4', b'Title of course is required'),
+    ('wow_a_title','', b'Credit amount is required'),
+    ('new_title', 'three', b'Credit amount needs to be a number')
 ))
-
 def test_edit_function_errors(client, editTitle, editCredit, error):
 
     rv = login(
         client, 'teacher@stevenscollege.edu', 'qwerty')
     assert b'Logged in' in rv.data
 
-    response = client.post('/courses/180/edit', data={'editTitle':editTitle, 'editCredit': editCredit })
+    response = client.post('/courses/180/edit', data={
+        'editTitle':editTitle, 'editCredit': editCredit, 'editDesc': 'New description' })
 
     # Make sure errors display on page
     assert error in response.data
@@ -116,10 +117,14 @@ def test_create_course(client):
 # Test a few cases of creating a course
 @pytest.mark.parametrize(('courseTitle', 'courseCredits', 'major_name', 'error'),
 ( ('title_of_course', '', 3, b'Credit amount is required'),
-  ('', '3', 2, b'Title of course is required')
+  ('', '3', 2, b'Title of course is required'),
+  ('title_of_course', 3, '', b'Major is required'),
+  ('title_of_course', 'credit', 1, b'Credit amount needs to be a number'),
+  ('title_of_course', 1, 'cset', b'Major not found'),
+  ('title_of_course', 1, 82, b'Major not found')
 ))
 
-def test_edit_function_errors(client, courseTitle, courseCredits, major_name, error):
+def test_create_course_validation(client, courseTitle, courseCredits, major_name, error):
     rv = login(
         client, 'teacher@stevenscollege.edu', 'qwerty')
     assert b'Logged in' in rv.data
