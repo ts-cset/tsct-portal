@@ -30,9 +30,7 @@
 
         <label for="editName">Name</label>
 
-        {{ session['name'] }}
-
-        <input type="text" name="editName" required>
+        <input type="text" name="editName" value="{{ session['name'] }}" required>
 
       </li>
 
@@ -42,9 +40,7 @@
 
         <label for="editTimes">Times</label>
 
-        {{ session['times'] }}
-
-        <input type="text" name="editTimes" required>
+        <textarea type="text" name="editTimes" required>{{ session['times'] }}</textarea>
 
       </li>
 
@@ -54,9 +50,7 @@
 
         <label for="editRoom">Room Number</label>
 
-        {{ session['room_number'] }}
-
-        <input type="text" name="editRoom" required>
+        <input type="text" name="editRoom" value="{{ session['room_number'] }}" required>
 
       </li>
 
@@ -66,9 +60,7 @@
 
         <label for="editLocal">Location</label>
 
-        {{ session['location'] }}
-
-        <input type="text" name="editLocal" required>
+        <textarea type="text" name="editLocal" required>{{ session['location'] }}</textarea>
 
       </li>
 
