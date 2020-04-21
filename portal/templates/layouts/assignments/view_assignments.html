@@ -1,22 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Assignments</h2>
+<h2 class='assignment-header'>Assignments</h2>
 
-<a href="{{ url_for('assignment.create_assignment', id=id)}}">
+<a href="{{ url_for('assignment.create_assignment', id=id)}}" class="view-assignment-link">
   Create new assignment for {{ id }}
 </a>
 
 {% for assignment in assignments %}
 
-<section class="teacher_forms">
-  <h3>{{ assignment['name'] }}</h3>
+<section class="assignment_forms">
+  <h3 class="assignment-title">{{ assignment['name'] }}</h3>
 
   <p>{{ assignment['description'] }}</p>
   <p>{{ assignment['due_date'] }}</p>
 
-  <a href="{{ url_for('assignment.edit_assignments', id=assignment['assignment_id']) }}"></a>
+  <a href="{{ url_for('assignment.edit_assignments', id=assignment['assignment_id']) }}"
+  class="assignment-link">Edit</a>
 
-  <a href="{{ url_for('assignment.edit_assignments', id=assignment['assignment_id']) }}"></a>
+  <a href="{{ url_for('assignment.delete_assignments', id=assignment['assignment_id']) }}"
+  class="assignment-link">Delete</a>
 
 </section>
 

@@ -250,3 +250,31 @@ label input {
 .link-something {
   display: block;
 }
+
+.view-assignment-link {
+  background-color: lightgrey;
+  border: 1px solid darkgrey;
+  text-decoration: none;
+  margin-bottom: 10px;
+  color: black;
+}
+
+.assignment-link {
+  background-color: #fac0c0;
+  text-decoration: none;
+  padding: 5px;
+  text-align: center;
+  color: black;
+}
+
+.assignment_forms {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: lightgrey;
+  border: 1px solid black;
+}
+
+.assignment_header {
+  margin-bottom: 20px;
+}

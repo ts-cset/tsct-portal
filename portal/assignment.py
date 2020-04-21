@@ -14,18 +14,21 @@ def create_assignment(id):
 
     if request.method == 'POST':
 
-        session_id = id
+        #Getting all information necessary for creating an assignment
         name = request.form['name']
         description = request.form['description']
         due_date = request.form['date']
 
         con = db.get_db()
         cur = con.cursor()
+
+        #Query to actually insert assignment into the database
         cur.execute("""
         INSERT INTO assignments(session_id, name, description, due_date)
         VALUES (%s, %s, %s, %s)""",
-        (session_id, name, description, due_date));
+        (id, name, description, due_date));
         g.db.commit()
+
         cur.close()
         con.close()
         return redirect(url_for('assignment.view_assignments', id=id))
@@ -41,19 +44,21 @@ def view_assignments(id):
     con = db.get_db()
     cur = con.cursor()
 
+    #Query to get all of the asssignments in a session
     cur.execute("""
     SELECT * FROM assignments
     WHERE session_id = %s
+    ORDER BY assignment_id ASC
     """, (id,))
 
     assignments = cur.fetchall()
     cur.close()
     con.close()
 
-
     return render_template('layouts/assignments/view_assignments.html', id=id, assignments=assignments)
 
-@bp.route('/<int:id>/edit', methods=('GET', 'POST'))
+
+@bp.route('/<int:id>/edit-assignment', methods=('GET', 'POST'))
 @login_required
 def edit_assignments(id):
     """Singe page view to edit an assignment."""
@@ -62,16 +67,53 @@ def edit_assignments(id):
     cur = con.cursor()
     if request.method == 'POST':
 
-        session_id = id
+        #getting all info required to update assignment information
         name = request.form['name']
         description = request.form['description']
         due_date = request.form['date']
 
+        #Query to update the information for an assignment
         cur.execute("""
-        UPDATE assignments SET name = %s, decription = %s, due_date= %s
+        UPDATE assignments SET name = %s, description = %s, due_date= %s
         WHERE assignment_id = %s
-        """, (name, description, due_date, session_id))
+        """, (name, description, due_date, id))
+
+        #Query to return directly to whichever session the assignment was from
+        cur.execute("""
+        SELECT * FROM assignments
+        WHERE assignment_id = %s""", (id,))
+        session_id = cur.fetchone()
         g.db.commit()
+
+        return redirect(url_for('assignment.view_assignments', id=session_id['session_id']))
 
     cur.close()
     con.close()
+
+    return render_template('layouts/assignments/edit_assignments.html')
+
+
+@bp.route('/<int:id>/delete', methods=('GET', 'POST'))
+@login_required
+def delete_assignments(id):
+    """Deletes any unwanted assignments."""
+
+    con = db.get_db()
+    cur = con.cursor()
+
+    #Query to select which session the assignment came from
+    cur.execute("""
+    SELECT * FROM assignments WHERE assignment_id = %s
+    """, (id,))
+    session = cur.fetchone()
+
+    #Query to delete an assignment from the database
+    cur.execute("""
+    DELETE FROM assignments WHERE assignment_id = %s
+    """, (id,))
+    g.db.commit()
+
+    cur.close()
+    con.close()
+
+    return redirect(url_for('assignment.view_assignments', id=str(session['session_id'])))
