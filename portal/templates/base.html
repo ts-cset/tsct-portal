@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/latest/normalize.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Crimson+Text|Lato:400,400i,700" />
-    <link rel="stylesheet" href="../static/styles.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/styles.css" type="text/css" />
     {% endblock %}
   </head>
   <body>
@@ -34,13 +34,16 @@
 
       <h1>{{ self.title() }}</h1>
       {% if g.user %}
-      <button class="return" onclick="goBack()">previous</button>
+      <nav class="home-buttons">
+        <ul>
+          <li class="home-options"><button class="return" onclick="goBack()">previous</button></li>
         {% if g.user['role'] == 'teacher' %}
-          <a class="home-button" href="{{ url_for('main.home') }}">home</a>
+          <li class="home-options"><a class="home-button" href="{{ url_for('main.home') }}">home</a></li>
         {% else %}
-          <a class="home-button" href="{{ url_for('main.student') }}">student home</a>
+          <li class="home-options"><a class="home-button" href="{{ url_for('main.student') }}">student home</a></li>
+        </ul>
+      </nav>
         {% endif %}
-      </div>
       {% endif %}
     </header>
 
