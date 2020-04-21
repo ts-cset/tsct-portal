@@ -26,6 +26,7 @@ def view(id):
     check = cur.fetchone()
     session_teacher = check['session_teacher']
     cur.close()
+
     if request.method == 'POST':
         message = ""
         studentname = request.form['sname']
@@ -35,24 +36,27 @@ def view(id):
         cur.execute('SELECT id, name FROM users WHERE name = %s',
                     (studentname,))
         student = cur.fetchone()
+        print(student)
 
         if student is not None:
 
             student_id = student['id']
             student_name = student['name']
 
-            # cur.execute('SELECT count, student_id, session_id FROM roster WHERE student_id = %s AND session_id = %s',
-            #             (student_id, id))
-            # matching = cur.fetchone()
-            # cur.close()
-
             con = db.get_db()
             cur = con.cursor()
             cur.execute(
                 """INSERT INTO roster (student_id , session_id)
-                    VALUES (%s, %s)""",
+                VALUES (%s, %s)""",
                 (student_id, id))
             g.db.commit()
+
+            cur.execute(
+                """SELECT roster.student_id, roster.session_id, users.id, users.name
+                FROM roster JOIN users ON roster.student_id = users.id
+                WHERE session_id = %s ORDER BY users.name DESC""",
+                (id,))
+            students = cur.fetchall()
             cur.close()
 
         else:
