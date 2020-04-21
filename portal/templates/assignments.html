@@ -1,0 +1,18 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Manage Assignments{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <ul>
+      {% for assignment in assignments %}
+      <li>
+        {{ assignment['course_name']}}–{{ assignment['name'] }}
+        <input type="checkbox" name="id" value="{{ assignment['id'] }}">
+        <button type="submit" formaction="{{ url_for('teacher.edit_assignments') }}" name="edit" value="{{ assignment['id'] }}">Edit</button>
+      </li>
+      {% endfor %}
+    </ul>
+    <button type="submit">Delete Selected</button>
+  </form>
+{% endblock %}

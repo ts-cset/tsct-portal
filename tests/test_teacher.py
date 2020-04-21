@@ -69,7 +69,19 @@ def test_course_edit(client,auth,app):
                 assert res.headers['Location'] == 'http://localhost/teacher/courses'
 def test_sessions(client, auth):
     auth.teacher_login()
-    assert client.get('/teacher/session').status_code == 200
+
+    # Teachers should see session from mock data on session page
+    response = client.get('/teacher/session')
+    assert b'180 A' in response.data
+
+    # Teachers should be able to delete sessions using a POST request
+    client.post(
+        '/teacher/session',
+        data={'id': 1}
+    )
+    response = client.get('/teacher/session')
+    # Session 1 should now be deleted and no longer shown
+    assert b'180 A' not in response.data
 
 
 def test_make_session(client, auth):

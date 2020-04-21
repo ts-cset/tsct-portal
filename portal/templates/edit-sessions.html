@@ -4,24 +4,34 @@
 
 {% block content %}
   <!-- Create a list of students that can be added to the session about to be created -->
-  <form action="{{ url_for('teacher.session_add') }}" method="post">
+  <form action="{{ url_for('teacher.session_add') }}" method="post" class="{{ "editSession" if students }}">
     <ul class="add-students">
       {% for student in students %}
         <li>
+          <label class="checkbox">
+            <input type="checkbox" name="{{ student['id'] }}" value="{{ student['id'] }}">
+            <!--Since checkboxes can't be styled, this span becomes the checkbox-->
+            <span class="fakeCheckbox"></span>
+          </label>
           {{ student['last_name'] }}, {{ student['first_name'] }}
-          <input type="checkbox" name="{{ student['id'] }}" value="{{ student['id'] }}">
         </li>
       {% endfor %}
     </ul>
-    <button type="submit">Add to Session</button>
+    {% if students %}
+      <button type="submit">Add to Session</button>
+    {% endif %}
   </form>
   <!-- Show a list of students already added to the session about to be created -->
-  <form action="{{ url_for('teacher.session_remove') }}" method="post">
+  <form action="{{ url_for('teacher.session_remove') }}" method="post" class="{{ "editSession" if roster }}">
     <ul class="roster">
       {% for member in roster %}
         <li>
+          <label class="checkbox">
+            <input type="checkbox" name="{{ member['id'] }}" value="{{ member['id'] }}">
+            <!--Since checkboxes can't be styled, this span becomes the checkbox-->
+            <span class="fakeCheckbox"></span>
+          </label>
           {{ member['last_name'] }}, {{ member['first_name'] }}
-          <input type="checkbox" name="{{ member['id'] }}" value="{{ member['id'] }}">
         </li>
       {% endfor %}
     </ul>
@@ -30,7 +40,7 @@
     {% endif %}
   </form>
 
-  <form action="{{ url_for('teacher.session_submit') }}" method="post">
+  <form action="{{ url_for('teacher.session_submit') }}" method="post" class="editSession">
     <!-- Set dates and times for the session -->
     <label for="meeting_days">Meeting Days:</label>
     <input type="text" name="meeting_days" maxlength="6" size="8" value="{{ session_info['meeting_days'] }}">
