@@ -59,6 +59,10 @@ def create_app(test_config=None):
     from . import roster
     app.register_blueprint(roster.bp)
 
+    from . import schedule
+    app.register_blueprint(schedule.bp)
+
+
     @app.route('/')
     @auth.login_required
     def index():

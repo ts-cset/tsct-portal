@@ -43,7 +43,7 @@ CREATE TABLE courses (
 CREATE TABLE sessions (
 id bigserial PRIMARY KEY,
 times text NOT NULL,
-name text NOT NULL,
+session_name text NOT NULL,
 room_number text NOT NULL,
 location text NOT NULL,
 course_id bigint REFERENCES courses (course_num)

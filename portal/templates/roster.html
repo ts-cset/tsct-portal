@@ -8,7 +8,7 @@
 
   <header>
 
-    <h2>{{ course['course_title'] + ' ' + session['name'] }} Roster</h2>
+    <h2>{{ course['course_title'] + ' ' + session['session_name'] }} Roster</h2>
 
     <a class="back" href="{{ url_for('session_editor.session_manage', id=course['course_num'])}}">Back</a>
   </header>

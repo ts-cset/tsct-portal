@@ -23,7 +23,7 @@ def login():
                 cur.execute('SELECT * FROM users WHERE email = %s', (email,))
                 user = cur.fetchone()
 
-                
+
 
         error = None
 
@@ -99,4 +99,14 @@ def teacher_required(view):
 
         return view(**kwargs)
 
+    return wrapped
+
+def student_required(view):
+    """Checks if the logged in user is a student"""
+    @functools.wraps(view)
+    def wrapped(**kwargs):
+        if g.user['role'] != 'student':
+            return redirect(url_for('index'))
+
+        return view(**kwargs)
     return wrapped

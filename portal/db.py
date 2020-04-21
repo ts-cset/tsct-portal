@@ -114,6 +114,16 @@ def insert_users():
                         row
                     )
 
+            with open('./portal/data/sessions.csv', 'r') as f:
+                reader = csv.reader(f)
+                next(reader)
+
+                for row in reader:
+                    cur.execute(
+                        "INSERT INTO sessions VALUES (%s, %s, %s, %s, %s, %s)",
+                        row
+                    )
+
                 # note: I have to create the "majors" database before "users" because
                 # users contains a reference to the majors database
 

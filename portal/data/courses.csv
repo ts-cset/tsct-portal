@@ -1,4 +1,7 @@
 course_num,course_title,description,credits,teacher_id,major_id
-20,ENG 216,Technical Writing,3,53114,3
-19,MATH 126,Tech Math I,3,42267,1
-344,PHYS 106,Physics Everyday,3,42267,1
+1,ENG 216,Technical Writing,3,53114,3
+2,MATH 126,Tech Math I,3,42267,1
+3,PHYS 106,Physics Everyday,3,42267,1
+4,CSET 155,Database Design,3,52502,1
+5,CSET 160,Web Development II,3,52502,1
+6,CSET 180,Software Project II,3,52502,1
