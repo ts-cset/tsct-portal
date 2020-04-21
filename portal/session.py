@@ -1,7 +1,8 @@
 from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session, abort
 
 from . import db
-from portal.auth import login_required, teacher_required
+from portal.auth import login_required, login_role
+from portal.course import get_course
 
 bp = Blueprint("session", __name__)
 
@@ -44,6 +45,11 @@ def view_sessions(id):
                 WHERE sessions.course_id = %s""",
                 (id,))
     sessions = cur.fetchall()
+
+    cur.execute("""SELECT courses.course_id, courses.name, courses.major, courses.description, courses.teacherid, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
+                (id,))
+    course = cur.fetchone()
+
     cur.close()
 
     return render_template("layouts/sessions/view_sessions.html", sessions=sessions)
