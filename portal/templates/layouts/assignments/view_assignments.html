@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Assignments{% endblock %}
+
+{% block content %}
+
+<a href="{{ url_for('assignment.create_assignment', id=id)}}" class="view-assignment-link">
+  create new assignment for session:{{ id }}
+</a>
+
+{% for assignment in assignments %}
+
+<section class="assignment_forms">
+  <h3 class="assignment-title">{{ assignment['name'] }}</h3>
+    <p class="assignment-item">{{ assignment['description'] }}</p>
+  <h3 class="assignment-date">assignment due:</h3>
+    <p class="assignment-item">{{ assignment['due_date'] }}</p>
+    <ul class="course-options">
+    <li class="course-options-item"><a href="{{ url_for('assignment.edit_assignments',
+    id=assignment['assignment_id']) }}">edit</a></li>
+    <li class="course-options-item"><a href="{{ url_for('assignment.delete_assignments',
+    id=assignment['assignment_id']) }}">delete</a></li>
+    </ul>
+
+</section>
+
+{% endfor %}
+
+
+{% endblock %}

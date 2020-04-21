@@ -1,7 +1,6 @@
 import pytest
 
 
-
 def test_create_course(client, auth):
     # getting the form as a teacher
     auth.login()
@@ -36,11 +35,11 @@ def test_edit(client, auth):
     assert b'CSET 180'in response.data
 
 
-def test_delete(client, auth):
-    # login to the page
-    auth.login()
-    response = client.post('/3/delete')
-    assert '/home' in response.headers['Location']
+# def test_delete(client, auth):
+#     # login to the page
+#     auth.login()
+#     response = client.post('/3/delete')
+#     assert '/home' in response.headers['Location']
 
 
 def test_view(client, auth):

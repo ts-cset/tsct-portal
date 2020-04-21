@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Create Assignment</h2>
+
+<form class="teacher_home_form" method="post">
+  <label class="form-label" for="name">Assignment Name:</label>
+  <input type="text" name="name" placeholder="Assignment Name" required>
+  <label class="form-label" for="description">Description:</label>
+  <textarea class="course-description" name="description" placeholder="Describe assignment here" required></textarea>
+  <label class="form-label" for="date">Assignment Due:</label>
+  <input type="date" name="date" required>
+  <input type="submit" value="Save new assignment">
+</form>
+
+{% endblock %}
