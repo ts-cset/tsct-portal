@@ -19,13 +19,13 @@ def view_session(course_id, session_id):
                    WHERE id = %s;""",
                    (session_id,))
     sessions = cur.fetchall()
-    
+
     cur = db.get_db().cursor()
     cur.execute("""SELECT * FROM assignments
                    WHERE session_id = %s;""",
                    (session_id,))
     assignments = cur.fetchall()
-    
+
     cur.execute("""SELECT * FROM roster
                    WHERE session_id = %s;""",
                    (session_id,))
@@ -37,11 +37,20 @@ def view_session(course_id, session_id):
 @login_required
 @teacher_required
 def create_session(course_id):
-    cur = db.get_db().cursor()
-    cur.execute("""SELECT * FROM users
-                   WHERE role = 'student'""")
-    students = cur.fetchall()
-    cur.close()
+    text = request.args.get('text')
+    text = '{}{}{}'.format('%',text,'%')
+    if text == None:
+        cur = db.get_db().cursor()
+        cur.execute("""SELECT * FROM users
+                    WHERE role = 'student'""")
+        students = cur.fetchall()
+        cur.close()
+    else:
+        cur = db.get_db().cursor()
+        cur.execute("""SELECT * FROM users
+                    WHERE role = 'student' and name ILIKE %s""", (text,))
+        students = cur.fetchall()
+        cur.close()
 
     if request.method == 'POST':
         name = request.form['name']
@@ -81,3 +90,13 @@ def create_session(course_id):
         else:
             return redirect(url_for('sessions.create_session', course_id=course_id))
     return render_template('portal/courses/sessions/create-session.html', students=students)
+
+def students_search():
+    if request.method == 'POST':
+        text = request.form['text']
+        error = None
+        cur = db.get_db().cursor()
+        cur.execute("""SELECT * FROM users
+                       WHERE role = 'student' and name =%s""",(text,))
+        students = cur.fetchall()
+        cur.close()

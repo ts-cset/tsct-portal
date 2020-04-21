@@ -4,6 +4,13 @@
 
 {% block content %}
 <h2>Create a Session</h2>
+<form>
+  <label for="Student Search">Student Search
+      <input type="text" name="text" placeholder="Search" />
+    </label>
+    <input type="submit" value="Search Students" />
+</form>
+
 <form method="post">
   <label for="name">Name
     <input name="name" required/>
@@ -11,12 +18,12 @@
   <label for="times">Times
     <input name="times" />
   </label>
-<label for="students">Students
-  </label>
+
 {% for student in students %}
 <input type="checkbox" id='students' name='students' value="{{ student['id'] }}">
 <label for="students">{{ student['name'] }}</label>
 {% endfor %}
   <input type="submit" value="Create Session" />
 </form>
+
 {% endblock %}
