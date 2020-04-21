@@ -141,7 +141,8 @@ label input {
 }
 
 .nav a:hover,
-.nav-logout:hover {
+.nav-logout:hover,
+.fake-button:hover {
   background-color: white;
   color: #8b1e41;
 }
