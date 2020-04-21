@@ -2,14 +2,12 @@ from flask import redirect, g, url_for, render_template, session, request, Bluep
 import functools
 
 import datetime
-from . import session_editor
-from . import course_editor
-from . import db
+from . import session_editor ,course_editor ,db
 from portal.auth import login_required, teacher_required
 
 bp = Blueprint("assign", __name__)
 
-@bp.route('/course/<int:course_id>/session/<int:sessions_id>/create/assignment/', methods=('GET', 'POST'))
+@bp.route('/course/<int:course_id>/session/<int:sessions_id>/assignment/create/', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
@@ -33,19 +31,22 @@ def assign_create(sessions_id, course_id):
         description = request.form['description']
         due_date = request.form['due_date']
         error = None
+
+        try:
+            int(points)
+        except ValueError:
+            error = 'Points are numbers only, check your values.'
+        try:
+            datetime.datetime.strptime(due_date, '%Y-%m-%dT%H:%M')
+        except ValueError:
+            error = 'Due Date only allows time data, check your values. Please format the time as such using military time. Year-Month-Day Hour:Minute ex. 2020-06-22 19:10'
+
+
         with db.get_db() as con:
             with con.cursor() as cur:
 
                 if not name:
                     error = 'Name is required.'
-                try:
-                    int(points)
-                except ValueError:
-                    error = 'Points are numbers only, check your values.'
-                try:
-                    datetime.datetime.strptime(due_date, '%Y-%m-%dT%H:%M')
-                except ValueError:
-                    error = 'Due Date only allows time data, check your values.'
 
                 if error is None:
                     now = datetime.datetime.utcnow()
@@ -62,7 +63,7 @@ def assign_create(sessions_id, course_id):
 
     return render_template('layouts/assigns/assign_create.html', session=session)
 
-@bp.route('/course/<int:course_id>/session/<int:sessions_id>/assignments/', methods=('GET', 'POST'))
+@bp.route('/course/<int:course_id>/session/<int:sessions_id>/assignments/', methods=('GET', ))
 @login_required
 @teacher_required
 
@@ -91,7 +92,7 @@ def assign_manage(course_id, sessions_id):
 
     return render_template("layouts/assigns/assign_manage.html", assignments=assignments, session=session)
 
-@bp.route('/course/<int:course_id>/session/<int:sessions_id>/Edit/assignment/<int:assign_id>/', methods=('GET', 'POST'))
+@bp.route('/course/<int:course_id>/session/<int:sessions_id>/assignment/Edit/<int:assign_id>/', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 
@@ -118,21 +119,21 @@ def assign_edit(course_id, assign_id, sessions_id):
         points = request.form['edit_points']
         description = request.form['edit_desc']
         due_date = request.form['edit_date']
-        print(due_date)
         error = None
+
+        try:
+            int(points)
+        except ValueError:
+            error = 'Points are numbers only, check your values.'
+        try:
+            datetime.datetime.strptime(due_date, '%Y-%m-%dT%H:%M')
+        except ValueError:
+            error = 'Due Date only allows time data, check your values. Please format the time as such using military time. Year-Month-Day Hour:Minute ex. 2020-06-22 19:10'
 
         with db.get_db() as con:
             with con.cursor() as cur:
                 if not name:
                     error = 'Name is required.'
-                try:
-                    int(points)
-                except ValueError:
-                    error = 'Points are numbers only, check your values.'
-                try:
-                    datetime.datetime.strptime(due_date, '%Y-%m-%dT%H:%M')
-                except ValueError:
-                    error = 'Due Date only allows time data, check your values.'
 
                 if error is None:
 
