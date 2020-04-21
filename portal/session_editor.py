@@ -25,6 +25,15 @@ def session_edit(course_id, sessions_id):
         location = request.form['editLocal']
         error = None
 
+        if not name:
+            error = 'Required field missing.'
+        if not times:
+            error = 'Required field missing.'
+        if not room:
+            error = 'Required field missing.'
+        if not location:
+            error = 'Required field missing.'
+
         with db.get_db() as con:
             with con.cursor() as cur:
 
@@ -43,7 +52,7 @@ def session_edit(course_id, sessions_id):
 
                     return redirect(url_for( 'session_editor.session_manage', id=course['course_num']))
 
-                flash(error)
+        flash(error)
 
 
     return render_template("layouts/editSession.html", course=course, session=session)
@@ -70,17 +79,17 @@ def session_create(id):
         location = request.form['locations']
         error = None
 
+        if not title:
+            error = 'Required field missing.'
+        if not times:
+            error = 'Required field missing.'
+        if not room:
+            error = 'Required field missing.'
+        if not location:
+            error = 'Required field missing.'
+
         with db.get_db() as con:
             with con.cursor() as cur:
-
-                if not title:
-                    error = 'Required field missing.'
-                if not times:
-                    error = 'Required field missing.'
-                if not room:
-                    error = 'Required field missing.'
-                if not location:
-                    error = 'Required field missing.'
 
                 if error is None:
 

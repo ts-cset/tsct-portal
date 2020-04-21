@@ -175,3 +175,13 @@ def test_course_manage(client):
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
+
+def test_course_404(client):
+    """Ensures that an incorrect course id leads to a 404"""
+
+    with client:
+        login(client, 'teacher@stevenscollege.edu', 'qwerty')
+
+        response = client.get('/courses/999/edit')
+
+        assert b'404' in response.data

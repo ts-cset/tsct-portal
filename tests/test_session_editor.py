@@ -31,6 +31,25 @@ def test_edit_session(client):
         assert b'TSCT Portal Login' in rv.data
 
 
+@pytest.mark.parametrize(('title', 'times', 'room', 'location'), (
+    ('', 'test', 'test', 'test'),
+    ('test', '', 'test', 'test'),
+    ('test', 'test', '', 'test'),
+    ('test', 'test', 'test', '')
+))
+def test_edit_session_validation(client, title, times, room, location):
+
+    with client:
+        login(client, 'teacher@stevenscollege.edu', 'qwerty')
+
+        response = client.post('/courses/180/sessions/2/edit', data={
+            'editName': title,
+            'editTimes': times,
+            'editRoom': room,
+            'editLocal': location
+        })
+        assert b'Required field missing' in response.data
+
 
 def test_create_session(client):
     """Tests access of the createSession page and the
@@ -56,6 +75,26 @@ def test_create_session(client):
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
+
+
+@pytest.mark.parametrize(('title', 'times', 'room', 'location'), (
+    ('', 'test', 'test', 'test'),
+    ('test', '', 'test', 'test'),
+    ('test', 'test', '', 'test'),
+    ('test', 'test', 'test', '')
+))
+def test_create_session_validation(client, title, times, room, location):
+
+    with client:
+        login(client, 'teacher@stevenscollege.edu', 'qwerty')
+
+        response = client.post('/courses/180/sessions/create', data={
+            'sessionTitle': title,
+            'sessionTimes': times,
+            'roomNumber': room,
+            'locations': location
+        })
+        assert b'Required field missing' in response.data
 
 
 def test_course_sessions(client):
@@ -103,3 +142,13 @@ def test_unique_teacher(client):
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
+
+
+def test_session_404(client):
+
+    with client:
+        login(client, 'teacher@stevenscollege.edu', 'qwerty')
+
+        response = client.get('/courses/180/sessions/9/edit')
+
+        assert b'404' in response.data
