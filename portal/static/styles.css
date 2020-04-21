@@ -17,7 +17,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
 }
 
-
 /**
  * Layout
  */
@@ -43,11 +42,13 @@ main {
   border-radius: 1em;
   padding: 1em;
 }
+
 @media (min-width: 760px) {
   footer {
     display: flex;
     justify-content: space-between;
   }
+
   footer h2,
   footer address {
     width: 40%;
@@ -100,6 +101,10 @@ label {
   padding-bottom: 1rem;
 }
 
+.students {
+  display: inline;
+}
+
 label input {
   width: 100%;
 }
@@ -109,6 +114,26 @@ label input {
  */
 .nav {
   margin: 5px;
+  clear: both;
+}
+
+.nav-name {
+  float: right;
+  margin-right: 1em;
+}
+
+.nav-title {
+  float: left;
+}
+
+.nav-logout {
+  float: right;
+  margin: .75em;
+  padding: .25em;
+  border-radius: 3px;
+  text-decoration: none;
+  background-color: #8b1e41;
+  color: white;
 }
 
 .nav a {
@@ -119,7 +144,9 @@ label input {
   background-color: #8b1e41;
 }
 
-.nav a:hover {
+.nav a:hover,
+.nav-logout:hover,
+.fake-button:hover {
   background-color: white;
   color: #8b1e41;
 }
