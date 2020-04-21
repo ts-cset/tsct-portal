@@ -12,8 +12,8 @@ bp = Blueprint("session_editor", __name__)
 def session_edit(course_id, sessions_id):
     """Allows teachers to edit a specific session of a
     specific course"""
-    course = course_editor.get_course(course_id)
     session = get_session(sessions_id)
+    course = course_editor.get_course(session['course_id'])
     if g.user['id'] != course['teacher_id']:
         return redirect(url_for('index'))
 
@@ -46,7 +46,7 @@ def session_edit(course_id, sessions_id):
                         location = %s
                         WHERE id = %s AND course_id = %s
                         """,
-                        (name, times, room, location, sessions_id, course_id, )
+                        (name, times, room, location, sessions_id, course['course_num'], )
                         )
                     con.commit()
 
