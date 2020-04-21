@@ -64,7 +64,8 @@ ALTER TABLE sessions
     ON DELETE CASCADE;
 
 CREATE TABLE roster (
-  student_id bigint PRIMARY KEY,
+  count bigserial PRIMARY KEY,
+  student_id bigint,
   session_id bigint
 );
 
