@@ -103,7 +103,6 @@ label {
 
 label input {
   width: 100%;
-<<<<<<< HEAD
 }
 
 /**
@@ -111,6 +110,26 @@ label input {
  */
 .nav {
   margin: 5px;
+  clear: both;
+}
+
+.nav-name {
+  float: right;
+  margin-right: 1em;
+}
+
+.nav-title {
+  float: left;
+}
+
+.nav-logout {
+  float: right;
+  margin: .75em;
+  padding: .25em;
+  border-radius: 3px;
+  text-decoration: none;
+  background-color: #8b1e41;
+  color: white;
 }
 
 .nav a {
@@ -121,10 +140,8 @@ label input {
   background-color: #8b1e41;
 }
 
-.nav a:hover {
+.nav a:hover,
+.nav-logout:hover {
   background-color: white;
   color: #8b1e41;
 }
-=======
-}
->>>>>>> 8095de8125797aa4794cf097f1f26872b9bf7fd0
