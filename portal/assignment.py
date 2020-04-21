@@ -1,7 +1,7 @@
 from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
 
 from . import db
-from portal.auth import login_required, login_role
+from portal.auth import login_required, teacher_required
 from . import course
 
 bp = Blueprint("assignment", __name__)
@@ -9,12 +9,13 @@ bp = Blueprint("assignment", __name__)
 
 @bp.route('/<int:id>/create_assignment', methods=('GET', 'POST'))
 @login_required
+@teacher_required
 def create_assignment(id):
     """Single page view to create an assignment."""
 
     if request.method == 'POST':
 
-        #Getting all information necessary for creating an assignment
+        # Getting all information necessary for creating an assignment
         name = request.form['name']
         description = request.form['description']
         due_date = request.form['date']
@@ -22,11 +23,11 @@ def create_assignment(id):
         con = db.get_db()
         cur = con.cursor()
 
-        #Query to actually insert assignment into the database
+        # Query to actually insert assignment into the database
         cur.execute("""
         INSERT INTO assignments(session_id, name, description, due_date)
         VALUES (%s, %s, %s, %s)""",
-        (id, name, description, due_date));
+                    (id, name, description, due_date))
         g.db.commit()
 
         cur.close()
@@ -44,7 +45,7 @@ def view_assignments(id):
     con = db.get_db()
     cur = con.cursor()
 
-    #Query to get all of the asssignments in a session
+    # Query to get all of the asssignments in a session
     cur.execute("""
     SELECT * FROM assignments
     WHERE session_id = %s
@@ -67,18 +68,18 @@ def edit_assignments(id):
     cur = con.cursor()
     if request.method == 'POST':
 
-        #getting all info required to update assignment information
+        # getting all info required to update assignment information
         name = request.form['name']
         description = request.form['description']
         due_date = request.form['date']
 
-        #Query to update the information for an assignment
+        # Query to update the information for an assignment
         cur.execute("""
         UPDATE assignments SET name = %s, description = %s, due_date= %s
         WHERE assignment_id = %s
         """, (name, description, due_date, id))
 
-        #Query to return directly to whichever session the assignment was from
+        # Query to return directly to whichever session the assignment was from
         cur.execute("""
         SELECT * FROM assignments
         WHERE assignment_id = %s""", (id,))
@@ -101,13 +102,13 @@ def delete_assignments(id):
     con = db.get_db()
     cur = con.cursor()
 
-    #Query to select which session the assignment came from
+    # Query to select which session the assignment came from
     cur.execute("""
     SELECT * FROM assignments WHERE assignment_id = %s
     """, (id,))
     session = cur.fetchone()
 
-    #Query to delete an assignment from the database
+    # Query to delete an assignment from the database
     cur.execute("""
     DELETE FROM assignments WHERE assignment_id = %s
     """, (id,))
