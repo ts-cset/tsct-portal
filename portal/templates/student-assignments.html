@@ -1,0 +1,17 @@
+{% extends "layouts/base.html"  %}
+
+{% block title %}Assignments{% endblock %}
+
+{% block content %}
+  <ul class="courseList">
+    {% for assignment in assignments %}
+      <li>
+        <h2>{{ assignment['name'] }}</h2>
+        <p>Due Date: {{ assignment['due_date'] }}</p>
+        <p>Description: {{ assignment['description'] }}</p>
+        <p>Possible Points: {{ assignment['points'] }}</p>
+      </li>
+    {% endfor  %}
+  </ul>
+{% endblock %}
+

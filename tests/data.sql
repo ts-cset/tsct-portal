@@ -16,6 +16,9 @@ VALUES ('A', 'MTWThF', 'Greenfield', '12:00-16:30', 1),
 INSERT INTO roster (student_id, session_id)
 VALUES (2, 1);
 
+INSERT INTO roster (student_id, session_id)
+VALUES (2, 1);
+
 INSERT INTO assignments (name, description, points, course_id)
 VALUES ('Big Software', 'You need to create some big software with lots of big software energy', 200, 1),
        ('Bigger Software', 'You need to create some big software with lots of big software energy', 300, 1),
