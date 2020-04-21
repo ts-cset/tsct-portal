@@ -13,8 +13,8 @@ bp = Blueprint("session_editor", __name__)
 def session_edit(course_id, sessions_id):
     """Allows teachers to edit a specific session of a
     specific course"""
-    course = course_editor.get_course(course_id)
     session = get_session(sessions_id)
+    course = course_editor.get_course(session['course_id'])
     if g.user['id'] != course['teacher_id']:
         return redirect(url_for('index'))
 
@@ -29,6 +29,15 @@ def session_edit(course_id, sessions_id):
         location = request.form['editLocal']
         error = None
 
+        if not name:
+            error = 'Required field missing.'
+        if not times:
+            error = 'Required field missing.'
+        if not room:
+            error = 'Required field missing.'
+        if not location:
+            error = 'Required field missing.'
+
         with db.get_db() as con:
             with con.cursor() as cur:
 
@@ -41,13 +50,13 @@ def session_edit(course_id, sessions_id):
                         location = %s
                         WHERE id = %s AND course_id = %s
                         """,
-                        (name, times, room, location, sessions_id, course_id, )
+                        (name, times, room, location, sessions_id, course['course_num'], )
                         )
                     con.commit()
 
                     return redirect(url_for( 'session_editor.session_manage', course_id=course['course_num']))
 
-                flash(error)
+        flash(error)
 
 
     return render_template("layouts/editSession.html", course=course, session=session)
@@ -74,17 +83,17 @@ def session_create(course_id):
         location = request.form['locations']
         error = None
 
+        if not title:
+            error = 'Required field missing.'
+        if not times:
+            error = 'Required field missing.'
+        if not room:
+            error = 'Required field missing.'
+        if not location:
+            error = 'Required field missing.'
+
         with db.get_db() as con:
             with con.cursor() as cur:
-
-                if not title:
-                    error = 'Required field missing.'
-                if not times:
-                    error = 'Required field missing.'
-                if not room:
-                    error = 'Required field missing.'
-                if not location:
-                    error = 'Required field missing.'
 
                 if error is None:
 

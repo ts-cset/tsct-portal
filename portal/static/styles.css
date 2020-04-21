@@ -235,10 +235,24 @@ input {
   width: 100%;
 }
 
+
 form.session label, form.assign label {
   border-bottom: 2px solid white;
+
+label {
+
   display: block;
-  margin: 1rem 0;
+  margin-top: .5rem;
+}
+
+textarea {
+  width: 100%;
+}
+
+form.session label,
+form.editFeature label {
+  border-bottom: 2px solid white;
+  margin: 1rem 0 0 0;
 }
 
 

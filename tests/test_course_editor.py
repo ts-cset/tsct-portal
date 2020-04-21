@@ -62,18 +62,19 @@ def test_edit(client):
         assert b'TSCT Portal Login' in rv.data
 
 # Test a few faliure edits an feedback a error
-@pytest.mark.parametrize(('editTitle', 'editCredit',  'error'),
-( ('', '4', b'Title of course is required'),
-('wow_a_title','', b'Credit amount is required')
+@pytest.mark.parametrize(('editTitle', 'editCredit',  'error'), (
+    ('', '4', b'Title of course is required'),
+    ('wow_a_title','', b'Credit amount is required'),
+    ('new_title', 'three', b'Credit amount needs to be a number')
 ))
-
 def test_edit_function_errors(client, editTitle, editCredit, error):
 
     rv = login(
         client, 'teacher@stevenscollege.edu', 'qwerty')
     assert b'Logged in' in rv.data
 
-    response = client.post('/courses/180/edit', data={'editTitle':editTitle, 'editCredit': editCredit })
+    response = client.post('/courses/180/edit', data={
+        'editTitle':editTitle, 'editCredit': editCredit, 'editDesc': 'New description' })
 
     # Make sure errors display on page
     assert error in response.data
@@ -100,10 +101,15 @@ def test_create_course(client):
         response = client.get('/courses/create')
         assert b'Create a New Course' in response.data
 
-        response_2 = client.post('/courses/create', data={'courseTitle': 'Welding 101',
-        'description': 'Learning how to use mig welder', 'courseCredits': 3, 'major_name': 2}, follow_redirects=True)
+        response_2 = client.post('/courses/create', data={
+                'courseNumber': 101,
+                'courseTitle': 'Welding',
+                'description': 'Learning how to use mig welder',
+                'courseCredits': 3,
+                'major_name': 2
+            }, follow_redirects=True)
 
-        assert b'<h4>Welding 101</h4>' in response_2.data
+        assert b'<h4>Welding</h4>' in response_2.data
         assert b'<h4>Software Project 2</h4>' in response_2.data
         assert b'Course Management' in response_2.data
 
@@ -114,18 +120,31 @@ def test_create_course(client):
 
 
 # Test a few cases of creating a course
-@pytest.mark.parametrize(('courseTitle', 'courseCredits', 'major_name', 'error'),
-( ('title_of_course', '', 3, b'Credit amount is required'),
-  ('', '3', 2, b'Title of course is required')
+@pytest.mark.parametrize(('courseNumber', 'courseTitle', 'courseCredits', 'major_name', 'error'),
+( (123, 'title_of_course', '', 3, b'Credit amount is required'),
+  (123, '', '3', 2, b'Title of course is required'),
+  (123, 'title_of_course', 3, '', b'Major is required'),
+  (123, 'title_of_course', 'credit', 1, b'Credit amount needs to be a number'),
+  (123, 'title_of_course', 1, 'cset', b'Major not found'),
+  (123, 'title_of_course', 1, 82, b'Major not found'),
+  ('hi', 'title_of_course', 1, 1, b'Course number needs to be a number'),
+  ('', 'title_of_course', 1, 1, b'Course number is required')
 ))
 
-def test_edit_function_errors(client, courseTitle, courseCredits, major_name, error):
+def test_create_course_validation(client, courseNumber, courseTitle, courseCredits, major_name, error):
     rv = login(
         client, 'teacher@stevenscollege.edu', 'qwerty')
     assert b'Logged in' in rv.data
 
 
-    response = client.post('/courses/create', data={'courseTitle':courseTitle, 'courseCredits': courseCredits,'major_name': major_name, 'description': ''})
+    response = client.post('/courses/create', data={
+            'courseNumber': courseNumber,
+            'courseTitle': courseTitle,
+            'courseCredits': courseCredits,
+            'major_name': major_name,
+            'description': 'hello'
+        })
+    
     # Make sure errors display on page
     assert error in response.data
 
@@ -170,3 +189,13 @@ def test_course_manage(client):
 
         rv = logout(client)
         assert b'TSCT Portal Login' in rv.data
+
+def test_course_404(client):
+    """Ensures that an incorrect course id leads to a 404"""
+
+    with client:
+        login(client, 'teacher@stevenscollege.edu', 'qwerty')
+
+        response = client.get('/courses/999/edit')
+
+        assert b'404' in response.data
