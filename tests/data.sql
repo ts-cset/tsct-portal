@@ -14,20 +14,20 @@ VALUES ('CSET', 'Software Project II', 180, 'blaaah', 3, 1),
        ('CSET', 'Security and Ethics', 170, 'delete me', 3, 1);
 -- sessions
 INSERT INTO sessions (course_id, teacher_id, section, meeting_time, location)
-VALUES (1, 1, 'A', 'now', 'here'),
-       (1, 1, 'B', 'now', 'place st'),
-       (2, 1, 'A', 'now', 'road st ave');
+VALUES (1, 1, 'A', 'now', 'here'), -- Software A
+       (1, 1, 'B', 'now', 'place st'), -- Software B
+       (2, 1, 'A', 'now', 'road st ave'); -- Web A
 
 -- student sessions
 INSERT INTO student_sessions (course_id, section, student_id)
-VALUES (1,'A', 2),
-       (2,'A', 2),
-       (1,'B', 2);
+VALUES (1,'A', 2), -- Software A
+       (2,'A', 2), -- Web A
+       (1,'B', 2); -- Software B
 
 
 -- Assignments
-INSERT INTO assignments (course_id,section, name, type, points, due_date, student_sessions_id)
-VALUES (1, 'A', 'homework', 'paper', 10, 'now', 1),
-       (1,'B', 'website', 'final', 50, 'now', 2),
-       (1,'A', 'application', 'final', 100, 'now', 1),
-       (2,'A', 'homework', 'paper', 10, 'now', 3);
+INSERT INTO assignments (course_id, section, name, type, points, due_date, student_sessions_id)
+VALUES (1, 'A', 'homework', 'paper', 10, 'now', 1), -- Software A
+       (1,'B', 'website', 'final', 50, 'now', 2), -- Software B
+       (1,'A', 'application', 'final', 100, 'now', 1), -- Software A
+       (2,'A', 'Write', 'essay', 15, 'now', 3); -- Web A

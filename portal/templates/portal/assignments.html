@@ -4,6 +4,11 @@
 
 {% block content %}
 <h1>Assignments</h1>
+
+{% if session['user'][4] == 'teacher' %}
+  <a href="{{ url_for('assignments.assignments_create', course_id=course_id, section=section) }}">Create New Assignment</a>
+{% endif %}
+
 {% for assignments in student_assignments %}
 {{ assignments["name"] }}
 {{ assignments["points"] }}
