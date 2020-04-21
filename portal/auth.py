@@ -36,3 +36,8 @@ def index():
 @bp.route('/home', methods=('GET', 'POST'))
 def home():
     return render_template('portal/home.html')
+
+@bp.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('auth.index'))

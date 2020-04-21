@@ -19,6 +19,7 @@ def app():
         db.init_db()
         db.mock_db()
 
+
     yield app
 
 
@@ -50,8 +51,8 @@ class AuthActions(object):
             '/',
             data={'email': email, 'password': password}
             )
-    # def logout(self):
-    #     return self._client.get('/logout')
+    def logout(self):
+         return self._client.get('/logout')
 
 
 

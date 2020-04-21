@@ -1,6 +1,8 @@
 from portal import create_app
 import pytest
 
+from flask import session
+
 
 def test_config(monkeypatch):
     # Default config
@@ -17,7 +19,7 @@ def test_config(monkeypatch):
 
 def test_index(client, auth):
     response = client.get('/')
-    assert b'<h1>TSCT Portal</h1>' in response.data
+    assert b"TSCT Portal" in response.data
     assert b'<form method="post">' in response.data
 
 
@@ -36,3 +38,12 @@ def test_login(client, auth):
 def test_login_validate_input(auth, username, password, message):
     response = auth.login(username, password)
     assert message in response.data
+
+
+# check logout
+def test_logout(client, auth):
+    auth.login()
+
+    with client:
+        auth.logout()
+        assert 'email' not in session
