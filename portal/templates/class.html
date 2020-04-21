@@ -13,6 +13,7 @@
               <p>{{ course['description'] }}</p>
               <input type="checkbox" value="{{ course['id'] }}" name="{{ course['id'] }}"/>
               <button formaction="{{ url_for('teacher.make_session') }}" type="submit" name="session" value="{{ course['id'] }}">Create Session</button>
+              <a href="{{ url_for('teacher.course_edit', id=course['id']) }}">Edit</a>
             </li>
           {% endfor %}
         </ul>

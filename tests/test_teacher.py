@@ -1,7 +1,7 @@
 import pytest
-from flask import g, session
+from flask import g, session, url_for, request
 from portal.db import get_db
-
+from urllib.parse import urlparse
 def test_home(client, auth):
     # Attempt to visit page without logging in
     response = client.get('/teacher/home')
@@ -39,6 +39,31 @@ def test_creation(client, auth):
     #Asserts that it's switched over to the Course Selection
     assert 'http://localhost/teacher/courses' == response.headers['Location']
 
+def test_course_edit(client,auth,app):
+    auth.teacher_login()
+    #assert client.get('/teacher/courses/edit').status_code == 200
+    #response = client.post(
+        ##data={'course_code': '5527', 'course_name': 'CSET-180', 'major': 'CSET', 'description': 'Not empty.'}
+    ##assert 'http://localhost/teacher/courses' == response.headers['Location']
+    response = client.get('teacher/courses/1/edit')
+    assert b'Course-Edit' in response.data
+    with app.app_context():
+        res = client.post(
+            '/teacher/courses/1/edit',
+            data={'code': 500, 'name': 'Ice-Cream', 'major': 'CSET',
+            'description': 'A basic introduction to Ice-Cream'}
+        )
+        with get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                SELECT * FROM courses
+                WHERE id = %s
+                """,
+                (1, )
+                )
+                result = cur.fetchone()
+                assert result['course_name'] == 'Ice-Cream'
+                assert res.headers['Location'] == 'http://localhost/teacher/courses'
 def test_sessions(client, auth):
     auth.teacher_login()
     assert client.get('/teacher/session').status_code == 200
