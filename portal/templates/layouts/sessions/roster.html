@@ -1,26 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}{% endblock %}
+{% block title %}Class Roster{% endblock %}
 
 {% block content %}
-
-  <ol>
+<h3 class="assignment-title">Current Students</h3>
+<section class="">
+  <ol class="student-list">
   {% for student in students %}
-    <li>{{ student['name'] }}</li>
-  {% endfor %}
+    <li class="student-name">{{ student['name'] }}</li>
+    {% endfor %}
   </ol>
-
-  <form method = 'POST' class ="add">
-    <label for="sname">Add Student
-      <input type="text" name="sname">
-    </label>
-    <label for="rname">Remove Student
-      <input type="text" name="rname"
-    </label>
+</section>
+{% if g.user['id'] == session_teacher %}
+<h3 class="assignment-title">Add Students By Name</h3>
+  <form class="teacher_home_form" method = 'POST'>
+    <label class="form-label" for="sname">student name</label>
+      <input type="text" name="sname" placeholder="Student Name">
+    <label for="rname">Remove Student</label>
+      <input type="text" name="rname">
     <input type="submit" value="submit">
-
   </form>
-
+{% endif %}
   <p>{{ message }}<p>
-
 {% endblock %}

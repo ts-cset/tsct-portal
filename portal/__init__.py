@@ -56,6 +56,9 @@ def create_app(test_config=None):
     from . import session
     app.register_blueprint(session.bp)
 
+    from . import assignment
+    app.register_blueprint(assignment.bp)
+
     from . import roster
     app.register_blueprint(roster.bp)
 
