@@ -163,6 +163,13 @@ a {
   background-color: #fac0c0;
 }
 
+.form-label2 {
+  font-size: 26px;
+  margin-top: 10px;
+  font-variant: small-caps;
+  background-color: #fac0c0;
+}
+
 .course-list-action {
   width: 100px;
   border: none;
@@ -495,4 +502,14 @@ aside {
   width: 300px;
   list-style-type: none;
   border: 1px solid black;
+}
+
+.error {
+  margin-left: 20px;
+  background-color: lightyellow;
+  padding: 3px;
+  color: black;
+  font-variant: small-caps;
+  font-size: 28px;
+  font-weight: bold;
 }

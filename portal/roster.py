@@ -11,6 +11,7 @@ bp = Blueprint("roster", __name__)
 def view(id):
     # session_id = class_session['id']
     bname = ''
+    message = ''
     con = db.get_db()
     cur = con.cursor()
     cur.execute(
@@ -28,39 +29,70 @@ def view(id):
     cur.close()
 
     if request.method == 'POST':
-        message = ""
         studentname = request.form['sname']
-
-        con = db.get_db()
-        cur = con.cursor()
-        cur.execute('SELECT id, name FROM users WHERE name = %s',
-                    (studentname,))
-        student = cur.fetchone()
-        print(student)
-
-        if student is not None:
-
-            student_id = student['id']
-            student_name = student['name']
-
-            con = db.get_db()
+        removename = request.form['rname']
+        print(studentname)
+        if studentname != "":
             cur = con.cursor()
             cur.execute(
-                """INSERT INTO roster (student_id , session_id)
-                VALUES (%s, %s)""",
-                (student_id, id))
-            g.db.commit()
-
-            cur.execute(
-                """SELECT roster.student_id, roster.session_id, users.id, users.name
-                FROM roster JOIN users ON roster.student_id = users.id
-                WHERE session_id = %s ORDER BY users.name DESC""",
-                (id,))
-            students = cur.fetchall()
+                'SELECT name, id FROM users WHERE name = %s', (studentname,))
+            bname = cur.fetchone()
+            print(bname)
+            if bname is not None:
+                bid = bname['id']
+                cur.execute('SELECT student_id, session_id FROM roster WHERE student_id = %s AND session_id = %s',
+                            (bid, id))
+                matching = cur.fetchall()
+                if matching == []:
+                    message = "{} has been added to the session".format(
+                        studentname)
+                    cur = con.cursor()
+                    newid = bname['id']
+                    print(newid)
+                    cur.execute(
+                        """INSERT INTO roster (student_id , session_id)
+                    VALUES (%s, %s)""",
+                        (newid, id))
+                    con.commit()
+                    cur.execute(
+                        """SELECT roster.student_id, roster.session_id, users.id, users.name
+                        FROM roster JOIN users ON roster.student_id = users.id
+                        WHERE session_id = %s ORDER BY users.name DESC""",
+                        (id,))
+                    students = cur.fetchall()
+                    cur.close()
+                else:
+                    message = "{} is already in the roster".format(studentname)
+            else:
+                message = "student not found"
             cur.close()
 
-        else:
-            message = "Error: student not found"
-        cur.close()
+        if removename != "":
+            cur = con.cursor()
+            cur.execute(
+                'SELECT name, id FROM users WHERE name = %s', (removename,))
+            bname = cur.fetchone()
+            print(bname)
+            if bname is not None:
+                bid = bname['id']
+                cur.execute('SELECT student_id, session_id FROM roster WHERE student_id = %s AND session_id = %s',
+                            (bid, id))
+                matching = cur.fetchall()
+                print(matching)
+                if matching != []:
+                    message = "student <<{}>> has been deleted".format(
+                        removename)
+                    cur.execute('DELETE FROM roster WHERE session_id = %s AND student_id = %s',
+                                (id, bid))
+                    con.commit()
+                    cur.execute(
+                        """SELECT roster.student_id, roster.session_id, users.id, users.name
+                        FROM roster JOIN users ON roster.student_id = users.id
+                        WHERE session_id = %s ORDER BY users.name DESC""",
+                        (id,))
+                    students = cur.fetchall()
+                    cur.close()
+        if studentname == "" and removename == "":
+            message = "error no input"
         con.close()
-    return render_template("layouts/sessions/roster.html", students=students, session_teacher=session_teacher)
+    return render_template("layouts/sessions/roster.html", students=students, session_teacher=session_teacher, message=message)
