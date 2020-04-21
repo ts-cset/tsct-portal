@@ -10,11 +10,15 @@
   {% endfor %}
   </ol>
 
-  <form method = 'POST'>
+  <form method = 'POST' class ="add">
     <label for="sname">Add Student
       <input type="text" name="sname">
     </label>
+    <label for="rname">Remove Student
+      <input type="text" name="rname"
+    </label>
     <input type="submit" value="submit">
+
   </form>
 
   <p>{{ message }}<p>
