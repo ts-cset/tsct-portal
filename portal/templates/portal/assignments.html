@@ -5,7 +5,12 @@
 {% block content %}
 <h1>Assignments</h1>
 {% for assignments in student_assignments %}
-{{ assignments["name"] }}
-{{ assignments["points"] }}
+
+<ul class="assignments-list">
+  <li>Name: {{ assignments['name'] }}</li>
+  <li>Points: {{ assignments['points'] }}</li>
+</ul>
+
+
 {% endfor %}
 {% endblock %}
