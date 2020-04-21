@@ -37,10 +37,7 @@ def view_schedule():
         (g.user['major_id'],)
         )
     infos = cur.fetchall()
-    cur.execute("SELECT user_id FROM rosters")
-    rosters = cur.fetchall()
-    print(rosters)
 
     cur.close()
 
-    return render_template("layouts/schedule.html", infos=infos, rosters=rosters)
+    return render_template("layouts/schedule.html", infos=infos)
