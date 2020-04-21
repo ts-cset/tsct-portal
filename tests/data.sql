@@ -22,8 +22,8 @@ VALUES (1, 'M/W/F', '9:00am'),
       (3, 'M/W/F', '8:15am'),
       (3, 'T/Th', '1:30pm');
 
-INSERT INTO assignments (session_id, name, description)
-VALUES (1, 'Exam_1', 'Chapter 1 Exam'),
-       (1, 'Exam_2', 'Chapter 2 Exam'),
-       (2, 'Essay', 'Biographical Essay'),
-       (2, 'Essay', 'Persuasive Essay');
+INSERT INTO assignments (session_id, name, description, due_date)
+VALUES (1, 'Exam_1', 'Chapter 1 Exam', '2020-04-28'),
+       (1, 'Exam_2', 'Chapter 2 Exam', '2020-05-03'),
+       (2, 'Essay', 'Biographical Essay', '2020-05-02'),
+       (2, 'Essay', 'Persuasive Essay', '2020-08-09');
