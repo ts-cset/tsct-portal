@@ -24,8 +24,10 @@ def login():
 
         if user is None:
             error = 'Incorrect email or password.'
+            return render_template('error.html', error=error)
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect email or password.'
+            return render_template('error.html', error=error)
 
         if error is None:
             session.clear()
@@ -53,6 +55,11 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+@bp.route('/<route>')
+def error(route=None):
+    error = "404 Not found"
+    return render_template('error.html', error=error)
+
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -67,7 +74,8 @@ def teacher_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.users['role'] != 'teacher':
-            return redirect(url_for('portal.userpage'))
+            error = "Not authorized"
+            return render_template('error.html', error=error)
 
         return view(**kwargs)
 

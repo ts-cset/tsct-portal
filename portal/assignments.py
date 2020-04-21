@@ -51,13 +51,16 @@ def submit_assignment(assignment_id):
         answer = request.form['answer']
         error = None
         cur = db.get_db().cursor()
-        cur.execute("""
-        UPDATE submissions SET answer = %s
-        WHERE users_id = %s and assignments_id = %s;""",
-        (answer, g.users['id'], assignment_id))
-        db.get_db().commit()
-
-        if error is None:
+        try:
+            cur.execute("""
+            UPDATE submissions SET answer = %s
+            WHERE users_id = %s and assignments_id = %s;""",
+            (answer, g.users['id'], assignment_id))
+            db.get_db().commit()
+        except:
+            error = "There was a problem with this submission"
+            return render_template('error.html', error=error)
+        else:
             return redirect(url_for('portal.userpage'))
     return render_template('portal/courses/sessions/assignments/submit-assignments.html', assignments=assignments)
 
@@ -82,38 +85,48 @@ def create_assignment(session_id):
 
         if assignment != None:
             error = "That assignment already exists"
+            return render_template('error.html', error=error)
 
         if error is None:
-            cur.execute("""INSERT INTO assignments (session_id, name, date, description, points)
-            VALUES (%s, %s, %s, %s, %s);
-             """,
-             (session_id, name, date, description, points))
-            db.get_db().commit()
-            cur.execute("""
-            SELECT id FROM assignments
-            WHERE name = %s and session_id = %s;
-            """,
-            (name, session_id))
-            assignments = cur.fetchone()
-            assignment_id = assignments[0]
-            cur.execute("""
-            SELECT users.id FROM users
-            JOIN roster ON roster.users_id = users.id
-            JOIN session ON session.id = roster.session_id
-            WHERE session_id = %s;
-            """,
-            (session_id,))
-            students = cur.fetchall()
-            for student in students:
-                cur.execute("""INSERT INTO submissions (users_id, assignments_id)
-                VALUES (%s, %s);
+            try:
+                cur.execute("""INSERT INTO assignments (session_id, name, date, description, points)
+                VALUES (%s, %s, %s, %s, %s);
                  """,
-                 (student[0], assignment_id))
+                 (session_id, name, date, description, points))
                 db.get_db().commit()
-            cur.close()
-
-
+            except:
+                error = "There was a problem creating that assignment"
+                return render_template('error.html', error=error)
+            else:
+                cur.execute("""
+                SELECT id FROM assignments
+                WHERE name = %s and session_id = %s;
+                """,
+                (name, session_id))
+                assignments = cur.fetchone()
+                assignment_id = assignments[0]
+                cur.execute("""
+                SELECT users.id FROM users
+                JOIN roster ON roster.users_id = users.id
+                JOIN session ON session.id = roster.session_id
+                WHERE session_id = %s;
+                """,
+                (session_id,))
+                students = cur.fetchall()
+                for student in students:
+                    cur.execute("""INSERT INTO submissions (users_id, assignments_id)
+                    VALUES (%s, %s);
+                     """,
+                     (student[0], assignment_id))
+                    db.get_db().commit()
+                cur.close()
             return redirect(url_for('portal.userpage'))
         else:
             return redirect(url_for('assignments.create_assignment', session_id=session_id))
     return render_template('portal/courses/sessions/assignments/create-assignments.html')
+
+@bp.route('/<route>')
+@login_required
+def error(route=None):
+    error = "404 Not found"
+    return render_template('error.html', error=error)
