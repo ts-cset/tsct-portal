@@ -85,6 +85,8 @@ def assign_edit(course_id, assign_id, sessions_id):
 
     session = session_editor.get_session(sessions_id)
     assignment = get_assignment(assign_id)
+    check_session = unique_session_check(sessions_id)
+    check_assign = unique_assignment_check(assign_id)
 
     if request.method == 'POST':
 
@@ -139,19 +141,36 @@ def get_assignment(assign_id):
 
             return assign
 
-def get_course_2(course_id):
-    """Gets the course from the database"""
+def unique_session_check(sessions_id):
+    """Compairs session course id to course number, and gets associated columns."""
     with db.get_db() as con:
         with con.cursor() as cur:
-
             cur.execute(
-                'SELECT course_num, credits, description, course_title, teacher_id'
-                ' FROM courses WHERE course_num = %s',
-                (course_id,))
+            'SELECT * FROM sessions JOIN courses ON sessions.course_id = courses.course_num'
+            ' WHERE sessions.id = %s;',
+            (sessions_id, )
+            )
+            check_session = cur.fetchone()
+            print(check_session)
 
-            course = cur.fetchone()
+            if check_session is None:
+                abort(404, "Assign id {0} doesn't exist.".format(sessions_id))
 
-            if course is None:
-                abort(404, "Course id {0} doesn't exist.".format(id))
+            return check_session
 
-            return course
+def unique_assignment_check(assign_id):
+    """Compairs assignment data to session data."""
+    with db.get_db() as con:
+        with con.cursor() as cur:
+            cur.execute(
+            'SELECT * FROM sessions JOIN assignments ON sessions.id = assignments.sessions_id'
+            ' WHERE assignments.id = %s;',
+            (assign_id, )
+            )
+            check_assign = cur.fetchone()
+            print(check_assign)
+
+            if check_assign is None:
+                abort(404, "Assign id {0} dpesn't exist.".format(assign_id))
+
+            return check_assign
