@@ -45,8 +45,14 @@ def create_app(test_config=None):
     # --------------
     from . import course_editor
     app.register_blueprint(course_editor.bp)
-    # Teacher Session Editor Routes
-    #----------------
+
+    # Assignement Routes
+    # --------------
+    from . import assign
+    app.register_blueprint(assign.bp)
+
+    # Sessions Routes
+    # --------------
     from . import session_editor
     app.register_blueprint(session_editor.bp)
 
@@ -63,6 +69,8 @@ def create_app(test_config=None):
     @auth.login_required
     def index():
         return render_template('index.html')
+
+
 
     # Return application object to be used by a WSGI server, like gunicorn
     return app
