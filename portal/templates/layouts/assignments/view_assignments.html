@@ -3,10 +3,11 @@
 {% block title %}Assignments{% endblock %}
 
 {% block content %}
-
+{% if g.user['id'] == course['teacherid'] %}
 <a href="{{ url_for('assignment.create_assignment', id=id, course_id=course['course_id'])}}" class="view-assignment-link">
   create new assignment
 </a>
+{% endif %}
 <h3>{{ course['class_name']}}</h3>
 <h3>SESSION {{id}}</h3>
 {% for assignment in assignments %}
