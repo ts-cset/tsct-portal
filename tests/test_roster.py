@@ -1,6 +1,5 @@
 import pytest
 
-
 def test_view_roster(client, auth):
     # getting the form as a logged in users,
     # reguarless if the user owns the session or not
