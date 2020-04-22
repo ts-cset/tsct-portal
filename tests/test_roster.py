@@ -7,11 +7,6 @@ def test_view_roster(client, auth):
     response = client.get('/course/2/session/2/roster')
     assert b'Class Roster' and b'Test Student' in response.data
 
-def require_login_roster(client, auth):
-    #requests the form as a loggedout user
-    response = client.get('/course/2/session/2/roster')
-    assert b'Class Roster' not in response.data
-
 def test_roster_add(client, auth):
     auth.login()
     # post request to add to the roster as a loggedin user
