@@ -3,6 +3,7 @@ import pytest
 from flask import session
 from portal.db import get_db
 
+<<<<<<< HEAD
 
 # get assignments that are assigned to the student
 def test_view_assignments(app, client, auth):

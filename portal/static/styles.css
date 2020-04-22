@@ -83,6 +83,10 @@ main {
   padding-left: 0px;
 }
 
+.assignments-list {
+  display: flex;
+  flex-direction: row;
+}
 /**
  * Forms
  */
