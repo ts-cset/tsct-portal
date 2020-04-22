@@ -66,4 +66,3 @@ def test_get_session_edit(client, auth):
 #     response = client.get('/sessions/6/delete')
 #     # make sure system aborts attempt
 #     assert b'Bad Request' in response.data
-
