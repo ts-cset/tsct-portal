@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Edit your assignment</h2>
+<h2>Edit Assignment: {{ assignment['assignment_id']}}</h2>
 <form class="teacher_home_form" method="post">
   <label class="form-label" for="name">Assignment Name:</label>
-  <input type="text" name="name" value="Name">
+  <input type="text" name="name" value="{{assignment['name']}}">
 <label class="form-label" for="name">Description:</label>
-  <textarea class="course-description" name="description" value="Description"></textarea>
+  <textarea class="course-description" value="{{ assignment['description'] }}" name="description"></textarea>
 <label class="form-label" for="date">Assignment Due:</label>
-  <input type="date" name="date" value="date" required>
+  <input type="date" name="date" value="{{ assignment['date']}}" required>
   <input  class="submit" type="submit" value="save changes">
 </form>
 

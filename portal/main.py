@@ -10,7 +10,6 @@ bp = Blueprint("main", __name__)
 def index():
     return render_template('layouts/index.html')
 
-  
 # route for showing the home for teachers
 @bp.route("/home", methods=['GET'])
 @teacher_required
@@ -27,7 +26,7 @@ def home():
 
 
 # Route for showing the home for students
-@bp.route("/student")
-@login_required
-def student():
-    return render_template("layouts/student-home.html")
+# @bp.route("/student")
+# @login_required
+# def student():
+#     return render_template("layouts/student-home.html")

@@ -7,11 +7,21 @@ from . import course
 bp = Blueprint("assignment", __name__)
 
 
-@bp.route('/<int:id>/create_assignment', methods=('GET', 'POST'))
+@bp.route('/course/<int:course_id>/session/<int:id>/create_assignment', methods=('GET', 'POST'))
 @login_required
 @teacher_required
-def create_assignment(id):
+def create_assignment(id, course_id):
     """Single page view to create an assignment."""
+    con = db.get_db()
+    cur = con.cursor()
+
+    cur.execute("""SELECT sessions.course_id, courses.course_id, courses.name
+                AS class_name FROM sessions JOIN courses
+                ON sessions.course_id=sessions.course_id
+                WHERE sessions.id=%s""",
+                (id,))
+    course = cur.fetchone()
+    cur.close()
 
     if request.method == 'POST':
 
@@ -32,18 +42,27 @@ def create_assignment(id):
 
         cur.close()
         con.close()
-        return redirect(url_for('assignment.view_assignments', id=id))
+        return redirect(url_for('assignment.view_assignments', id=id, course_id=course_id))
 
-    return render_template('layouts/assignments/create_assignments.html')
+    con.close()
+
+    return render_template('layouts/assignments/create_assignments.html', course=course)
 
 
-@bp.route('/<int:id>/assignments', methods=('GET',))
+@bp.route('/course/<int:course_id>/session/<int:id>/assignments', methods=('GET',))
 @login_required
-def view_assignments(id):
+def view_assignments(id, course_id):
     """Single page view of all the assignments in a session."""
 
     con = db.get_db()
     cur = con.cursor()
+
+    cur.execute("""SELECT sessions.id, sessions.course_id, courses.course_id, courses.teacherid, courses.name 
+                AS class_name FROM sessions JOIN courses
+                ON sessions.course_id = sessions.course_id
+                WHERE sessions.id=%s AND courses.course_id= %s""",
+                (id, course_id,))
+    course = cur.fetchone()
 
     # Query to get all of the asssignments in a session
     cur.execute("""
@@ -56,16 +75,21 @@ def view_assignments(id):
     cur.close()
     con.close()
 
-    return render_template('layouts/assignments/view_assignments.html', id=id, assignments=assignments)
+    return render_template('layouts/assignments/view_assignments.html', course=course, id=id, assignments=assignments)
 
 
-@bp.route('/<int:id>/edit-assignment', methods=('GET', 'POST'))
+@bp.route('/course/<int:course_id>/session/<int:session_id>/assignment/<int:id>/edit-assignment', methods=('GET', 'POST'))
 @login_required
-def edit_assignments(id):
+def edit_assignments(course_id, session_id, id):
     """Singe page view to edit an assignment."""
 
     con = db.get_db()
     cur = con.cursor()
+    cur.execute("""SELECT * FROM assignments WHERE assignment_id=%s""",
+                (id,))
+    assignment = cur.fetchone()
+    cur.close()
+
     if request.method == 'POST':
 
         # getting all info required to update assignment information
@@ -73,6 +97,7 @@ def edit_assignments(id):
         description = request.form['description']
         due_date = request.form['date']
 
+        cur = con.cursor()
         # Query to update the information for an assignment
         cur.execute("""
         UPDATE assignments SET name = %s, description = %s, due_date= %s
@@ -85,16 +110,18 @@ def edit_assignments(id):
         WHERE assignment_id = %s""", (id,))
         session_id = cur.fetchone()
         g.db.commit()
+        cur.close()
+        con.close()
 
-        return redirect(url_for('assignment.view_assignments', id=session_id['session_id']))
+        return redirect(url_for('assignment.view_assignments', id=session_id['session_id'], course_id=course_id))
 
     cur.close()
     con.close()
 
-    return render_template('layouts/assignments/edit_assignments.html')
+    return render_template('layouts/assignments/edit_assignments.html', assignment=assignment)
 
 
-@bp.route('/<int:id>/delete', methods=('GET', 'POST'))
+@bp.route('/<int:id>/delete', methods=['POST'])
 @login_required
 def delete_assignments(id):
     """Deletes any unwanted assignments."""

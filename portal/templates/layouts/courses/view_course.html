@@ -5,22 +5,31 @@
 {% block content %}
 <aside>
 <ul class="course-options">
-  <li class="course-options-item"><a href="{{ url_for('session.view_sessions', id=course['course_id']) }}">sessions</a></li>
+  <li class="course-options-item"><a href="{{ url_for('session.view_sessions', course_id=course['course_id']) }}">sessions</a></li>
 {% if g.user['id'] == course['teacherid'] %}
   <li class="course-options-item"><a href="{{ url_for('course.edit', id=course['course_id']) }}">edit course</a></li>
-  <li class="course-options-item"><a href="{{ url_for('session.create', id=course['id']) }}">add session</a></li>
 {% endif %}
 </ul>
 </aside>
 
 <article class="course">
 <h2>Course Information</h2>
-
-<h3><span class="course-view">course id:</span>{{ course['course_id']}}</h3>
-<h3><span class="course-view">teacher:</span>{{ course['teacher_name']}}</h3>
-<h3><span class="course-view">major:</span>{{ course['major'] }}</h3>
-<h3><span class="course-view">credits:</span>{{ course['credits']}}</h3>
-
+<table>
+  <tbody>
+    <tr>
+      <th class="th3">course id</th>
+      <th class="th3">teacher</th>
+      <th class="th3">major</th>
+      <th class="th3">credits</th>
+    </tr>
+    <tr>
+      <td class="session-table">{{ course['course_id']}}</td>
+      <td class="session-table">{{ course['teacher_name']}}</td>
+      <td class="session-table">{{ course['major'] }}</td>
+      <td class="session-table">{{ course['credits']}}</td>
+    </tr>
+    </tbody>
+  </table>
 <section class="course-description">
 
   <h3><span class="course-view">course description:</span></h3>

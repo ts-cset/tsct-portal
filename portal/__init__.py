@@ -62,5 +62,8 @@ def create_app(test_config=None):
     from . import roster
     app.register_blueprint(roster.bp)
 
+    from . import student
+    app.register_blueprint(student.bp)
+
     # Return application object to be used by a WSGI server, like gunicorn
     return app
