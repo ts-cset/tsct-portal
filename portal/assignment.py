@@ -121,19 +121,13 @@ def edit_assignments(course_id, session_id, id):
     return render_template('layouts/assignments/edit_assignments.html', assignment=assignment)
 
 
-@bp.route('/<int:id>/delete', methods=['POST'])
+@bp.route('/course/<int:course_id>/session/<int:session_id>/assignment/<int:id>/delete', methods=['POST'])
 @login_required
-def delete_assignments(id):
+def delete_assignments(id, course_id, session_id):
     """Deletes any unwanted assignments."""
 
     con = db.get_db()
     cur = con.cursor()
-
-    # Query to select which session the assignment came from
-    cur.execute("""
-    SELECT * FROM assignments WHERE assignment_id = %s
-    """, (id,))
-    session = cur.fetchone()
 
     # Query to delete an assignment from the database
     cur.execute("""
@@ -144,4 +138,4 @@ def delete_assignments(id):
     cur.close()
     con.close()
 
-    return redirect(url_for('assignment.view_assignments', id=str(session['session_id'])))
+    return redirect(url_for('assignment.view_assignments', id=session_id, course_id=course_id))
