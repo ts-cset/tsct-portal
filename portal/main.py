@@ -26,7 +26,7 @@ def home():
 
 
 # Route for showing the home for students
-@bp.route("/student")
-@login_required
-def student():
-    return render_template("layouts/student-home.html")
+# @bp.route("/student")
+# @login_required
+# def student():
+#     return render_template("layouts/student-home.html")
