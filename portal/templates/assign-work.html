@@ -10,7 +10,7 @@
           {{ assignment['name'] }}
           <input type="date" name="date" required>
           <input type="hidden" name="session_id" value="{{ session_id }}">
-          <button type="submit" name="submit" value="{{ assignment['id']}}">Assign</button>
+          <button type="submit" name="assign_id" value="{{ assignment['id']}}">Assign</button>
         </form>
       </li>
     {% endfor %}

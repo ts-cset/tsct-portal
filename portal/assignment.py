@@ -118,7 +118,7 @@ def assign_work():
 def assign_submit():
     if request.method == 'POST':
         date = request.form['date']
-        assign_id = request.form['submit']
+        assign_id = request.form['assign_id']
         session_id = request.form['session_id']
         with db.get_db() as con:
             with con.cursor() as cur:
