@@ -22,7 +22,16 @@ def forbidden(e):
 
 def page_not_found(e):
     """Tells the user what they are looking for is not there."""
-    return render_template('layouts/errors/404.html')
+    return render_template('layouts/errors/404.html'), 404
+
+def gone(e):
+    """Notifies the user the resource they are looking for is no longer here"""
+    return render_template('layouts/errors/410.html'), 410
+
+def bad_request(e):
+    """Notifies the user that the request they have attempted is not excepted"""
+    return render_template('layouts/errors/400.html'), 400
+########################
 
 def create_app(test_config=None):
     """Factory to configure and return a Flask application.
@@ -32,9 +41,12 @@ def create_app(test_config=None):
 
     # Create the Flask application object using this module's name
     app = Flask(__name__, instance_relative_config=True)
+    # Registering the auto-matic error pages
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(403, forbidden)
+    app.register_error_handler(400, bad_request)
     app.register_error_handler(500, handle_exception)
+    app.register_error_handler(410, gone)
 
     # Configure App
     # -------------

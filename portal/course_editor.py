@@ -32,6 +32,7 @@ def course_create():
 
     if request.method == 'POST':
 
+        course_number = request.form['courseNumber']
         course_title = request.form['courseTitle']
         course_description = request.form['description']
         course_credit = request.form['courseCredits']
@@ -39,6 +40,38 @@ def course_create():
         error = None
         result = isinstance(course_major, int)
 
+        # Checks if course_number is a number
+        try:
+            int(course_number)
+        except ValueError:
+            error = 'Course number needs to be a number'
+
+        # Checks if course_credit is a number
+        try:
+            int(course_credit)
+        except ValueError:
+            error = 'Credit amount needs to be a number'
+
+        # Checks if course_major is a number
+        try:
+            int(course_major)
+        except ValueError:
+            error = 'Major not found'
+
+        # Checks if the selected major is in the database
+        if not error:
+            with db.get_db() as con:
+                with con.cursor() as cur:
+
+                    cur.execute('SELECT * FROM majors WHERE id = %s', (course_major,))
+
+                    check_major = cur.fetchone()
+
+                    if check_major == None:
+
+                        error = 'Major not found'
+        if not course_number:
+            error = 'Course number is required'
         if not course_title:
             error = 'Title of course is required'
         if not course_credit:
@@ -50,10 +83,10 @@ def course_create():
             with db.get_db() as con:
                 with con.cursor() as cur:
                     # Adds info to courses table
-                    cur.execute("""INSERT INTO courses (course_title, description,
+                    cur.execute("""INSERT INTO courses (course_num, course_title, description,
                     credits, major_id, teacher_id)
-                    VALUES (%s, %s, %s, %s, %s)""",
-                            (course_title, course_description,
+                    VALUES (%s, %s, %s, %s, %s, %s)""",
+                            (course_number, course_title, course_description,
                              course_credit, course_major, g.user['id'], )
                             )
                     con.commit()
@@ -82,6 +115,12 @@ def course_edit(course_id):
         title = request.form['editTitle']
         desc = request.form['editDesc']
         error = None
+
+        # Checks if course_credit is a number
+        try:
+            int(credit)
+        except ValueError:
+            error = 'Credit amount needs to be a number'
 
         if not credit:
             error = 'Credit amount is required'

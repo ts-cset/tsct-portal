@@ -1,5 +1,7 @@
 {% extends 'layouts/base.html' %}
 
+{% block title %}TSCT Portal - Assignment Edit{% endblock %}
+
 {% block content%}
 
 <header>
@@ -7,7 +9,7 @@
 
   <h2>Edit assignment {{ assignment['assign_name'] }}</h2>
 
-  <a href="{{ url_for('assign.assign_manage', course_id=course['course_num'], sessions_id=session['id'] )}}" class='back'>Back</a>
+  <a href="{{ url_for('assign.assign_manage', course_id=session['course_id'], sessions_id=session['id'] )}}" class='back'>Back</a>
 
 </header>
 
@@ -17,7 +19,7 @@
 
 <section class='assignments'>
 
-  <form class="assign" action="{{ url_for('assign.assign_edit', sessions_id=session['id'], assign_id=assignment['id'], course_id=course['course_num'] )}}" method="post">
+  <form class="assign" action="{{ url_for('assign.assign_edit', sessions_id=session['id'], assign_id=assignment['id'], course_id=session['course_id'] )}}" method="post">
 
     <ul>
 
@@ -25,9 +27,7 @@
 
         <label for="edit_name">Name</label>
 
-        {{ assignment['assign_name']}}
-
-        <input type="text" name="edit_name">
+        <input type="text" name="edit_name" value="{{ assignment['assign_name']}}">
 
       </li>
 
@@ -36,9 +36,7 @@
 
         <label for="edit_desc">Description</label>
 
-        {{ assignment['description'] }}
-
-        <input type="text" name="edit_desc">
+        <input type="text" name="edit_desc" value="{{ assignment['description'] }}">
 
       </li>
 
@@ -46,10 +44,7 @@
 
         <label for="edit_points">Points</label>
 
-          {{ assignment['points'] }}
-
-          <input type="number" name="edit_points">
-
+          <input type="number" name="edit_points" value="{{ assignment['points'] }}">
 
       </li>
 
@@ -57,10 +52,9 @@
 
         <label for="edit_date">Due Date</label>
 
-        {{ assignment['due_date'] }}
+        {{ assignment['due_time'] }}
 
-          <input type="text" name="edit_date">
-
+          <input type="datetime-local" name="edit_date">
 
       </li>
 

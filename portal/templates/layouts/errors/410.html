@@ -1,0 +1,15 @@
+{% extends 'layouts/errors/error_page.html' %}
+
+{% block title %}Gone 410{% endblock %}
+
+{% block content %}
+<div class="error_pages">
+
+<h3>The resource you are searching for is gone</h3>
+
+<h3>Press the browser back button or click the home link below</h3>
+
+<a href="{{ url_for('index')}}">Portal Home</a>
+
+</div>
+{% endblock %}

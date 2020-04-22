@@ -32,6 +32,9 @@ def display_roster(course_id, session_id):
     if g.user['id'] != course['teacher_id']:
         abort(403)
 
+    if course['course_num'] != session['course_id']:
+        abort(403)
+
     if request.method == 'POST':
 
         email = request.form['email']

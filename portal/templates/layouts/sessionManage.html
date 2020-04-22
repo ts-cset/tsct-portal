@@ -39,7 +39,7 @@
 
             <a href="{{ url_for('session_editor.session_edit', course_id=session['course_id'], sessions_id=session['id']) }}">Edit</a>
 
-              <a href="{{ url_for('assign.assign_manage', course_id=course['course_num'], sessions_id=session['id']) }}">Assignments</a>
+              <a href="{{ url_for('assign.assign_manage', course_id=session['course_id'], sessions_id=session['id']) }}">Assignments</a>
 
           </div>
 
