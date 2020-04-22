@@ -239,6 +239,8 @@ input {
 form.session label, form.assign label {
   border-bottom: 2px solid white;
 
+}
+
 label {
 
   display: block;
