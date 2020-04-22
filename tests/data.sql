@@ -31,7 +31,8 @@ INSERT INTO assignments (session_id, name, description, due_date)
 VALUES (1, 'Exam_1', 'Chapter 1 Exam', '2020-04-28'),
       (1, 'Exam_2', 'Chapter 2 Exam', '2020-05-03'),
       (2, 'Essay', 'Biographical Essay', '2020-05-02'),
-      (2, 'Essay', 'Persuasive Essay', '2020-08-09');
+      (2, 'Essay', 'Persuasive Essay', '2020-08-09'),
+      (6, 'Failure', 'Should not be deleted', '2020-09-08');
 
 INSERT INTO roster (student_id, session_id)
 VALUES (4, 1),
@@ -48,4 +49,3 @@ VALUES (4, 1),
         (5, 4),
         (5, 7),
         (5, 8);
-
