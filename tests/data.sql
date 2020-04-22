@@ -25,7 +25,13 @@ VALUES ( 3, 'M/W/F', '9:00am', 'Main Campus'),
       ( 7, 'M/W/F', '8:15am', 'Branch Campus'),
       ( 1, 'T/Th', '1:30pm', 'Main Campus'),
       ( 1, 'W/F', '12:00pm', 'Branch Campus'),
-      ( 8, 'M', '6:00pm', 'Main Campus');
+      ( 6, 'M', '6:00pm', 'Main Campus'),
+      ( 3, 'M/W', '3:00pm', 'Branch Campus'),
+      ( 8, 'T', '6:00pm', 'Main Campus'),
+      ( 7, 'M/W/F', '8:15am', 'Branch Campus'),
+      ( 8, 'T/Th', '1:30pm', 'Main Campus'),
+      ( 5, 'W/F', '12:00pm', 'Branch Campus');
+
 
 INSERT INTO assignments (session_id, name, description, due_date)
 VALUES (1, 'Exam_1', 'Chapter 1 Exam', '2020-04-28'),
