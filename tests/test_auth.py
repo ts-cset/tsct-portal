@@ -1,6 +1,7 @@
 import pytest
 
-from flask import  session
+from flask import session
+
 
 def test_login(client, auth):
     assert client.get('/').status_code == 200
@@ -15,6 +16,8 @@ def test_login(client, auth):
 def test_login_validate_input(auth, email, password, message):
     response = auth.login(email, password)
     assert message in response.data
+
+
 def test_logout(client, auth):
     auth.login()
 

@@ -64,8 +64,10 @@ ALTER TABLE sessions
     ON DELETE CASCADE;
 
 CREATE TABLE roster (
-  student_id bigint PRIMARY KEY,
-  session_id bigint
+  count bigserial PRIMARY KEY,
+  student_id bigint,
+  session_id bigint,
+  UNIQUE (student_id, session_id)
 );
 
 ALTER TABLE roster
@@ -82,11 +84,17 @@ ALTER TABLE roster
 
 CREATE TABLE assignments(
   assignment_id bigserial PRIMARY KEY,
-  session_id bigserial REFERENCES sessions(id),
+  session_id bigserial,
   name text,
   description text,
   due_date date
 );
+
+ALTER TABLE assignments
+  ADD CONSTRAINT session FOREIGN KEY (session_id)
+  REFERENCES sessions(id)
+  ON UPDATE CASCADE
+  ON DELETE CASCADE;
 
 INSERT INTO majors (name, description)
   VALUES ('ARCH', 'Architectural Technology'),

@@ -4,4 +4,29 @@
 
 {% block content %}
 
+<table>
+  <tbody>
+    <tr>
+      <th class="th1">session id</th>
+      <th class="th3">class name</th>
+      <th class="th3">days</th>
+      <th class="th3">class time</th>
+      <th class="th3">location</th>
+      <th class="th3"></th>
+    </tr>
+  {% for session in sessions %}
+    <tr>
+   <td class="session-table">{{ session['id']}}</td>
+   <td class="session-table">{{ session['class_name']}}</td>
+   <td class="session-table">{{ session['days']}}</td>
+   <td class="session-table">{{ session['class_time']}}</td>
+   <td class="session-table">{{ session['location']}}</td>
+   <td class="table-buttons"><a href="">view course</a></td>
+   <td class="table-buttons"><a href="">assignments</a></td>
+
+    </tr>
+ {% endfor %}
+ </tbody>
+</table>
+
 {% endblock %}
