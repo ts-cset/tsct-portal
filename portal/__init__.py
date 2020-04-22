@@ -102,6 +102,12 @@ def create_app(test_config=None):
     from . import roster
     app.register_blueprint(roster.bp)
 
+    # Student View Routes
+    # -------------------
+    from . import student_views
+    app.register_blueprint(student_views.bp)
+
+
     @app.route('/')
     @auth.login_required
     def index():

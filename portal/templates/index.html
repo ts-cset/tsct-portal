@@ -19,10 +19,16 @@
 
     {% endif %}
 
+    {% if g.user['role'] == 'student' %}
+
+    <a href="{{ url_for('schedule.view_schedule') }}">View your schedule</a>
+
+    {% endif %}
+
+
   </section>
 
 </article>
-
 
 
 

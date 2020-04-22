@@ -44,7 +44,7 @@ def session_edit(course_id, sessions_id):
                 if error is None:
 
                     cur.execute("""UPDATE sessions SET
-                        name = %s,
+                        session_name = %s,
                         times = %s,
                         room_number = %s,
                         location = %s
@@ -97,7 +97,7 @@ def session_create(course_id):
 
                 if error is None:
 
-                    cur.execute("""INSERT INTO sessions (times, name, room_number, location, course_id)
+                    cur.execute("""INSERT INTO sessions (times, session_name, room_number, location, course_id)
                         VALUES (%s, %s, %s, %s, %s )
                     """,
                     (times, title, room, location, course_id, )
@@ -138,7 +138,7 @@ def get_session(sessions_id):
         with con.cursor() as cur:
 
             cur.execute(
-                'SELECT id, times, name, room_number, location, course_id'
+                'SELECT id, times, session_name, room_number, location, course_id'
                 ' FROM sessions WHERE id = %s',
                 (sessions_id, )
             )
