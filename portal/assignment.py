@@ -7,11 +7,19 @@ from . import course
 bp = Blueprint("assignment", __name__)
 
 
-@bp.route('/<int:id>/create_assignment', methods=('GET', 'POST'))
+@bp.route('/course/<int:course_id>/session/<int:id>/create_assignment', methods=('GET', 'POST'))
 @login_required
 @teacher_required
-def create_assignment(id):
+def create_assignment(id, course_id):
     """Single page view to create an assignment."""
+    con = db.get_db()
+    cur = con.cursor()
+
+    cur.execute("""SELECT course_id from sessions where id=%s""",
+                (id,))
+    course = cur.fetchone()
+    cur.close()
+    con.close()
 
     if request.method == 'POST':
 
@@ -32,19 +40,23 @@ def create_assignment(id):
 
         cur.close()
         con.close()
-        return redirect(url_for('assignment.view_assignments', id=id))
+        return redirect(url_for('assignment.view_assignments', id=id, course=course))
 
     return render_template('layouts/assignments/create_assignments.html')
 
 
-@bp.route('/<int:id>/assignments', methods=('GET',))
+@bp.route('/course/<int:course_id>/session/<int:id>/assignments', methods=('GET',))
 @login_required
-def view_assignments(id):
+def view_assignments(id, course_id):
     """Single page view of all the assignments in a session."""
 
     con = db.get_db()
     cur = con.cursor()
 
+    cur.execute("""SELECT course_id FROM sessions
+                WHERE id = %s""",
+                (id,))
+    course_id = cur.fetchone()
     # Query to get all of the asssignments in a session
     cur.execute("""
     SELECT * FROM assignments
@@ -56,12 +68,12 @@ def view_assignments(id):
     cur.close()
     con.close()
 
-    return render_template('layouts/assignments/view_assignments.html', id=id, assignments=assignments)
+    return render_template('layouts/assignments/view_assignments.html', course_id=course_id, id=id, assignments=assignments)
 
 
-@bp.route('/<int:id>/edit-assignment', methods=('GET', 'POST'))
+@bp.route('/course/<int:course_id>/session/<int:session_id>/assignment/<int:id>/edit-assignment', methods=('GET', 'POST'))
 @login_required
-def edit_assignments(id):
+def edit_assignments(id, session_id, course_id):
     """Singe page view to edit an assignment."""
 
     con = db.get_db()
@@ -86,7 +98,7 @@ def edit_assignments(id):
         session_id = cur.fetchone()
         g.db.commit()
 
-        return redirect(url_for('assignment.view_assignments', id=session_id['session_id']))
+        return redirect(url_for('assignment.view_assignments', id=session_id['session_id'], course_id=course_id))
 
     cur.close()
     con.close()
@@ -94,7 +106,7 @@ def edit_assignments(id):
     return render_template('layouts/assignments/edit_assignments.html')
 
 
-@bp.route('/<int:id>/delete', methods=('GET', 'POST'))
+@bp.route('/<int:id>/delete', methods=['POST'])
 @login_required
 def delete_assignments(id):
     """Deletes any unwanted assignments."""

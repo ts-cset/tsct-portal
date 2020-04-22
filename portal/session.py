@@ -10,25 +10,29 @@ bp = Blueprint("session", __name__)
 def get_session(id, check_teacher=True):
 
     user_id = session.get('user_id')
-    cur = db.get_db().cursor()
+    con = db.get_db()
+    cur = con.cursor()
     cur.execute("""SELECT sessions.id, sessions.course_id, courses.teacherid AS course_teacher
                 FROM sessions LEFT JOIN courses on sessions.course_id = courses.course_id
                 WHERE courses.teacherid = %s AND sessions.id = %s """,
                 (user_id, id))
     x = cur.fetchone()
     cur.close()
+    con.close()
 
     if x is None:
         abort(400, """System has prevented this action. \n
                     Either this session does not exist,\n
                     or you do not have acces to it.""")
     else:
-        cur = db.get_db().cursor()
+        con = db.get_db()
+        cur = con.cursor()
         cur.execute("""SELECT id, class_time, days, course_id, location
                     FROM sessions WHERE id = %s """,
                     (id,))
         class_session = cur.fetchone()
         cur.close()
+        con.close()
 
         return class_session
 
@@ -37,7 +41,8 @@ def get_session(id, check_teacher=True):
 @login_required
 def view_sessions(course_id):
     """Single page view of session"""
-    cur = db.get_db().cursor()
+    con = db.get_db()
+    cur = con.cursor()
     cur.execute("""SELECT sessions.id, sessions.days, sessions.course_id,
                 sessions.class_time, sessions.location, courses.name AS course_name,
                 courses.teacherid AS teacher_id
@@ -51,6 +56,7 @@ def view_sessions(course_id):
     course = cur.fetchone()
 
     cur.close()
+    con.close()
 
     return render_template("layouts/sessions/view_sessions.html", sessions=sessions, course=course)
 
@@ -67,14 +73,16 @@ def session_edit(id, course_id):
         session_time = request.form['session_time']
         location = request.form['location']
 
-        cur = db.get_db().cursor()
+        con = db.get_db()
+        cur = con.cursor()
         cur.execute(
             'UPDATE sessions SET days = %s, class_time = %s, location = %s'
             ' WHERE id = %s ',
             (session_days, session_time, location, id)
         )
         g.db.commit()
-        g.db.close()
+        cur.close()
+        con.close()
 
         return redirect(url_for('session.view_sessions', course_id=session['course_id']))
 
@@ -87,13 +95,15 @@ def session_edit(id, course_id):
 def create(course_id):
 
     user_id = session.get('user_id')
-    cur = db.get_db().cursor()
+    con = db.get_db()
+    cur = con.cursor()
     cur.execute("""
         SELECT course_id, name FROM courses
         WHERE teacherid=%s AND course_id = %s""",
                 (user_id, course_id))
     course = cur.fetchone()
     cur.close()
+    con.close()
 
     if course == None:
         abort(400, 'Either the course does not exist, or you do not have permission to create session for this course.')
@@ -103,7 +113,8 @@ def create(course_id):
         days = request.form['session_days']
         class_time = request.form['class_time']
         location = request.form['location']
-        cur = db.get_db().cursor()
+        con = db.get_db()
+        cur = con.cursor()
         cur.execute("""
         INSERT INTO sessions ( course_id, days, class_time, location)
         VALUES ( %s, %s, %s, %s)""",
@@ -111,6 +122,7 @@ def create(course_id):
 
         g.db.commit()
         cur.close()
+        con.close()
         return redirect(url_for('session.view_sessions', course_id=course_id))
 
     return render_template("layouts/sessions/create_session.html", course=course)
@@ -123,9 +135,11 @@ def delete_session(id, course_id):
     """Delete unwanted session"""
     session = get_session(id)
     id = session['id']
-    cur = db.get_db().cursor()
+    con = db.get_db()
+    cur = con.cursor()
     cur.execute('DELETE FROM sessions where id = %s',
                 (id,))
     g.db.commit()
     cur.close()
+    con.close()
     return redirect(url_for('session.view_sessions', course_id=course_id))

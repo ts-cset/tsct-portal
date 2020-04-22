@@ -55,7 +55,6 @@ def edit(id):
 
 # Route to view the course, and information about it
 @bp.route('/course/<int:id>/view', methods=('GET', 'POST'))
-@teacher_required
 @login_required
 def view(id):
     """Single page view of a course"""

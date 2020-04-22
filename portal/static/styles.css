@@ -524,7 +524,7 @@ tbody{
 .th3 {
   font-variant: small-caps;
   background-color: white;
-  width: 16%;
+  width: 18%;
 }
 
 
@@ -534,4 +534,5 @@ tbody{
   font-variant: small-caps;
   text-align: center;
   height: 30px;
+  width:120px;
 }
