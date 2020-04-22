@@ -11,14 +11,14 @@ def assignments():
     """View for the assignments"""
     course_id = request.args.get('course_id')
     section = request.args.get('section')
-
+    coursename = course(course_id, section)
+    print(coursename)
     if session['user'][4] == 'student':
     # get the id of the student
         student = session['user'][0]
     # Display the student's assignments
         cur = get_db().cursor()
 
-    if course_id:
     # pulls out all assignments for student id
         cur.execute("""SELECT * FROM assignments AS a
                        JOIN student_sessions AS ss
@@ -41,7 +41,7 @@ def assignments():
                        WHERE a.course_id = %s AND a.section = %s;""", (course_id, section))
         student_assignments = cur.fetchall()
 
-    return render_template("portal/assignments.html", student_assignments=student_assignments, course_id=course_id, section=section)
+    return render_template("portal/assignments.html", student_assignments=student_assignments, course_id=course_id, section=section, coursename=coursename)
 
 
 @bp.route('/createassignment', methods=("GET", "POST"))
@@ -80,3 +80,16 @@ def assignments_create():
         return render_template('portal/createassignment.html')
     else:  # if they aren't a teacher return them to home page
         return render_template('portal/home.html')
+
+def course(course_id, section):
+    cur = get_db().cursor()
+    cur.execute("""SELECT name FROM courses WHERE id = %s;""",
+                (course_id,))
+    course = cur.fetchall()[0][0]
+
+    cur.execute("""SELECT section FROM sessions WHERE course_id = %s AND section = %s;""",
+                (course_id, section))
+    section = cur.fetchall()[0][0]
+
+    name = course + ' - ' + section
+    return name
