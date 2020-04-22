@@ -153,7 +153,8 @@ def grade_assignment(course_id, session_id, assignment_id):
     cur.close()
 
     if request.method == 'POST':
-        points = request.form['points']
+        points = request.form.getlist('points')
+        count = 0
         error = None
         cur = db.get_db().cursor()
         cur.execute("""
@@ -163,14 +164,27 @@ def grade_assignment(course_id, session_id, assignment_id):
         (assignment_id,))
         assignment = cur.fetchone()
         assignment_point = assignment[0]
-        points = float(points)
 
-        if points > assignment_point or points < 0:
-            error = "Invalid point amount"
-            return render_template('error.html', error=error)
+        cur.execute("""
+        SELECT users.id, submissions.users_id, session.id, assignments.* FROM submissions
+        JOIN users ON users.id = submissions.users_id
+		JOIN assignments ON assignments.id = submissions.assignments_id
+		JOIN session ON session.id = assignments.session_id
+        WHERE assignments.id = %s
+        """,
+        (assignment_id,))
+        users = cur.fetchall()
 
-        if error is None:
-            grade = (points/assignment_point)
+        for user in users:
+            print(points[count])
+            points[count] = float(points[count])
+
+            if points[count] > assignment_point or points[count] < 0:
+                error = "Invalid point amount"
+                return render_template('error.html', error=error)
+
+            if error is None:
+                grade = (points[count]/assignment_point)
 
             if grade >= 0.98:
                 grade_id = 1
@@ -200,10 +214,12 @@ def grade_assignment(course_id, session_id, assignment_id):
                 grade_id = 13
 
             cur.execute("""UPDATE submissions SET points = %s, grades_id = %s
-            WHERE users_id = %s;
+            WHERE users_id = %s and assignments_id = %s;
              """,
-             (points, grade_id, "43784"))
+             (points[count], grade_id, user[0], assignment_id))
             db.get_db().commit()
+            count += 1
+        return redirect(url_for('portal.userpage'))
 
     return render_template('portal/courses/sessions/assignments/grade-assignments.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions)
 
