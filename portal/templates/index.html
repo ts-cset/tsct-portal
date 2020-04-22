@@ -3,23 +3,34 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-  <p>Home</p>
 
-<section class='helpfulLinks'>
+<article class="home_page">
 
-  {% if g.user['role'] == 'teacher' %}
+  <h2>Home</h2>
 
-  <a href="{{ url_for('course_editor.course_manage')}}">Course Management</a>
 
-  {% endif %}
+  <section class='helpfulLinks'>
 
-  {% if g.user['role'] == 'student' %}
+    {% if g.user['role'] == 'teacher' %}
 
-  <a href="{{ url_for('schedule.view_schedule') }}">View your schedule</a>
 
-  {% endif %}
+        <a href="{{ url_for('course_editor.course_manage')}}">Course Management</a>
 
-</section>
+
+    {% endif %}
+
+    {% if g.user['role'] == 'student' %}
+
+    <a href="{{ url_for('schedule.view_schedule') }}">View your schedule</a>
+
+    {% endif %}
+
+
+  </section>
+
+</article>
+
+
 
 
 {% endblock %}

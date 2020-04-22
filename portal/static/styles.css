@@ -16,10 +16,17 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
   font-family: 'Crimson Text', serif;
   font-weight: 400;
-  margin: 1rem auto;
+  margin: 2rem auto;
   text-align: center;
+  padding: 10px;
 }
 
+
+article.home_page h2 {
+   background-color:#8B1E41;
+   margin: 2rem auto;
+   text-align: center;
+}
 
 /**
  * Layout
@@ -135,6 +142,7 @@ section {
 
 section.teacher_courses h3,
 section.courseSession h3,
+section.assignments h3, h4,
 section.courseSession h4 {
   background-color: #8B1E41;
   font-size: 28px;
@@ -142,6 +150,7 @@ section.courseSession h4 {
 }
 
 section.teacher_courses li,
+section.assignments li,
 section.courseSession li {
   align-items: center;
   border: 1px solid #8B1E41;
@@ -151,6 +160,7 @@ section.courseSession li {
 }
 
 section.teacher_courses h4 ,
+section.assignments li h4,
 section.courseSession li h4 {
   background-color: white;
   color: #8B1E41;
@@ -188,6 +198,7 @@ div.links {
   }
 
   section.teacher_courses li,
+  section.assignments li,
   section.courseSession li {
     flex-direction: row;
   }
@@ -195,6 +206,14 @@ div.links {
   div.links {
     margin: 0;
   }
+
+  article.home_page h2 {
+     background-color:#8B1E41;
+     margin: 2rem auto;
+     text-align: justify;
+  }
+
+
 }
 
 
@@ -216,15 +235,36 @@ input {
   width: 100%;
 }
 
-form.session label {
+
+form.session label, form.assign label {
   border-bottom: 2px solid white;
-  display: block;
-  margin: 1rem 0;
+
 }
 
-form.session > ul > li {
+label {
+
+  display: block;
+  margin-top: .5rem;
+}
+
+textarea {
+  width: 100%;
+}
+
+form.session label,
+form.editFeature label {
+  border-bottom: 2px solid white;
+  margin: 1rem 0 0 0;
+}
+
+
+
+
+form.session > ul > li, form.assign > ul > li {
   flex-direction: column;
 }
+
+
 
 @media (min-width: 760px) {
   form {
