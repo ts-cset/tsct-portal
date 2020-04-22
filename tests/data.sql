@@ -38,3 +38,7 @@ VALUES (5, 1);
 INSERT INTO assignments (sessions_id, assign_name, description, points, due_time)
 VALUES (2, 'exam1', 'first exam of course', 25, '2020-06-22 19:10'),
         (1, 'test1', 'first test of course', 30, '2020-07-24 10:05');
+
+
+INSERT INTO submissions (assignment_id, student_id)
+VALUES (2, 5)
