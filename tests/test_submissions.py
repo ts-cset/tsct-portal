@@ -9,17 +9,18 @@ def test_add_grade(client):
 
     with client:
 
-        client.post('/login', data={'email': 'teacher2@stevenscollege.edu', 'password': 'qwerty'})
+        client.post('/login', data={'email': 'teacher2@stevenscollege.edu', 'password': 'PASSWORD'})
 
-        response = client.get('/course/260/session/1/assignments/2/submissions')
+        response = client.get('/course/216/session/1/assignments/2/submissions')
 
         response.status_code == 200
         assert b'Marisa Kirisame' in response.data
+        assert b'bob phillp' in response.data
 
-        response = client.get('/course/260/session/1/assignments/2/submissions/1')
+        response = client.get('/course/216/session/1/assignments/2/submissions/1')
         assert b'Insert feedback' in response.data
 
-        response = client.post('/course/260/session/1/assignments/2/submissions/1',
+        response = client.post('/course/216/session/1/assignments/2/submissions/1',
             data={ 'grade': 25, 'feedback': 'good' })
 
         assert b'25' in response.data

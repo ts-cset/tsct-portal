@@ -65,6 +65,10 @@ def create_app(test_config=None):
     from . import roster
     app.register_blueprint(roster.bp)
 
+    #Submission Route
+    from . import submissions
+    app.register_blueprint(submissions.bp)
+
     @app.route('/')
     @auth.login_required
     def index():

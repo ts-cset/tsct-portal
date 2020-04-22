@@ -23,7 +23,7 @@ def login():
                 cur.execute('SELECT * FROM users WHERE email = %s', (email,))
                 user = cur.fetchone()
 
-                
+
 
         error = None
 
