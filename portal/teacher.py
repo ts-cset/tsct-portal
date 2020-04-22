@@ -94,8 +94,7 @@ def course_edit(id):
                 return redirect(url_for('teacher.courses'))
     return render_template('edit-course.html')
 
-
-@bp.route('/session', methods=('GET', 'POST'))
+@bp.route('/sessions', methods=('GET', 'POST'))
 @login_required
 @admin
 def sessions():
@@ -128,7 +127,7 @@ def sessions():
     return render_template('sessions.html', sessions=sessions)
 
 
-@bp.route('/session/create', methods=('GET', 'POST'))
+@bp.route('/sessions/create', methods=('GET', 'POST'))
 @login_required
 @admin
 def make_session():
@@ -177,7 +176,7 @@ def make_session():
         return redirect(url_for('teacher.home'))
 
 
-@bp.route('/session/add', methods=('GET', 'POST'))
+@bp.route('/sessions/add', methods=('GET', 'POST'))
 @login_required
 @admin
 def session_add():
@@ -195,7 +194,7 @@ def session_add():
     else:
         return redirect(url_for('teacher.session_edit'))
 
-@bp.route('/session/remove', methods=('GET', 'POST'))
+@bp.route('/sessions/remove', methods=('GET', 'POST'))
 @login_required
 @admin
 def session_remove():
@@ -213,7 +212,7 @@ def session_remove():
     else:
         return redirect(url_for('teacher.session_edit'))
 
-@bp.route('/session/submit', methods=('GET', 'POST'))
+@bp.route('/sessions/submit', methods=('GET', 'POST'))
 @login_required
 @admin
 def session_submit():
@@ -237,7 +236,7 @@ def session_submit():
     else:
         return redirect(url_for('teacher.session_edit'))
 
-@bp.route('/session/cancel')
+@bp.route('/sessions/cancel')
 @login_required
 @admin
 def session_cancel():
@@ -268,7 +267,7 @@ def session_cancel():
 
     return redirect(url_for('teacher.home'))
 
-@bp.route('/session/edit', methods=('GET', 'POST'))
+@bp.route('/sessions/edit', methods=('GET', 'POST'))
 @login_required
 @admin
 def session_edit():
