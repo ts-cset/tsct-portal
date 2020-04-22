@@ -35,7 +35,7 @@ def assignments():
         cur.execute("""SELECT * FROM assignments AS a
                        JOIN sessions AS s
                        ON a.course_id = s.course_id AND a.section = s.section
-                       WHERE a.course_id = %s;""", (course_id,))
+                       WHERE a.course_id = %s AND a.section = %s;""", (course_id, section))
         student_assignments = cur.fetchall()
 
     return render_template("portal/assignments.html", student_assignments=student_assignments, course_id=course_id, section=section)
