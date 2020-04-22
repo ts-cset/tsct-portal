@@ -18,21 +18,19 @@ def get_session(id, check_teacher=True):
                 (user_id, id))
     x = cur.fetchone()
     cur.close()
-    con.close()
 
     if x is None:
+        con.close()
         abort(400, """System has prevented this action. \n
                     Either this session does not exist,\n
                     or you do not have acces to it.""")
     else:
-        con = db.get_db()
         cur = con.cursor()
         cur.execute("""SELECT id, class_time, days, course_id, location
                     FROM sessions WHERE id = %s """,
                     (id,))
         class_session = cur.fetchone()
         cur.close()
-        con.close()
 
         return class_session
 
@@ -41,7 +39,9 @@ def get_session(id, check_teacher=True):
 @login_required
 def view_sessions(course_id):
     """Single page view of session"""
+
     con = db.get_db()
+
     cur = con.cursor()
     cur.execute("""SELECT sessions.id, sessions.days, sessions.course_id,
                 sessions.class_time, sessions.location, courses.name AS course_name,
@@ -75,14 +75,15 @@ def session_edit(id, course_id):
 
         con = db.get_db()
         cur = con.cursor()
+
         cur.execute(
             'UPDATE sessions SET days = %s, class_time = %s, location = %s'
             ' WHERE id = %s ',
             (session_days, session_time, location, id)
         )
+
         g.db.commit()
         cur.close()
-        con.close()
 
         return redirect(url_for('session.view_sessions', course_id=session['course_id']))
 
