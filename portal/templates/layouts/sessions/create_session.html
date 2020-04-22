@@ -5,13 +5,7 @@
 {% block content %}
 <section class="teacher_forms">
       <form class="teacher_home_form" method="post">
-      <label class="form-label" for="courses">new session for:
-      <select name="courses" class="major-dropdown">
-      {% for course in courses %}
-      <option value="{{ course['name']}}"> {{ course['name'] }}</option>
-      {% endfor %}
-      </select>
-
+      <label class="form-label" for="courses">new session for: {{ course['name']}}
       <label class="form-label" for="session_days">days:</label>
         <input type="text" name="session_days" placeholder="ex M/W/F or T/Th" required />
       <label class="form-label" for="location">location:</label>

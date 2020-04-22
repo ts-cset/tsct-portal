@@ -10,8 +10,9 @@ bp = Blueprint("session", __name__)
 def get_session(id, check_teacher=True):
 
     user_id = session.get('user_id')
-    cur = db.get_db().cursor()
-    cur.execute("""SELECT sessions.id, sessions.course_id, courses.teacherid
+    con = db.get_db()
+    cur = con.cursor()
+    cur.execute("""SELECT sessions.id, sessions.course_id, courses.teacherid AS course_teacher
                 FROM sessions LEFT JOIN courses on sessions.course_id = courses.course_id
                 WHERE courses.teacherid = %s AND sessions.id = %s """,
                 (user_id, id))
@@ -19,11 +20,12 @@ def get_session(id, check_teacher=True):
     cur.close()
 
     if x is None:
+        con.close()
         abort(400, """System has prevented this action. \n
                     Either this session does not exist,\n
                     or you do not have acces to it.""")
     else:
-        cur = db.get_db().cursor()
+        cur = con.cursor()
         cur.execute("""SELECT id, class_time, days, course_id, location
                     FROM sessions WHERE id = %s """,
                     (id,))
@@ -33,32 +35,36 @@ def get_session(id, check_teacher=True):
         return class_session
 
 # Route for viewing sessions
-@bp.route("/<int:id>/sessions", methods=['GET', 'POST'])
+@bp.route("/course/<int:course_id>/sessions", methods=['GET', 'POST'])
 @login_required
-def view_sessions(id):
+def view_sessions(course_id):
     """Single page view of session"""
-    cur = db.get_db().cursor()
+
+    con = db.get_db()
+
+    cur = con.cursor()
     cur.execute("""SELECT sessions.id, sessions.days, sessions.course_id,
                 sessions.class_time, sessions.location, courses.name AS course_name,
                 courses.teacherid AS teacher_id
                 FROM sessions JOIN courses ON courses.course_id = sessions.course_id
                 WHERE sessions.course_id = %s""",
-                (id,))
+                (course_id,))
     sessions = cur.fetchall()
 
     cur.execute("""SELECT courses.course_id, courses.name, courses.major, courses.description, courses.teacherid, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
-                (id,))
+                (course_id,))
     course = cur.fetchone()
 
     cur.close()
+    con.close()
 
-    return render_template("layouts/sessions/view_sessions.html", sessions=sessions)
+    return render_template("layouts/sessions/view_sessions.html", sessions=sessions, course=course)
 
 
 @login_required
 @teacher_required
-@bp.route("/sessions/<int:id>/edit", methods=['GET', 'POST'])
-def session_edit(id):
+@bp.route("/course/<int:course_id>/sessions/<int:id>/edit", methods=['GET', 'POST'])
+def session_edit(id, course_id):
     """Edit a session"""
     session = get_session(id)
     if request.method == 'POST':
@@ -67,51 +73,49 @@ def session_edit(id):
         session_time = request.form['session_time']
         location = request.form['location']
 
-        cur = db.get_db().cursor()
+        con = db.get_db()
+        cur = con.cursor()
+
         cur.execute(
             'UPDATE sessions SET days = %s, class_time = %s, location = %s'
             ' WHERE id = %s ',
             (session_days, session_time, location, id)
         )
-        g.db.commit()
-        g.db.close()
 
-        return redirect(url_for('session.view_sessions', id=session['course_id']))
+        g.db.commit()
+        cur.close()
+
+        return redirect(url_for('session.view_sessions', course_id=session['course_id']))
 
     return render_template("layouts/sessions/edit_session.html", session=session)
 
 
-@bp.route("/sessions/create", methods=['GET', 'POST'])
+@bp.route("/course/<int:course_id>/session_create", methods=['GET', 'POST'])
 @teacher_required
 @login_required
-def create():
+def create(course_id):
 
     user_id = session.get('user_id')
-    cur = db.get_db().cursor()
+    con = db.get_db()
+    cur = con.cursor()
     cur.execute("""
-        SELECT course_id, name FROM courses where teacherid=%s""",
-                (user_id,))
-    courses = cur.fetchall()
+        SELECT course_id, name FROM courses
+        WHERE teacherid=%s AND course_id = %s""",
+                (user_id, course_id))
+    course = cur.fetchone()
     cur.close()
 
-    if courses == None:
+    if course == None:
         abort(400, 'Either the course does not exist, or you do not have permission to create session for this course.')
 
     if request.method == 'POST':
 
-        course = request.form['courses']
-        cur = db.get_db().cursor()
-        cur.execute("""
-            SELECT course_id FROM courses where name=%s""",
-                    (course,))
-        x = cur.fetchone()
-        cur.close()
-        course_id = x['course_id']
         days = request.form['session_days']
         class_time = request.form['class_time']
-        print(course, course_id, days, class_time)
         location = request.form['location']
-        cur = db.get_db().cursor()
+
+        con = db.get_db()
+        cur = con.cursor()
         cur.execute("""
         INSERT INTO sessions ( course_id, days, class_time, location)
         VALUES ( %s, %s, %s, %s)""",
@@ -119,22 +123,26 @@ def create():
 
         g.db.commit()
         cur.close()
-        return redirect(url_for('session.view_sessions', id=course_id))
+        con.close()
+        return redirect(url_for('session.view_sessions', course_id=course_id))
 
-    return render_template("layouts/sessions/create_session.html", courses=courses)
+    con.close()
+
+    return render_template("layouts/sessions/create_session.html", course=course)
 
 
-@bp.route("/session/<int:id>/delete", methods=['POST', 'GET'])
+@bp.route("/course/<int:course_id>/sessions/<int:id>/delete", methods=['POST'])
 @teacher_required
 @login_required
-def delete_session(id):
+def delete_session(id, course_id):
     """Delete unwanted session"""
-    x = get_session(id)
-    course_id = x['course_id']
-    id = x['id']
-    cur = db.get_db().cursor()
+    session = get_session(id)
+    id = session['id']
+    con = db.get_db()
+    cur = con.cursor()
     cur.execute('DELETE FROM sessions where id = %s',
                 (id,))
     g.db.commit()
     cur.close()
-    return redirect(url_for('session.view_sessions', id=course_id))
+    con.close()
+    return redirect(url_for('session.view_sessions', course_id=course_id))

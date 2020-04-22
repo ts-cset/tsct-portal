@@ -56,9 +56,13 @@ def create_app(test_config=None):
     from . import session
     app.register_blueprint(session.bp)
 
-
     from . import assignment
     app.register_blueprint(assignment.bp)
+
+    from . import roster
+
+    from . import student
+    app.register_blueprint(student.bp)
 
 
     # Return application object to be used by a WSGI server, like gunicorn

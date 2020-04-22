@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/latest/normalize.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Crimson+Text|Lato:400,400i,700" />
-    <link rel="stylesheet" href="../../static/styles.css" type="text/css" />
+    <link rel="stylesheet" href="/../../static/styles.css" type="text/css" />
     {% endblock %}
   </head>
   <body>
@@ -40,7 +40,7 @@
         {% if g.user['role'] == 'teacher' %}
           <li class="home-options"><a class="home-button" href="{{ url_for('main.home') }}">home</a></li>
         {% else %}
-          <li class="home-options"><a class="home-button" href="{{ url_for('main.student') }}">student home</a></li>
+          <li class="home-options"><a class="home-button" href="{{ url_for('student.student_view') }}">student home</a></li>
         </ul>
       </nav>
         {% endif %}
@@ -50,9 +50,9 @@
     <main>
       {% block content %}{% endblock %}
     </main>
-      {% for message in get_flashed_messages() %}
-      <p class="flash">{{ message }}</p>
-      {% endfor %}
+    {% for message in get_flashed_messages() %}
+          <p class="flash">{{ message }}</p>
+    {% endfor %}
     <footer>
 
       <h2>Thaddeus Stevens College of Technology</h2>

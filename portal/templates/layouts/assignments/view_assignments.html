@@ -4,20 +4,21 @@
 
 {% block content %}
 
-<a href="{{ url_for('assignment.create_assignment', id=id)}}" class="view-assignment-link">
-  create new assignment for session:{{ id }}
+<a href="{{ url_for('assignment.create_assignment', id=id, course_id=course['course_id'])}}" class="view-assignment-link">
+  create new assignment
 </a>
-
+<h3>{{ course['class_name']}}</h3>
+<h3>SESSION {{id}}</h3>
 {% for assignment in assignments %}
 
 <section class="assignment_forms">
-  <h3 class="assignment-title">{{ assignment['name'] }}</h3>
+  <h3 class="assignment-title">{{ assignment['name'] }} ID: {{ assignment['assignment_id']}}</h3>
     <p class="assignment-item">{{ assignment['description'] }}</p>
   <h3 class="assignment-date">assignment due:</h3>
     <p class="assignment-item">{{ assignment['due_date'] }}</p>
     <ul class="course-options">
     <li class="course-options-item"><a href="{{ url_for('assignment.edit_assignments',
-    id=assignment['assignment_id']) }}">edit</a></li>
+    id=assignment['assignment_id'], session_id=assignment['session_id'], course_id=course['course_id']) }}">edit</a></li>
     <li class="course-options-item"><a href="{{ url_for('assignment.delete_assignments',
     id=assignment['assignment_id']) }}">delete</a></li>
     </ul>
