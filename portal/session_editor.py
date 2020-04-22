@@ -16,10 +16,10 @@ def session_edit(course_id, sessions_id):
     session = get_session(sessions_id)
     course = course_editor.get_course(session['course_id'])
     if g.user['id'] != course['teacher_id']:
-        return redirect(url_for('index'))
+        abort(403)
 
     if course['course_num'] != session['course_id']:
-        return redirect(url_for('index'))
+        abort(403)
 
     if request.method == 'POST':
 
@@ -71,7 +71,7 @@ def session_create(course_id):
     course = course_editor.get_course(course_id)
     students = get_students()
     if g.user['id'] != course['teacher_id']:
-        return redirect(url_for('index'))
+        abort(403)
 
 
 
@@ -120,7 +120,7 @@ def session_manage(course_id):
 
     course = course_editor.get_course(course_id)
     if g.user['id'] != course['teacher_id']:
-        return redirect(url_for('index'))
+        abort(403)
 
     cur = db.get_db().cursor()
     cur.execute('SELECT * FROM sessions WHERE course_id = %s',
@@ -146,7 +146,7 @@ def get_session(sessions_id):
             session = cur.fetchone()
 
             if session is None:
-                abort(404, "Session id {0} doesn't exist.".format(sessions_id))
+                abort(404)
 
             return session
 

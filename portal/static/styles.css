@@ -216,6 +216,22 @@ div.links {
 
 }
 
+/**
+*Error Pages
+*/
+
+div.error_pages {
+  display: flex;
+  flex-direction: column;
+  font-size: 15pt;
+  background: #8B1E41;
+}
+
+div.error_pages a:hover {
+  color:white;
+}
+
+
 
 /**
  * Forms

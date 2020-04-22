@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, abort
 )
 import functools
 from . import db
@@ -23,7 +23,7 @@ def login():
                 cur.execute('SELECT * FROM users WHERE email = %s', (email,))
                 user = cur.fetchone()
 
-                
+
 
         error = None
 
@@ -95,7 +95,7 @@ def teacher_required(view):
     @functools.wraps(view)
     def wrapped(**kwargs):
         if g.user['role'] != 'teacher':
-            return redirect(url_for('index'))
+            abort(403)
 
         return view(**kwargs)
 
