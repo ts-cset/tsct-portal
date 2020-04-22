@@ -7,12 +7,12 @@
 <a href="{{ url_for('assignment.create_assignment', id=id, course_id=course['course_id'])}}" class="view-assignment-link">
   create new assignment
 </a>
-<h3>{{ course['class_name']}}{{ course['course_id']}}</h3>
+<h3>{{ course['class_name']}}</h3>
 <h3>SESSION {{id}}</h3>
 {% for assignment in assignments %}
 
 <section class="assignment_forms">
-  <h3 class="assignment-title">{{ assignment['name'] }}{{ assignment['assignment_id']}}</h3>
+  <h3 class="assignment-title">{{ assignment['name'] }} ID: {{ assignment['assignment_id']}}</h3>
     <p class="assignment-item">{{ assignment['description'] }}</p>
   <h3 class="assignment-date">assignment due:</h3>
     <p class="assignment-item">{{ assignment['due_date'] }}</p>
