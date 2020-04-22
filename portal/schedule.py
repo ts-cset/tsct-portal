@@ -13,13 +13,11 @@ bp = Blueprint("schedule", __name__)
 def view_schedule():
     """Students can view their schedule here"""
 
-    # This is to test the schedule page
-    # cur = db.get_db().cursor()
-    # cur.execute('SELECT * FROM users')
-    # classes = cur.fetchall()
-    # cur.close()
-
     # Here, I will put what goes into the schedule
+    # In order, I am selecting the session name, location, room number,
+    # days and time of day, a description, teacher name, and who is in
+    # that session. I am selecting rosters.user_id because in schedule.html,
+    # I am checking what courses the currently logged in student is enrolled in.
     cur = db.get_db().cursor()
     cur.execute("""
         SELECT sessions.session_name,
