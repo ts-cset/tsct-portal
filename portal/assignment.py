@@ -57,7 +57,7 @@ def view_assignments(id, course_id):
     con = db.get_db()
     cur = con.cursor()
 
-    cur.execute("""SELECT sessions.id, sessions.course_id, courses.course_id, courses.name
+    cur.execute("""SELECT sessions.id, sessions.course_id, courses.course_id, courses.teacherid, courses.name 
                 AS class_name FROM sessions JOIN courses
                 ON sessions.course_id = sessions.course_id
                 WHERE sessions.id=%s AND courses.course_id= %s""",
