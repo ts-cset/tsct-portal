@@ -1,5 +1,5 @@
 from flask import (
-    render_template, Blueprint, session, g, flash, request, redirect, url_for
+    render_template, Blueprint, session, g, flash, request, redirect, url_for, abort
 )
 
 from . import db, auth
@@ -32,14 +32,17 @@ def submission_list(course_id, session_id, assignment_id):
 
             students = cur.fetchall()
 
+    if session == None:
+
+        abort(404)
 
     if course['teacher_id'] != g.user['id']:
 
-        return redirect(url_for('index')) #placeholder
+        abort(403)
 
     if assignment['sessions_id'] != session['id']:
 
-        return redirect(url_for('index')) #placeholder
+        abort(403)
 
     for student in students:
 
@@ -66,4 +69,12 @@ def submission_list(course_id, session_id, assignment_id):
             submissions = cur.fetchall()
 
 
-    return render_template('submissions.html', submissions=submissions, assignment=assignment, session=session)
+    return render_template('submissions/submissions.html', submissions=submissions, assignment=assignment, session=session)
+
+
+@bp.route('/course/<int:course_id>/session/<int:session_id>/assignments/<int:assignment_id>/submissions/<int:submission_id>')
+@auth.login_required
+@auth.teacher_required
+def grade_submission(course_id, session_id, assignment_id, submission_id):
+
+    pass
