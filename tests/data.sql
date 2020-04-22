@@ -7,7 +7,6 @@ VALUES (0001, 'teacher@stevenscollege.edu', '$2b$12$xVtl1ZGJBEW4gxQOm9UzW.P.UOq/
        (0004, 'student2@stevenscollege.edu', '$2b$12$PE/vM8jOb6Og84zdJ9GvKe8177OZ8EhMRzEwAONF1R8R6qeJ6PAsm', 'Test Student 2', 'student', 3),
        (0005, 'student3@stevenscollege.edu', '$2b$12$PE/vM8jOb6Og84zdJ9GvKe8177OZ8EhMRzEwAONF1R8R6qeJ6PAsm', 'Test Student 3', 'student', 4);
 
-
 INSERT INTO courses (name, major, description, credits, teacherid)
 VALUES ('ENG 101', 'GEND', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent semper quam et quam fringilla feugiat. Donec at risus efficitur, vehicula risus et, tempor nibh. Vivamus vitae porttitor metus, ac venenatis quam. Pellentesque porttitor malesuada orci iaculis condimentum. Vestibulum sodales, purus sit amet ultricies luctus, leo arcu mattis dui, at ultrices tortor eros sit amet lorem. Duis quis metus fringilla neque ornare ornare. Sed commodo sit amet elit et dictum. Nulla eget mattis ligula. Nulla sodales enim nec leo eleifend, et feugiat felis fermentum. Cras aliquet a magna ac pellentesque. Nulla ultrices bibendum dui tristique facilisis. Nam pellentesque lobortis ultricies. In id pretium quam. Sed facilisis lacinia lectus at tristique.', 3, 0003),
       ('METAL 155', 'WELD', 'Basic metals kinda stuff Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent semper quam et quam fringilla feugiat. Donec at risus efficitur, vehicula risus et, tempor nibh. Vivamus vitae porttitor metus, ac venenatis quam. Pellentesque porttitor malesuada orci iaculis condimentum. Vestibulum sodales, purus sit amet ultricies luctus, leo arcu mattis dui, at ultrices tortor eros sit amet lorem. Duis quis metus fringilla neque ornare ornare. Sed commodo sit amet elit et dictum. Nulla eget mattis ligula. Nulla sodales enim nec leo eleifend, et feugiat felis fermentum. Cras aliquet a magna ac pellentesque. Nulla ultrices bibendum dui tristique facilisis. Nam pellentesque lobortis ultricies. In id pretium quam. Sed facilisis lacinia lectus at tristique.', 3, 0001),
@@ -33,6 +32,7 @@ VALUES (1, 'Exam_1', 'Chapter 1 Exam', '2020-04-28'),
       (1, 'Exam_2', 'Chapter 2 Exam', '2020-05-03'),
       (2, 'Essay', 'Biographical Essay', '2020-05-02'),
       (2, 'Essay', 'Persuasive Essay', '2020-08-09');
+
 INSERT INTO roster (student_id, session_id)
 VALUES (4, 1),
         (4, 3),
@@ -48,3 +48,4 @@ VALUES (4, 1),
         (5, 4),
         (5, 7),
         (5, 8);
+
