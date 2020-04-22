@@ -18,11 +18,14 @@ def assignments():
     # Display the student's assignments
         cur = get_db().cursor()
 
+    if course_id:
     # pulls out all assignments for student id
-        cur.execute("""SELECT * FROM assignments
-                       JOIN student_sessions
-                       ON student_sessions_id = student_sessions.id
-                       WHERE student_id = %s;""", (student,))
+        cur.execute("""SELECT * FROM assignments AS a
+                       JOIN student_sessions AS ss
+                       ON student_sessions_id = ss.id
+                       WHERE ss.course_id = %s
+                       AND ss.section = %s
+                       AND ss.student_id = %s;""", (course_id, section, student))
         student_assignments = cur.fetchall()
 
     if session['user'][4] == 'teacher':

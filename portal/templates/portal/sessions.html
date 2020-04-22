@@ -19,6 +19,7 @@
 {% for class in sessions %}
 <li class=" ">
   <a href="{{ url_for('sessions.session_view', class=class, course_id=course_id[loop.index0], section=sections[loop.index0]) }}">{{ class }}</a>
+  <a href="{{ url_for('assignments.assignments', course_id=course_id[loop.index0], section=sections[loop.index0]) }}">Assignments</a>
   {% endfor %}
 {% endif %}
   {% endblock %}
