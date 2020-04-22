@@ -289,7 +289,7 @@ aside {
   font-variant: small-caps;
   border: 1px solid darkgrey;
   padding: 3px 5px 3px 5px;
-  margin: 5px 5px 5px 5px;
+  margin: 5px 10px 5px 0px;
 }
 
 .session-add-button {
@@ -300,16 +300,6 @@ aside {
   margin: 10px 0 20px 0;
 }
 
-
-.about-course-form {
-  width: 100%;
-  background-color: lightgrey;
-  padding: 0;
-  margin: 0;
-  border: none;
-  justify-content: center;
-
-}
 .course-button {
   background-color: #fac0c0;
   border: 1px solid black;
