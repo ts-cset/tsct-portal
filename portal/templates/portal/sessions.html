@@ -9,14 +9,18 @@
 
 {% for class in sessions %}
 <li class=" ">
-  <a href="{{ url_for('sessions.session_view', class=class, course_id=course_id, section=sections[loop.index0]) }}">{{ class }}</a>
-  </li>
-  {% endfor %}
+  <a href="{{ url_for('sessions.session_view', class=class, course_id=course_id, section=sections[loop.index0]) }}">{{ class }} - {{sections[loop.index0]}}</a>
+  <div class="button-group">
+    <a class="fake-button">Edit</a>
+    <a class="fake-button">Delete</a>
+  </div>
+</li>
+{% endfor %}
 {% elif session['user'][4] == 'student' %}
 
 {% for class in sessions %}
 <li class=" ">
   <a href="{{ url_for('sessions.session_view', class=class, course_id=course_id[loop.index0], section=sections[loop.index0]) }}">{{ class }}</a>
   {% endfor %}
-{% endif %}
+  {% endif %}
   {% endblock %}
