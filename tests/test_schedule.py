@@ -22,6 +22,3 @@ def test_schedule_view(client):
     # test logging out
     rv = logout(client)
     assert b'TSCT Portal Login' in rv.data
-
-    # rv = view_schedule()
-    # assert b'Schedule' in rv.data
