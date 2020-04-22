@@ -103,7 +103,6 @@ def create(course_id):
                 (user_id, course_id))
     course = cur.fetchone()
     cur.close()
-    con.close()
 
     if course == None:
         abort(400, 'Either the course does not exist, or you do not have permission to create session for this course.')
@@ -113,6 +112,7 @@ def create(course_id):
         days = request.form['session_days']
         class_time = request.form['class_time']
         location = request.form['location']
+
         con = db.get_db()
         cur = con.cursor()
         cur.execute("""
@@ -124,6 +124,8 @@ def create(course_id):
         cur.close()
         con.close()
         return redirect(url_for('session.view_sessions', course_id=course_id))
+
+    con.close()
 
     return render_template("layouts/sessions/create_session.html", course=course)
 

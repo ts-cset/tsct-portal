@@ -15,11 +15,13 @@ def create_assignment(id, course_id):
     con = db.get_db()
     cur = con.cursor()
 
-    cur.execute("""SELECT course_id from sessions where id=%s""",
+    cur.execute("""SELECT sessions.course_id, courses.course_id, courses.name
+                AS class_name FROM sessions JOIN courses
+                ON sessions.course_id=sessions.course_id
+                WHERE sessions.id=%s""",
                 (id,))
     course = cur.fetchone()
     cur.close()
-    con.close()
 
     if request.method == 'POST':
 
@@ -40,9 +42,11 @@ def create_assignment(id, course_id):
 
         cur.close()
         con.close()
-        return redirect(url_for('assignment.view_assignments', id=id, course=course))
+        return redirect(url_for('assignment.view_assignments', id=id, course_id=course_id))
 
-    return render_template('layouts/assignments/create_assignments.html')
+    con.close()
+
+    return render_template('layouts/assignments/create_assignments.html', course=course)
 
 
 @bp.route('/course/<int:course_id>/session/<int:id>/assignments', methods=('GET',))
@@ -53,10 +57,13 @@ def view_assignments(id, course_id):
     con = db.get_db()
     cur = con.cursor()
 
-    cur.execute("""SELECT course_id FROM sessions
-                WHERE id = %s""",
-                (id,))
-    course_id = cur.fetchone()
+    cur.execute("""SELECT sessions.id, sessions.course_id, courses.course_id, courses.name
+                AS class_name FROM sessions JOIN courses
+                ON sessions.course_id = sessions.course_id
+                WHERE sessions.id=%s AND courses.course_id= %s""",
+                (id, course_id,))
+    course = cur.fetchone()
+
     # Query to get all of the asssignments in a session
     cur.execute("""
     SELECT * FROM assignments
@@ -68,16 +75,21 @@ def view_assignments(id, course_id):
     cur.close()
     con.close()
 
-    return render_template('layouts/assignments/view_assignments.html', course_id=course_id, id=id, assignments=assignments)
+    return render_template('layouts/assignments/view_assignments.html', course=course, id=id, assignments=assignments)
 
 
 @bp.route('/course/<int:course_id>/session/<int:session_id>/assignment/<int:id>/edit-assignment', methods=('GET', 'POST'))
 @login_required
-def edit_assignments(id, session_id, course_id):
+def edit_assignments(course_id, session_id, id):
     """Singe page view to edit an assignment."""
 
     con = db.get_db()
     cur = con.cursor()
+    cur.execute("""SELECT * FROM assignments WHERE assignment_id=%s""",
+                (id,))
+    assignment = cur.fetchone()
+    cur.close()
+
     if request.method == 'POST':
 
         # getting all info required to update assignment information
@@ -85,6 +97,7 @@ def edit_assignments(id, session_id, course_id):
         description = request.form['description']
         due_date = request.form['date']
 
+        cur = con.cursor()
         # Query to update the information for an assignment
         cur.execute("""
         UPDATE assignments SET name = %s, description = %s, due_date= %s
@@ -97,13 +110,15 @@ def edit_assignments(id, session_id, course_id):
         WHERE assignment_id = %s""", (id,))
         session_id = cur.fetchone()
         g.db.commit()
+        cur.close()
+        con.close()
 
         return redirect(url_for('assignment.view_assignments', id=session_id['session_id'], course_id=course_id))
 
     cur.close()
     con.close()
 
-    return render_template('layouts/assignments/edit_assignments.html')
+    return render_template('layouts/assignments/edit_assignments.html', assignment=assignment)
 
 
 @bp.route('/<int:id>/delete', methods=['POST'])
