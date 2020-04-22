@@ -51,7 +51,6 @@ def courses():
             """, (g.user['id'],))
             courses = cur.fetchall()
     return render_template('class.html', courses=courses)
-
 @bp.route('/courses/create', methods=('GET', 'POST'))
 #Checks if the user is log in and if they are an admin role
 @login_required
@@ -73,6 +72,28 @@ def create():
         #Selects all the data from courses and returns it to 'class.html'
         return redirect(url_for('teacher.courses'))
     return render_template('course-creation.html')
+
+@bp.route('/courses/<int:id>/edit', methods=('POST', 'GET'))
+@login_required
+@admin
+def course_edit(id):
+    if request.method == "POST":
+        class_code = request.form['code']
+        class_name = request.form['name']
+        class_subject = request.form['major']
+        class_description = request.form['description']
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                UPDATE courses
+                SET course_code = %s, course_name = %s , major= %s, description= %s, teacher_id= %s
+                WHERE id = %s
+                """,
+                (class_code, class_name, class_subject, class_description, g.user['id'], id )
+                )
+                return redirect(url_for('teacher.courses'))
+    return render_template('edit-course.html')
+
 
 @bp.route('/session', methods=('GET', 'POST'))
 @login_required
