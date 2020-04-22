@@ -81,7 +81,7 @@ def create_session(course_id):
 
 #for this i need the course_id the session_id, roster_id, and assignment_id to get it to work
 
-
+#assingment_id attmept
             cur.execute("""SELECT id FROM session
             WHERE name = %s and courses_id = %s;
             """,

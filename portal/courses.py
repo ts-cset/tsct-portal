@@ -90,27 +90,6 @@ def create_course():
              (course_number, g.users['major'], name, description, credits, g.users['id']))
             db.get_db().commit()
             cur.close()
-
-
-            #routing 
-            cur.execute("""
-            SELECT id FROM courses WHERE id = %s;
-            """),
-            (id,)
-            courses = cur.fetchone()
-            course_id = courses[0]
-
-            cur.execute("""SELECT id FROM session
-            WHERE name = %s and courses_id = %s;
-            """,
-            (name, course_id))
-            sessions = cur.fetchone()
-            session_id = sessions[0]
-            cur.close()
-
-
-
-
             return redirect(url_for('portal.userpage'))
 
     return render_template('portal/courses/create-course.html')
@@ -143,25 +122,12 @@ def update_course(course_id):
              """,
              (course_number, g.users['major'], name, description, credits, g.users['id'], course_id))
             db.get_db().commit()
-            
-
-            #START OF NEW CODE 
-    
-            cur.execute("""
-            SELECT id FROM courses WHERE id = %s;
-            """),
-            (id,)
-            courses = cur.fetchone()
-            course_id = courses[0]
-
-            cur.execute("""SELECT id FROM session
-            WHERE name = %s and courses_id = %s;
-            """,
-            (name, course_id))
-            sessions = cur.fetchone()
-            session_id = sessions[0]
             cur.close()
 
+            #START OF NEW CODE 
 
-            return redirect(url_for('courses.view_course', session_id=session_id, course_id=course_id))
+
+            
+
+            return redirect(url_for('courses.view_course'))
     return render_template('portal/courses/update-course.html')
