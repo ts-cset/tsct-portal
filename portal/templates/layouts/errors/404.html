@@ -1,0 +1,21 @@
+{% extends 'layouts/errors/error_page.html' %}
+
+{% block title %}Not Found 404{% endblock %}
+
+
+{% block content %}
+    <div class="error_pages">
+
+    <h2>Not found</h2>
+
+
+    <h3>Looks like the page you are requesting is not found.
+    It is either non-existant or has been moved.</h3>
+
+    <h3>You can press the back button on the browser or click this
+    link below to go home.</h3>
+
+    <a href="{{ url_for('index') }}">Portal Home</a>
+
+    </div>
+{% endblock %}

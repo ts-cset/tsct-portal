@@ -1,0 +1,18 @@
+
+{% extends 'layouts/errors/error_page.html' %}
+
+{% block title %}Forbidden 403{% endblock %}
+
+  {% block content %}
+    <div class="error_pages">
+
+    <h3>An action you attempted is not allowed and
+    it has been prevented.</h3>
+
+    <h3>If you do not know why, you have been redirectd to this
+    page press the back button on your browser or click the home button below.</h3>
+
+    <a href="{{ url_for('index')}}">Portal Home</a>
+
+    </div>
+  {% endblock %}

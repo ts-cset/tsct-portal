@@ -75,7 +75,7 @@ def course_edit(course_id):
     """Allows teachers to edit the course"""
     course = get_course(course_id)
     if g.user['id'] != course['teacher_id']:
-        return redirect(url_for('index'))
+        abort(403)
     if request.method == "POST":
 
         credit = request.form['editCredit']
@@ -123,7 +123,7 @@ def get_course(course_id):
             course = cur.fetchone()
 
             if course is None:
-                abort(404, "Course id {0} doesn't exist.".format(id))
+                abort(404)
 
             return course
 

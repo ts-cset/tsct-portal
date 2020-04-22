@@ -20,7 +20,7 @@ def assign_create(sessions_id, course_id):
     course = course_editor.get_course(course_id)
 
     if g.user['id'] != course['teacher_id']:
-        return redirect(url_for('index'))
+        abort(403)
 
     session = session_editor.get_session(sessions_id)
     # course = course_editor.get_course(id)
@@ -100,8 +100,7 @@ def assign_edit(course_id, assign_id, sessions_id):
     course = course_editor.get_course(course_id)
 
     if g.user['id'] != course['teacher_id']:
-        print('hello')
-        return redirect(url_for('index'))
+        abort(403)
 
     if request.method == 'POST':
 
@@ -153,7 +152,7 @@ def get_assignment(assign_id):
             assign = cur.fetchone()
 
             if assign is None:
-                abort(404, "Assign id {0} doesn't exist.".format(assign_id))
+                abort(404)
 
             return assign
 
@@ -170,6 +169,6 @@ def get_course_2(course_id):
             course = cur.fetchone()
 
             if course is None:
-                abort(404, "Course id {0} doesn't exist.".format(id))
+                abort(404)
 
             return course

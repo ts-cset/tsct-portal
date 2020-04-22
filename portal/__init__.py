@@ -1,8 +1,28 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
 
 from werkzeug.security import check_password_hash, generate_password_hash
+
+##########################
+####Custom Error Pages####
+##########################
+def handle_exception(e):
+    # pass through HTTP errors
+    if isinstance(e, HTTPException):
+        return e
+
+    # now you're handling non-HTTP exceptions only
+    return render_template("500.html", e=e), 500
+
+
+def forbidden(e):
+    """Notifies the user that the previous action they attempted is not allowed."""
+    return render_template('layouts/errors/403.html'), 403
+
+def page_not_found(e):
+    """Tells the user what they are looking for is not there."""
+    return render_template('layouts/errors/404.html')
 
 def create_app(test_config=None):
     """Factory to configure and return a Flask application.
@@ -12,6 +32,9 @@ def create_app(test_config=None):
 
     # Create the Flask application object using this module's name
     app = Flask(__name__, instance_relative_config=True)
+    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(403, forbidden)
+    app.register_error_handler(500, handle_exception)
 
     # Configure App
     # -------------
@@ -36,6 +59,8 @@ def create_app(test_config=None):
     else:
         # App configuration specifically for tests
         app.config.from_mapping(test_config)
+
+
 
     # Setup Database
     # --------------
