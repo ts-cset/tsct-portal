@@ -18,3 +18,6 @@ VALUES ('43784', '1');
 
 INSERT INTO assignments (session_id, name, description, date, points)
 VALUES ('1', 'Homework', 'homework', '2000-12-31', '5');
+
+INSERT INTO submissions (users_id, assignments_id)
+VALUES ('43784', '1');

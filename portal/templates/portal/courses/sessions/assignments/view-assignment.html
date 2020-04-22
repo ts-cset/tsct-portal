@@ -7,8 +7,8 @@
 <ul>
   {% for course in courses %}
   <li>
-  <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
-  <p>Description: {{ course['description'] }}</p>
+    <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
+    <p>Description: {{ course['description'] }}</p>
   </li>
   {% endfor %}
 </ul>
@@ -16,7 +16,7 @@
 <ul>
   {% for session in sessions %}
   <li>
-  <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
+    <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
   </li>
   {% endfor %}
 </ul>
@@ -24,11 +24,33 @@
 <ul>
   {% for assignment in assignments %}
   <li>
-  <p>Name: {{ assignment['name'] }}</p>
-  <p>Due Date: {{ assignment['date'] }}</p>
-  <p>Description: {{ assignment['description'] }}</p>
-  <p>Points: {{ assignment['points'] }}</p>
+    <p>Name: {{ assignment['name'] }}</p>
+    <p>Due Date: {{ assignment['date'] }}</p>
+    <p>Description: {{ assignment['description'] }}</p>
+    <p>Points: {{ assignment['points'] }}</p>
+    {% if g.users['role'] == 'student' %}
+    <a href="{{ url_for('assignments.submit_assignment', assignment_id=assignment['id']) }}"><input type="button" value="Submit Assignment"></a>
+    {% endif %}
   </li>
   {% endfor %}
 </ul>
+{% if g.users['role'] == 'teacher' %}
+<h5>Submissions</h5>
+<ul>
+  {% for submission in submissions %}
+  <li>
+    <p>Student: {{ submission['users_id'] }}, Answer: {{ submission['answer'] }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% elif g.users['role'] == 'student' %}
+<h5>Your submission</h5>
+<ul>
+  {% for submission in submissions %}
+  <li>
+    <p>Answer: {{ submission['answer'] }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}

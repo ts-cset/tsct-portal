@@ -76,6 +76,8 @@ header h1{
   display: inline;
   padding-left: 1px;
   color: #a6093d;
+  
+
 }
 
 header nav ul {
@@ -100,4 +102,9 @@ text-transform: uppercase;
 header p{
   color: #a6093d;
   display: inline-block;
+}
+
+nav {
+  float: right;
+  padding-right: 20px;
 }

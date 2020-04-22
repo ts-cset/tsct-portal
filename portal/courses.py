@@ -89,8 +89,23 @@ def create_course():
              """,
              (course_number, g.users['major'], name, description, credits, g.users['id']))
             db.get_db().commit()
-            cur.close()
-            return redirect(url_for('portal.userpage'))
+           
+
+
+            #routing 
+            cur.execute("""
+            SELECT id FROM courses WHERE name = %s AND course_number = %s;
+            """,
+            (name, course_number))
+            courses_tuple = cur.fetchone()
+            course_id = courses_tuple[0]
+
+           
+
+
+
+
+            return redirect(url_for('courses.view_course', course_id=course_id))
 
     return render_template('portal/courses/create-course.html')
 
@@ -122,12 +137,17 @@ def update_course(course_id):
              """,
              (course_number, g.users['major'], name, description, credits, g.users['id'], course_id))
             db.get_db().commit()
-            cur.close()
-
-            #START OF NEW CODE 
-
-
             
 
-            return redirect(url_for('courses.view_course'))
+            #START OF NEW CODE 
+    
+            cur.execute("""
+            SELECT id FROM courses WHERE name = %s AND course_number = %s;
+            """,
+            (name, course_number))
+            courses_tuple = cur.fetchone()
+            course_id = courses_tuple[0]
+
+
+            return redirect(url_for('courses.view_course', course_id=course_id))
     return render_template('portal/courses/update-course.html')
