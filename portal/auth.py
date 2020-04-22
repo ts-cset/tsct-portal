@@ -62,6 +62,7 @@ def load_logged_in_user():
         )
         g.user = cur.fetchone()
         cur.close()
+    cur.close()
 
 
 def login_required(view):
