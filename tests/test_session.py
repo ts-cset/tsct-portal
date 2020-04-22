@@ -2,13 +2,6 @@ import pytest
 
 
 def test_view_sessions(client, auth):
-
-    auth.login()
-    response = client.get('/2/sessions')
-    assert b'Sessions' in response.data
-
-    # getting the form as a logged in users,
-    # reguarless if the user owns the course or not
     auth.login()
     response = client.get('/course/1/sessions')
     assert b'Current Sessions' in response.data
@@ -63,14 +56,13 @@ def test_get_session_edit(client, auth):
     assert b'Bad Request' in response.data
 
 
-# def test_delete_session(client, auth):
-#     # login as a teacher who does not own the course/session
-#     auth.login()
-#     # attempt to delete a session not owned by user
-#     response = client.post('/course/1/sessions/6/delete')
-#     # make sure system aborts attempt
-#     assert b'Bad Request' in response.data
-#
-#     response = client.post('/course/2/sessions/2/delete')
-#
-#     assert response.headers['Location'] == 'http://localhost/course/2/sessions'
+def test_delete_session(client, auth):
+    # login as a teacher who does not own the course/session
+    auth.login()
+    # attempt to delete a session not owned by user
+    response = client.post('/course/1/sessions/6/delete')
+    # make sure system aborts attempt
+    assert b'Bad Request' in response.data
+
+    response = client.post('/course/2/sessions/2/delete')
+    assert response.headers['Location'] == 'http://localhost/course/2/sessions'
