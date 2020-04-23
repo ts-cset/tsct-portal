@@ -12,24 +12,33 @@
   <!-- g.user looks for information in user table.
   This will loop and see how many classes the user has
   and then put them in a list element -->
-  {% if g.user %}
-    <!-- Displays classes -->
+  <!-- {% if g.user %}
+
     <ul>
-      {% for session in course_sessions %}
-        <!-- The content in the list element should be an anchor to the course page  -->
-        <li>{{ session['session_name'] }}</li>
+      {% for name in courses %}
+        The content in the list element should be an anchor to the course page
+        <li>{{ name['course_name'] }}</li>
       {% endfor %}
     </ul>
-  {% endif %}
+  {% endif %} -->
 
   <!-- Shows scheduling for classes -->
-  <!-- <section id="schedule">
+  <section id="schedule">
     {% if g.user %}
       <ul>
-        {% for scheduling in date_time %}
-        <li>{{ scheduling['dnt'] }}</li>
+        {% for scheduling in courses %}
+          <li>
+            {{ scheduling['course_name'] }}
+            {{ scheduling['course_code'] }}
+
+            {{ scheduling['session_name'] }}
+            {{ scheduling['meeting_days'] }}
+            {{ scheduling['meeting_time'] }}
+            {{ scheduling['meeting_place'] }}
+            <button type="submit" name="scheduling['session_id']" value="scheduling['session_id']" formaction="url_for('student.assignments')">assignments</button>
+          </li>
         {% endfor %}
       </ul>
     {% endif %}
   </section>
-{% endblock %} -->
+{% endblock %}
