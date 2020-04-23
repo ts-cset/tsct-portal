@@ -3,7 +3,9 @@
 {% block title %}Class Roster{% endblock %}
 
 {% block content %}
-<h3 class="assignment-title">Current Students    <span class="error">{{ message}}</span></h3>
+<h3 class="class-list-title">Current Students in:</h3>
+<h3>{{course_name}} / SESSION:{{session_id}}</h3>
+<h3> <span class="error">{{ message}}</span></h3>
 <section class="class-list">
   <ol class="student-list">
   {% for student in students %}
@@ -18,7 +20,7 @@
       <input type="text" name="sname" placeholder="Add Student by Name">
     <label class="form-label2" for="rname">remove</label>
       <input type="text" name="rname" placeholder="Remove Student by Name">
-    <input type="submit" value="submit">
+    <input type="submit" class="submit" value="submit">
   </form>
 {% endif %}
 {% endblock %}

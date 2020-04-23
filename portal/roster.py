@@ -8,6 +8,8 @@ bp = Blueprint("roster", __name__)
 
 # Route to roster
 @bp.route("/course/<int:course_id>/session/<int:id>/roster", methods=('GET', 'POST'))
+@teacher_required
+@login_required
 def view(id, course_id):
     # session_id = class_session['id']
     bname = ''
@@ -20,12 +22,14 @@ def view(id, course_id):
         WHERE session_id = %s ORDER BY users.name DESC""",
         (id,))
     students = cur.fetchall()
-    cur.execute("""SELECT sessions.id, sessions.course_id, courses.course_id, courses.teacherid AS session_teacher
+    cur.execute("""SELECT sessions.id AS session_id, sessions.course_id, courses.course_id, courses.name AS class_name, courses.teacherid AS session_teacher
                 FROM sessions JOIN courses on sessions.course_id = courses.course_id
                 WHERE sessions.id = %s""",
                 (id,))
     check = cur.fetchone()
     session_teacher = check['session_teacher']
+    course_name = check['class_name']
+    session_id = check['session_id']
     cur.close()
 
     if request.method == 'POST':
@@ -95,4 +99,6 @@ def view(id, course_id):
         if studentname == "" and removename == "":
             message = "error no input"
         con.close()
-    return render_template("layouts/sessions/roster.html", students=students, session_teacher=session_teacher, message=message)
+    return render_template("layouts/sessions/roster.html", students=students,
+                           session_teacher=session_teacher, message=message,
+                           course_name=course_name, session_id=session_id)

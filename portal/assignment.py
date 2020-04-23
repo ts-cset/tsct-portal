@@ -57,7 +57,7 @@ def view_assignments(id, course_id):
     con = db.get_db()
     cur = con.cursor()
 
-    cur.execute("""SELECT sessions.id, sessions.course_id, courses.course_id, courses.teacherid, courses.name 
+    cur.execute("""SELECT sessions.id, sessions.course_id, courses.course_id, courses.teacherid, courses.name
                 AS class_name FROM sessions JOIN courses
                 ON sessions.course_id = sessions.course_id
                 WHERE sessions.id=%s AND courses.course_id= %s""",
@@ -80,6 +80,7 @@ def view_assignments(id, course_id):
 
 @bp.route('/course/<int:course_id>/session/<int:session_id>/assignment/<int:id>/edit-assignment', methods=('GET', 'POST'))
 @login_required
+@teacher_required
 def edit_assignments(course_id, session_id, id):
     """Singe page view to edit an assignment."""
 
@@ -123,6 +124,7 @@ def edit_assignments(course_id, session_id, id):
 
 @bp.route('/<int:id>/delete', methods=['POST'])
 @login_required
+@teacher_required
 def delete_assignments(id):
     """Deletes any unwanted assignments."""
 

@@ -448,15 +448,15 @@ aside {
   margin-bottom: 20px;
 }
 
-.assignment-title {
+.class-list-title {
   margin-block-start: 5px;
   margin-block-end: 0;
   margin-inline-start: 5px;
   margin-inline-end: 0px;
   font-size: 28px;
   font-weight: bold;
-  border-bottom: 1px solid black;
-  padding-bottom: 5px;
+  border-bottom: 2px solid black;
+  padding-bottom: 10px;
 }
 
 .assignment-item {
@@ -486,14 +486,18 @@ table {
 }
 
 tbody{
-  background-color: lightgrey;
+  background-color: white;
+}
+
+th {
+  font-size: 26px;
 }
 
 .th1 {
   font-variant: small-caps;
   background-color: white;
   color: black;
-  width: 100px;
+  width: 150px;
 }
 
 .session-table {
@@ -525,18 +529,52 @@ tbody{
   width: 18%;
 }
 
+.th4 {
+  font-variant: small-caps;
+  background-color: white;
+  width: 30%;
+  margin: 5px;
+}
+
+.th5 {
+  font-variant: small-caps;
+  background-color: white;
+  width: 45%;
+}
+
+
+
+.assignment-table {
+  width: 80%;
+  background-color: white;
+}
 
 .table-buttons{
   border: 1px solid maroon;
   background-color: #fac0c0;
   font-variant: small-caps;
   text-align: center;
-  height: 30px;
   width:120px;
-
-.class-list {
-  width: 100%;
 }
+
+.assignment-table{
+  background-color: white;
+}
+
+td  {
+  border: 1px solid black;
+  background-color: lightgrey;
+  padding: 2px;
+}
+
+.td-assign-button{
+  border: 1px solid maroon;
+  background-color: #fac0c0;
+  font-variant: small-caps;
+  text-align: center;
+  width:120px;
+}
+
 
 .student-list{
   display: flex;
@@ -548,13 +586,13 @@ tbody{
 
 
 .student-name{
-  background-color: lightgrey;
+  background-color: white;
   padding: 5px;
   justify-content: center;
   align-items: center;
   width: 300px;
-  list-style-type: none;
-  border: 1px solid black;
+  list-style-type: decimal;
+  border-bottom: 1px solid black;
 }
 
 .error {
@@ -565,5 +603,10 @@ tbody{
   font-variant: small-caps;
   font-size: 28px;
   font-weight: bold;
+}
 
+.class-list {
+  margin-bottom: 30px;
+  border-bottom: 2px solid black;
+  padding-bottom: 20px;
 }
