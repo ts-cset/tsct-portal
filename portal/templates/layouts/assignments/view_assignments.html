@@ -31,8 +31,12 @@
         <td class="td-assign-button" ><a href="{{ url_for('assignment.edit_assignments',
     id=assignment['assignment_id'], session_id=assignment['session_id'],
     course_id=course['course_id']) }}">edit</a></td>
-      <td class="td-assign-button" ><a href="{{ url_for('assignment.delete_assignments',
-    id=assignment['assignment_id']) }}">delete</a></td>
+      <td class="td-assign-button">
+        <form class ="edit-button" action="{{ url_for('assignment.delete_assignments',
+      id=assignment['assignment_id'], session_id=assignment['session_id'], course_id=course['course_id']) }}" method="post">
+        <input class="edit" onclick="submit" type="submit" name="delete" value="delete">
+      </form>
+      </td>
     {% endif %}
     </tr>
     {% endfor %}

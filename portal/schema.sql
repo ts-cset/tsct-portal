@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS courses CASCADE;
 DROP TABLE IF EXISTS sessions CASCADE;
 DROP TABLE IF EXISTS roster CASCADE;
 DROP TABLE IF EXISTS assignments CASCADE;
+DROP TABLE IF EXISTS grades CASCADE;
 
 -- Users
 CREATE TABLE users (
@@ -22,12 +23,14 @@ CREATE TABLE users (
     major varchar(10)
 );
 
+-- Majors
 CREATE TABLE majors (
   major_id bigserial PRIMARY KEY,
   name varchar(50) UNIQUE NOT NULL,
   description text
 );
 
+-- Courses
 CREATE TABLE courses (
   course_id bigserial PRIMARY KEY,
   name varchar(50) UNIQUE NOT NULL,
@@ -49,6 +52,7 @@ ALTER TABLE courses
     ON UPDATE CASCADE
     ON DELETE CASCADE;
 
+-- Sessions
 CREATE TABLE sessions (
   id bigserial PRIMARY KEY,
   course_id bigint NOT NULL,
@@ -63,6 +67,7 @@ ALTER TABLE sessions
     ON UPDATE CASCADE
     ON DELETE CASCADE;
 
+-- Roster
 CREATE TABLE roster (
   count bigserial PRIMARY KEY,
   student_id bigint,
@@ -82,6 +87,7 @@ ALTER TABLE roster
     ON UPDATE CASCADE
     ON DELETE CASCADE;
 
+-- Assignments
 CREATE TABLE assignments(
   assignment_id bigserial PRIMARY KEY,
   session_id bigserial,
@@ -93,6 +99,29 @@ CREATE TABLE assignments(
 ALTER TABLE assignments
   ADD CONSTRAINT session FOREIGN KEY (session_id)
   REFERENCES sessions(id)
+  ON UPDATE CASCADE
+  ON DELETE CASCADE;
+
+-- Grades
+CREATE TABLE grades(
+  grade_id bigserial PRIMARY KEY,
+  student_id bigserial,
+  assignment_id bigserial,
+  points_received decimal(5,2),
+  total_points integer,
+  feedback text,
+  submission text
+);
+
+ALTER TABLE grades
+  ADD CONSTRAINT student FOREIGN KEY (student_id)
+  REFERENCES users(id)
+  ON UPDATE CASCADE
+  ON DELETE CASCADE;
+
+ALTER TABLE grades
+  ADD CONSTRAINT assignment FOREIGN KEY (assignment_id)
+  REFERENCES assignments(assignment_id)
   ON UPDATE CASCADE
   ON DELETE CASCADE;
 
