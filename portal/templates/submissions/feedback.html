@@ -5,7 +5,7 @@
 {% block content %}
 
 <header>
-  <h2>{{ assignment['assign_name'] }} - {{ student }}'s Submission'</h2>
+  <h2>{{ assignment['assign_name'] }} - {{ student }}'s Submission</h2>
   <a class="back" href="{{ url_for('submissions.submission_list', course_id = session['course_id'], session_id = session['id'], assignment_id = assignment['id'], submission_id = submission['id']) }}">Back</a>
 </header>
 

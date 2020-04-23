@@ -99,9 +99,26 @@ def grade_submission(course_id, session_id, assignment_id, submission_id):
 
             submission = cur.fetchone()
 
-            cur.execute('SELECT name FROM users WHERE id = %s', (submission['student_id'],))
+            if submission:
+                cur.execute('SELECT name FROM users WHERE id = %s', (submission['student_id'],))
 
-            student = cur.fetchone()
+                student = cur.fetchone()
+
+    if course['teacher_id'] != g.user['id']:
+
+        abort(403)
+
+    if submission == None or assignment == None:
+
+        abort(404)
+
+    if assignment['sessions_id'] != session['id']:
+
+        abort(403)
+
+    if submission['assignment_id'] != assignment['id']:
+
+        abort(403)
 
     if request.method == 'POST':
 

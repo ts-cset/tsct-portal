@@ -34,11 +34,13 @@ def test_add_grade(client):
 
 
 @pytest.mark.parametrize(('email', 'password', 'route', 'error'), (
-    ('teacher@stevenscollege.edu', 'qwerty', 'submissions', b'403'),
-    ('teacher@stevenscollege.edu', 'qwerty', 'submissions/1', b'403'),
-    ('student@stevenscollege.edu', 'asdfgh', 'submissions', b'403'),
-    ('student@stevenscollege.edu', 'asdfgh', 'submissions/1', b'403'),
-    ('teacher2@stevenscollege.edu', 'PASSWORD', 'submissions/99', b'404')
+    ('teacher@stevenscollege.edu', 'qwerty', '2/submissions', 403),
+    ('teacher@stevenscollege.edu', 'qwerty', '2/submissions/1', 403),
+    ('student@stevenscollege.edu', 'asdfgh', '2/submissions', 403),
+    ('student@stevenscollege.edu', 'asdfgh', '2/submissions/1', 403),
+    ('teacher2@stevenscollege.edu', 'PASSWORD', '2/submissions/99', 404),
+    ('teacher2@stevenscollege.edu', 'PASSWORD', '99/submissions/99', 404),
+    ('teacher2@stevenscollege.edu', 'PASSWORD', '1/submissions/1', 403)
 ))
 def test_submission_error_codes(client, email, password, route, error):
 
@@ -46,6 +48,6 @@ def test_submission_error_codes(client, email, password, route, error):
 
         client.post('/login', data={'email': email, 'password': password})
 
-        response = client.get(f'/course/216/session/1/assignments/2/{route}')
+        response = client.get(f'/course/216/session/1/assignments/{route}')
 
-        assert error in response.data
+        assert response.status_code == error
