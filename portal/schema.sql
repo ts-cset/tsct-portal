@@ -33,15 +33,15 @@ CREATE TABLE courses (
   description varchar(1000),
   credits integer NOT NULL,
   teacher_id bigint REFERENCES users (id) -- One teacher owns many courses
-
+  ON DELETE CASCADE
 );
 
 
 
 -- Session
 CREATE TABLE sessions (
-  course_id bigint REFERENCES courses (id) NOT NULL, -- One course owns many sessions
-  teacher_id bigint REFERENCES users (id) NOT NULL, -- One teacher owns many sessions
+  course_id bigint REFERENCES courses (id) ON DELETE CASCADE NOT NULL , -- One course owns many sessions
+  teacher_id bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL , -- One teacher owns many sessions
   section varchar(1) NOT NULL,
   meeting_time time NOT NULL,
   location varchar(200) NOT NULL,
@@ -53,8 +53,9 @@ CREATE TABLE student_sessions (
   id bigserial PRIMARY KEY,
   course_id bigint NOT NULL,
   section varchar(1) NOT NULL,
-  FOREIGN KEY  (course_id, section) REFERENCES sessions (course_id, section), -- One session owns many student sessions
+  FOREIGN KEY  (course_id, section) REFERENCES sessions (course_id, section) ON DELETE CASCADE, -- One session owns many student sessions
   student_id bigint REFERENCES users (id) -- One User has many student sessions
+  ON DELETE CASCADE
 );
 
 -- Assignments
@@ -62,10 +63,11 @@ CREATE TABLE assignments (
   id bigserial PRIMARY KEY,
   course_id bigint NOT NULL,
   section varchar(1) NOT NULL,
-  FOREIGN KEY  (course_id, section) REFERENCES sessions (course_id, section), -- One session owns many assignments
+  FOREIGN KEY  (course_id, section) REFERENCES sessions (course_id, section) ON DELETE CASCADE, -- One session owns many assignments
   name varchar(50) NOT NULL,
   type varchar(50) NOT NULL,
   points integer NOT NULL,
   due_date date NOT NULL,
   student_sessions_id bigint REFERENCES student_sessions (id) -- One student session owns many Assignments
+  ON DELETE CASCADE
 );
