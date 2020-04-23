@@ -43,9 +43,27 @@ def courses_create():
                 return render_template('portal/createcourse.html')
             # make a query that inserts into courses table with this info and teacher id
             cur = get_db().cursor()
-
+            cur.execute("SELECT * FROM courses WHERE name = %s;", (cour_name,))
+            existingcourse = cur.fetchall()
+            print('print')
+            print(existingcourse)
+            if existingcourse != []:
+                error = "Name already exists"
+                # TODO: don't clear user data
+                session['cour_name'] = cour_name
+                session['cour_num'] = cour_num
+                session['cour_maj'] = cour_maj
+                session['cour_cred'] = cour_cred
+                session['cour_desc'] = cour_desc
+                flash(error)
+                return render_template('portal/createcourse.html')
             cur.execute("""INSERT INTO courses (major, name, num, description, credits, teacher_id)
                             VALUES (%s, %s, %s, %s, %s, %s);""", (cour_maj, cour_name, cour_num, cour_desc, cour_cred, teacher))
+            session['cour_name'] = ''
+            session['cour_num'] = ''
+            session['cour_maj'] = ''
+            session['cour_cred'] = ''
+            session['cour_desc'] = ''
             get_db().commit()
             cur.close()
 
@@ -120,11 +138,32 @@ def courses_edit(cour_id):
                 flash(error)
                 return render_template("portal/editcourse.html")
 
+            cur.execute(
+                "SELECT * FROM courses WHERE name = %s and id != %s;", (cour_name, cour_id))
+            existingcourse = cur.fetchall()
+            print('print')
+            print(existingcourse)
+            if existingcourse != []:
+                error = "Name already exists"
+                # TODO: don't clear user data
+                session['cour_name'] = cour_name
+                session['cour_num'] = cour_num
+                session['cour_maj'] = cour_maj
+                session['cour_cred'] = cour_cred
+                session['cour_desc'] = cour_desc
+                flash(error)
+                return render_template('portal/createcourse.html')
+
             # Update the course
             cur.execute(
                 """UPDATE courses SET (major, name, num, credits, description) = (%s, %s, %s, %s, %s)
                     WHERE id = %s AND teacher_id = %s ;""", (cour_maj, cour_name, cour_num, cour_cred, cour_desc, cour_id, teacher)
             )
+            session['cour_name'] = ''
+            session['cour_num'] = ''
+            session['cour_maj'] = ''
+            session['cour_cred'] = ''
+            session['cour_desc'] = ''
             get_db().commit()
             cur.close()
 
