@@ -10,31 +10,31 @@ from werkzeug.security import check_password_hash, generate_password_hash
 bp = Blueprint('auth', __name__)
 
 @bp.before_app_request
-def load_logged_in_user():
+def load_logged_in_user(): # transfers session user id to safer g object
     user_id = session.get('user_id')
     cur = db.get_db().cursor()
     if user_id is None:
         g.user = None
     else:
         cur.execute('SELECT * FROM users WHERE id = %s;', (user_id,))
-        g.user = cur.fetchone()
+        g.user = cur.fetchone() # g has all information from users table for that user id
 
-def login_required(view):
+def login_required(view): # requires the user to be logged in
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.index'))
+            return redirect(url_for('auth.index')) # if not logged, redirect them to the login page
 
         return view(**kwargs)
 
     return wrapped_view
 
-def teacher_required(view):
+def teacher_required(view): # requires the user to have the role of teacher
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        if g.user is None:
+        if g.user is None: # if not logged in, go to login
             return redirect(url_for('auth.index'))
-        if g.user['role'] != 'teacher':
+        if g.user['role'] != 'teacher': # if not a teacher, redirect to home page.
             return redirect(url_for('auth.home'))
 
         return view(**kwargs)
