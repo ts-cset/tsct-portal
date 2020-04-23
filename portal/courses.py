@@ -74,13 +74,14 @@ def create_course():
         cur = db.get_db().cursor()
         cur.execute("""
         SELECT * FROM courses
-        WHERE course_number = %s and name = %s;
+        WHERE course_number = %s;
         """,
-        (course_number, name))
+        (course_number,))
         courses = cur.fetchone()
 
         if courses != None:
             error = "That course already exists"
+            return render_template('error.html', error=error)
 
         if error is None:
             cur.execute("""
@@ -106,6 +107,19 @@ def create_course():
 
 
             return redirect(url_for('courses.view_course', course_id=course_id))
+            try:
+                cur.execute("""
+                 INSERT INTO courses (course_number, major, name, description, credits, teacher)
+                 VALUES (%s, %s, %s, %s, %s, %s);
+                 """,
+                 (course_number, g.users['major'], name, description, credits, g.users['id']))
+                db.get_db().commit()
+                cur.close()
+            except:
+                error="There was a problem creating that course"
+                return render_template('error.html', error=error)
+            else:
+                return redirect(url_for('courses.view_course', course_id=course_id))
 
     return render_template('portal/courses/create-course.html')
 
@@ -122,13 +136,14 @@ def update_course(course_id):
         cur = db.get_db().cursor()
         cur.execute("""
         SELECT * FROM courses
-        WHERE course_number = %s and name = %s;
+        WHERE course_number = %s;
         """,
-        (course_number, name))
+        (course_number,))
         courses = cur.fetchone()
 
         if courses != None:
             error = "That course already exists"
+            return render_template('error.html', error=error)
 
         if error is None:
             cur.execute("""
@@ -150,4 +165,23 @@ def update_course(course_id):
 
 
             return redirect(url_for('courses.view_course', course_id=course_id))
+            try:
+                cur.execute("""
+                 UPDATE courses SET course_number = %s, major = %s, name = %s, description = %s, credits = %s, teacher = %s
+                 WHERE id = %s;
+                 """,
+                 (course_number, g.users['major'], name, description, credits, g.users['id'], course_id))
+                db.get_db().commit()
+                cur.close()
+            except:
+                error="There was a problem updating that course"
+                return render_template('error.html', error=error)
+            else:
+                return redirect(url_for('portal.userpage'))
     return render_template('portal/courses/update-course.html')
+
+@bp.route('/<route>/')
+@login_required
+def course_error(route=None):
+    error = "404 Not found"
+    return render_template('error.html', error=error)

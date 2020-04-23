@@ -73,6 +73,12 @@ def create_app(test_config=None):
     def index():
         return render_template('index.html')
 
+    # Error Page
+    # ---------------
+    @app.route('/<route>')
+    def error(route=None):
+        error = "404 Not found"
+        return render_template('error.html', error=error)
+
     # Return application object to be used by a WSGI server, like gunicorn
     return app
-

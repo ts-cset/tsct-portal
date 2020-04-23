@@ -26,7 +26,7 @@ def test_login(client):
     assert b'User Page' in response.data
     assert b'Courses' in response.data
 
-def test_login_fail(client):
+def test_login_error(client):
     response = client.get('/')
     assert b'Log In' in response.data
     assert b'Log Out' not in response.data
@@ -35,6 +35,7 @@ def test_login_fail(client):
         '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'yes'}
     )
     assert b'Log In' in response.data
+    assert b'Incorrect email or password' in response.data
     assert b'Log Out' not in response.data
     assert b'User Page' not in response.data
     response = client.get('/auth/login')
@@ -42,6 +43,7 @@ def test_login_fail(client):
         '/auth/login', data={'email': 'student@stevenscollege.edu', 'password':'yes'}
     )
     assert b'Log In' in response.data
+    assert b'Incorrect email or password' in response.data
     assert b'Log Out' not in response.data
     assert b'User Page' not in response.data
 
