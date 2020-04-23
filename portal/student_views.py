@@ -1,7 +1,7 @@
-from flask import Blueprint, g, render_template
+from flask import abort, Blueprint, g, render_template
 from . import db
 from portal.auth import login_required, student_required
-from portal import sessions, assign
+from portal import sessions, assign, courses
 
 bp = Blueprint("student_views", __name__)
 
@@ -21,11 +21,13 @@ def view_schedule():
     cur = db.get_db().cursor()
     cur.execute("""
         SELECT sessions.session_name,
+                sessions.course_id,
                 sessions.id,
                 sessions.location,
                 sessions.room_number,
                 sessions.times,
                 courses.description,
+                courses.course_num,
                 users.name,
                 rosters.user_id
         FROM sessions
@@ -41,12 +43,15 @@ def view_schedule():
 
     return render_template("layouts/student_views/schedule.html", infos=infos)
 
-@bp.route("/your_assignments/session/<int:session_id>", methods=('GET', 'POST'))
+@bp.route("/course/<int:course_id>/session/<int:session_id>/your_assignments", methods=('GET', 'POST'))
 @login_required
 @student_required
-def session_assignments(session_id):
+def session_assignments(session_id, course_id):
     """Allows students to view their assignments for a specific course"""
     session = sessions.get_session(session_id)
+    course = courses.get_course(course_id)
+    if session['course_id'] != course['course_num']:
+        abort(403)
     cur = db.get_db().cursor()
     cur.execute("""
             SELECT * FROM assignments
@@ -54,14 +59,20 @@ def session_assignments(session_id):
             (session_id,))
     assignments = cur.fetchall()
     cur.close()
-    return render_template("layouts/student_views/your_assignments.html", session=session, assignments=assignments)
+    return render_template("layouts/student_views/your_assignments.html", session=session, assignments=assignments, course=course)
 
 
-@bp.route("/session/<int:session_id>/assignment_details/<int:assign_id>", methods=('GET', 'POST'))
+@bp.route("/course/<int:course_id>/session/<int:session_id>/assignment_details/<int:assign_id>", methods=('GET', 'POST'))
 @login_required
 @student_required
-def assign_view(assign_id, session_id):
+def assign_view(assign_id, session_id, course_id):
     """Allows students to view a specific assignment's details for a specific course"""
     assignment = assign.get_assignment(assign_id)
     session = sessions.get_session(session_id)
-    return render_template("layouts/student_views/assignment_details.html", session=session, assignment=assignment)
+    course = courses.get_course(course_id)
+    if session['course_id'] != course['course_num']:
+        abort(403)
+    if session['id'] != assignment['sessions_id']:
+        abort(403)
+
+    return render_template("layouts/student_views/assignment_details.html", session=session, assignment=assignment, course=course)
