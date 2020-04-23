@@ -1,0 +1,26 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal - Enter Grade{% endblock %}
+
+{% block content %}
+
+<header>
+  <h2>{{ assignment['assign_name'] }} - {{ student }}'s Submission'</h2>
+  <a class="back" href="{{ url_for('submissions.submission_list', course_id = session['course_id'], session_id = session['id'], assignment_id = assignment['id'], submission_id = submission_id) }}">Back</a>
+</header>
+
+<form class="submit_grade" method="post">
+
+  <label>Enter Grade:
+    <input type="number" name="grade" value="{{ grade }}">/{{ assignment['points'] }}
+  </label>
+
+  <label>Enter feedback (Optional):
+    <textarea name="feedback" rows="8" cols="80"></textarea>
+  </label>
+
+  <input type="submit" name="submit">Submit</input>
+</form>
+
+
+{% endblock %}

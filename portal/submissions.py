@@ -72,9 +72,32 @@ def submission_list(course_id, session_id, assignment_id):
     return render_template('submissions/submissions.html', submissions=submissions, assignment=assignment, session=session)
 
 
-@bp.route('/course/<int:course_id>/session/<int:session_id>/assignments/<int:assignment_id>/submissions/<int:submission_id>')
+@bp.route('/course/<int:course_id>/session/<int:session_id>/assignments/<int:assignment_id>/submissions/<int:submission_id>', methods=('GET', 'POST'))
 @auth.login_required
 @auth.teacher_required
 def grade_submission(course_id, session_id, assignment_id, submission_id):
 
-    pass
+    with db.get_db() as con:
+        with con.cursor() as cur:
+
+            cur.execute('SELECT id, course_id FROM sessions WHERE id = %s', (session_id,))
+
+            session = cur.fetchone()
+
+            cur.execute('SELECT teacher_id FROM courses WHERE course_num = %s', (session['course_id'],))
+
+            course = cur.fetchone()
+
+            cur.execute('SELECT * FROM assignments WHERE id = %s', (assignment_id,))
+
+            assignment = cur.fetchone()
+
+            cur.execute('SELECT * FROM submissions WHERE id = %s', (submission_id,))
+
+            submission = cur.fetchone()
+
+            cur.execute('SELECT name FROM users WHERE id = %s', (submission['student_id'],))
+
+            student = cur.fetchone()
+
+    return render_template('submissions/feedback.html', assignment=assignment, student=student['name'], session=session, submission_id=submission_id)

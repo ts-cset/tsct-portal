@@ -24,7 +24,7 @@ def test_add_grade(client):
         client.post('/login', data={'email': 'teacher2@stevenscollege.edu', 'password': 'PASSWORD'})
 
         response = client.get('/course/216/session/1/assignments/2/submissions/1')
-        assert b'Insert feedback' in response.data
+        assert b'Enter feedback' in response.data
 
         response = client.post('/course/216/session/1/assignments/2/submissions/1',
             data={ 'grade': 25, 'feedback': 'good' })
