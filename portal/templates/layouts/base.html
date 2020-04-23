@@ -16,7 +16,26 @@
 
 <body>
   <header>
-    <h1>{{ self.title() }}</h1>
+    <h1 class='nav-title'>{{ self.title() }}</h1>
+
+    {% if session['user'] %}
+    <a class="nav-logout" href="{{ url_for('auth.logout') }}">Logout</a>
+    <p class='nav-name'>Welcome Back {{ session['user'][3] }}!</p>
+
+    <ul class="nav">
+      <a class="buttons" href="{{ url_for('auth.home') }}">Home</a>
+
+      {% if session['user'][4] == 'teacher' %}
+      <a class="buttons" href="{{ url_for('courses.courses') }}">Courses</a>
+      {% endif %}
+
+      {% if session['user'][4] == 'student' %}
+      <a class="buttons" href="{{ url_for('sessions.sessions') }}">Sessions</a>
+      {% endif %}
+
+      {% endif %}
+    </ul>
+
   </header>
 
   <main>
