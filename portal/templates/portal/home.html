@@ -4,12 +4,12 @@
 
 {% block content %}
 
-{% if session['user'][4] == 'teacher' %}
+{% if g.role == 'teacher' %}
 <a class="fake-button" href="{{ url_for('courses.courses') }}">Courses</a>
 {% endif %}
 
-{% if session['user'][4] == 'student' %}
+{% if g.user.role == 'student' %}
 <a href="{{ url_for('sessions.sessions') }}">Sessions</a>
 {% endif %}
-<p>welcome {{session['user'][3]}} to portal you are a {{session['user'][4]}}</p>
+<p>welcome {{g.user.name}} to portal you are a {{g.user.role}}</p>
 {% endblock %}
