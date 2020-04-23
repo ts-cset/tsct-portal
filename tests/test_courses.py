@@ -3,6 +3,7 @@ import pytest
 from flask import session
 from portal.db import get_db
 
+
 def test_course_page(client, auth):
     auth.teacher_login()
 
@@ -10,8 +11,9 @@ def test_course_page(client, auth):
 
     assert b'Software Project II' in response.data
 
+
 def test_create_course(app, client, auth):
-    with app.app_context(): # allows DB queries to happen
+    with app.app_context():  # allows DB queries to happen
         db = get_db()
 
         cur = db.cursor()
@@ -19,7 +21,8 @@ def test_create_course(app, client, auth):
         auth.teacher_login()
 
         # post it
-        response = client.post('/createcourse', data={'cour_maj': 'CSET', 'cour_name': 'test course', 'cour_num': 100, 'cour_desc': 'test description', 'cour_cred': 3})
+        response = client.post('/createcourse', data={'cour_maj': 'CSET', 'cour_name': 'test course',
+                                                      'cour_num': 100, 'cour_desc': 'test description', 'cour_cred': 3})
         # check the db and see if that course exists now
         cur.execute("SELECT * FROM courses WHERE name = 'test course';")
 
@@ -34,6 +37,23 @@ def test_create_course(app, client, auth):
 
         assert b'test course' in courses_resp.data
 
+
+def test_create_save_data(app, auth, client):
+    with app.app_context():  # allows DB queries to happen
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.teacher_login()
+
+        # post it
+        client.post('/createcourse', data={'cour_maj': 'CSET', 'cour_name': 'Metal',
+                                           'cour_num': 100, 'cour_desc': 'test description', 'cour_cred': 3})
+        # create a class that already exists
+        response = client.get('/createcourse')
+        assert b'<input type="number" id="cour_cred" name="cour_cred" value=\'3\' min="1" max="4" required>' in response.data
+
+
 def test_edit_course(app, client, auth):
     with app.app_context():
         db = get_db()
@@ -42,7 +62,8 @@ def test_edit_course(app, client, auth):
 
         auth.teacher_login()
         # post it again
-        response = client.post('/1/editcourse', data={'cour_name': 'This is a test', 'cour_num': 111, 'cour_maj': 'CSET', 'cour_cred': 1, 'cour_desc': 'test description'})
+        response = client.post('/1/editcourse', data={'cour_name': 'This is a test', 'cour_num': 111,
+                                                      'cour_maj': 'CSET', 'cour_cred': 1, 'cour_desc': 'test description'})
         # check if it's been updated
         cur.execute("SELECT * FROM courses WHERE credits = 1")
         check = cur.fetchone()
@@ -55,6 +76,38 @@ def test_edit_course(app, client, auth):
         courses_resp = client.get('/courses')
 
         assert b'This is a test' in courses_resp.data
+
+
+def test_edit_save_data(app, client, auth):
+    with app.app_context():
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.teacher_login()
+        # post it again
+        response = client.post('/1/editcourse', data={'cour_name': 'Metal', 'cour_num': 111,
+                                                      'cour_maj': 'CSET', 'cour_cred': 1, 'cour_desc': 'test description'})
+        # check if it's been updated
+        assert b'<input type="number" id="cour_cred" name="cour_cred" value=\'1\' min="1" max="4" required>' in response.data
+
+
+def test_course_id_length(app, client, auth):
+    with app.app_context():
+        auth.teacher_login()
+        response = client.post('/createcourse', data={'cour_name': 'djhcd', 'cour_num': 111,
+                                                      'cour_maj': 'CSETt', 'cour_cred': 1, 'cour_desc': 'test description'})
+        assert b'<div class="flash">course major name can only be 4 letters</div>' in response.data
+
+
+def test_edit_course_id_length(app, client, auth):
+    with app.app_context():
+        auth.teacher_login()
+        response = client.post('/1/editcourse', data={'cour_name': 'something', 'cour_num': 111,
+                                                      'cour_maj': 'CSETtt', 'cour_cred': 1, 'cour_desc': 'test description'})
+        assert b'<div class="flash">course major name can only be 4 letters</div>' in response.data
+
+
 def test_delete_course(app, client, auth):
     with app.app_context():
         db = get_db()
@@ -68,6 +121,8 @@ def test_delete_course(app, client, auth):
         check = cur.fetchone()
 
         assert check is None
+
+
 def test_course_view(app, client, auth):
     with app.app_context():
         db = get_db()

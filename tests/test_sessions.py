@@ -65,15 +65,17 @@ def test_view_sessions(app, client, auth):
         assert b"Session Time" in response.data
 
 
-# def test_delete_sessions(app, client, auth):
-#     with app.app_context():
-#         db = get_db()
-#
-#         cur = db.cursor()
-#
-#         auth.teacher_login()
-#
-#         response = client.post('/deletesession', data={'course_to_delete': 4})
-#         cur.execute("SELECT * FROM courses WHERE name = 'Security and Ethics';")
-#         check = cur.fetchone()
-#         assert check is None
+def test_delete_sessions(app, client, auth):
+    with app.app_context():
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.teacher_login()
+
+        response = client.post(
+            '/deletesession', data={'course_id': 1, 'section': 'A'})
+        cur.execute(
+            "SELECT * FROM sessions WHERE section = 'A' and course_id = '1';")
+        check = cur.fetchone()
+        assert check is None

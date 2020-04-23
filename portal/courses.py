@@ -131,7 +131,7 @@ def courses_edit(cour_id):
             if len(cour_maj) > 4:
                 error = 'course major name can only be 4 letters'
                 flash(error)
-                return render_template("portal/editcourse.html")
+                return render_template("portal/editcourse.html", course=course)
 
             cur.execute(
                 "SELECT * FROM courses WHERE name = %s and id != %s;", (cour_name, cour_id))
