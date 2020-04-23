@@ -82,8 +82,35 @@ def create_session(course_id):
                  """,
                  (student, session[0]))
                 db.get_db().commit()
-            cur.close()
-            return redirect(url_for('portal.userpage'))
+
+#new code for the routes and trying to get back to the view-sessions page
+
+#for this i need the course_id the session_id, roster_id, and assignment_id to get it to work
+
+#assingment_id attmept
+            cur.execute("""SELECT id FROM session
+            WHERE name = %s and courses_id = %s;
+            """,
+            (name, course_id))
+            sessions = cur.fetchone()
+            session_id = sessions[0]
+            
+            cur.execute("""SELECT id FROM assignments WHERE name = %s 
+                    and session_id = %s;""",
+                    (name, session_id))
+            assignment_id = cur.fetchone()
+            
+
+            cur.execute("""SELECT id FROM roster
+                   WHERE session_id = %s;""",
+                   (session_id,))
+            rosters = cur.fetchone()
+            roster_id = rosters[0]
+        
+            #end of new code 
+        
+        
+            return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id, assignment_id=assignment_id, roster_id=roster_id))
         else:
             return redirect(url_for('sessions.create_session', course_id=course_id))
     return render_template('portal/courses/sessions/create-session.html', students=students)
