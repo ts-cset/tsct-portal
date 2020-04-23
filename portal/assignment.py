@@ -1,10 +1,38 @@
-from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session
+from flask import Flask, render_template, g, redirect, url_for, Blueprint, request, session, abort
 
 from . import db
 from portal.auth import login_required, teacher_required
 from . import course
 
 bp = Blueprint("assignment", __name__)
+
+
+def get_assignment(id):
+
+    user_id = session.get('user_id')
+
+    con = db.get_db()
+    cur = con.cursor()
+    cur.execute("""SELECT assignments.assignment_id, assignments.session_id,
+                sessions.course_id, courses.teacherid
+                FROM assignments JOIN sessions ON assignments.session_id = sessions.id
+                JOIN courses ON sessions.course_id = courses.course_id
+                WHERE assignments.assignment_id = %s
+                AND courses.teacherid = %s""",
+                (id, user_id))
+    check_teacher = cur.fetchone()
+    cur.close()
+
+    if check_teacher is None:
+        con.close()
+        abort(400, """You cannot modify this assignment""")
+    else:
+        cur = con.cursor()
+        cur.execute("""SELECT * FROM assignments
+                    WHERE assignment_id = %s""",
+                    (id,))
+        assignment = cur.fetchone()
+        cur.close()
 
 
 @bp.route('/course/<int:course_id>/session/<int:id>/create_assignment', methods=('GET', 'POST'))
@@ -57,7 +85,8 @@ def view_assignments(id, course_id):
     con = db.get_db()
     cur = con.cursor()
 
-    cur.execute("""SELECT sessions.id, sessions.course_id, courses.course_id, courses.teacherid, courses.name
+    cur.execute("""SELECT sessions.id, sessions.course_id, courses.course_id,
+                courses.teacherid, courses.name
                 AS class_name FROM sessions JOIN courses
                 ON sessions.course_id = sessions.course_id
                 WHERE sessions.id=%s AND courses.course_id= %s""",
@@ -84,12 +113,7 @@ def view_assignments(id, course_id):
 def edit_assignments(course_id, session_id, id):
     """Singe page view to edit an assignment."""
 
-    con = db.get_db()
-    cur = con.cursor()
-    cur.execute("""SELECT * FROM assignments WHERE assignment_id=%s""",
-                (id,))
-    assignment = cur.fetchone()
-    cur.close()
+    assignment = get_assignment(id)
 
     if request.method == 'POST':
 
@@ -115,9 +139,6 @@ def edit_assignments(course_id, session_id, id):
         con.close()
 
         return redirect(url_for('assignment.view_assignments', id=session_id['session_id'], course_id=course_id))
-
-    cur.close()
-    con.close()
 
     return render_template('layouts/assignments/edit_assignments.html', assignment=assignment)
 
