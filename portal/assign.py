@@ -2,7 +2,7 @@ from flask import redirect, g, url_for, render_template, session, request, Bluep
 import functools
 
 import datetime
-from . import session_editor ,course_editor ,db
+from . import sessions ,courses ,db
 from portal.auth import login_required, teacher_required
 
 bp = Blueprint("assign", __name__)
@@ -15,8 +15,8 @@ def assign_create(sessions_id, course_id):
     """Allows teachers to create new assignments for a
     specific session"""
 
-    session = session_editor.get_session(sessions_id)
-    course = course_editor.get_course(course_id)
+    session = sessions.get_session(sessions_id)
+    course = courses.get_course(course_id)
 
     if g.user['id'] != course['teacher_id']:
         abort(403)
@@ -71,8 +71,8 @@ def assign_manage(course_id, sessions_id):
     """Allows teachers to see current assignments for a
     specific session"""
 
-    session = session_editor.get_session(sessions_id)
-    course = course_editor.get_course(course_id)
+    session = sessions.get_session(sessions_id)
+    course = courses.get_course(course_id)
 
     if g.user['id'] != course['teacher_id']:
         abort(403)
@@ -100,8 +100,8 @@ def assign_edit(course_id, assign_id, sessions_id):
     """Allows teachers to edit current assignments for a
     specific session"""
 
-    course = course_editor.get_course(course_id)
-    session = session_editor.get_session(sessions_id)
+    course = courses.get_course(course_id)
+    session = sessions.get_session(sessions_id)
     assignment = get_assignment(assign_id)
 
     if g.user['id'] != course['teacher_id']:

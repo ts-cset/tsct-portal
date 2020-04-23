@@ -1,7 +1,7 @@
 from flask import g, session, url_for
 import pytest
 from portal.db import get_db
-from portal.auth import login, logout
+# from portal.auth import login, logout
 import os
 import tempfile
 

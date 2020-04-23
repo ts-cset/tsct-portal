@@ -3,7 +3,7 @@ import functools
 from . import db
 from portal.auth import login_required, teacher_required
 
-bp = Blueprint("course_editor", __name__)
+bp = Blueprint("courses", __name__)
 
 
 @bp.route("/courses", methods=('GET', 'POST'))  # Management Page
@@ -19,7 +19,7 @@ def course_manage():
 
     cur.close()
 
-    return render_template("layouts/courseMan.html", courses=courses)
+    return render_template("layouts/courses/courseMan.html", courses=courses)
 
 
 @bp.route("/courses/create", methods=('GET', 'POST'))  # Course Create
@@ -91,11 +91,11 @@ def course_create():
                             )
                     con.commit()
 
-                    return redirect(url_for("course_editor.course_manage"))
+                    return redirect(url_for("courses.course_manage"))
 
         flash(error)
 
-    return render_template('layouts/courseCreate.html', all_majors=all_majors)
+    return render_template('layouts/courses/courseCreate.html', all_majors=all_majors)
 
 
 # Needs new template
@@ -142,11 +142,11 @@ def course_edit(course_id):
                                 )
                     con.commit()
 
-                    return redirect(url_for("course_editor.course_manage"))
+                    return redirect(url_for("courses.course_manage"))
 
         flash(error)
 
-    return render_template("layouts/courseEdit.html", course=course)
+    return render_template("layouts/courses/courseEdit.html", course=course)
 
 
 def get_course(course_id):
