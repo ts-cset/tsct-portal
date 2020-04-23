@@ -61,7 +61,7 @@ def submit_assignment(assignment_id):
             error = "There was a problem with this submission"
             return render_template('error.html', error=error)
         else:
-            return redirect(url_for('portal.userpage'))
+            return redirect(url_for('assignments.view_assignment', course_id=course_id, session_id=session_id, assignment_id=assignment_id))
     return render_template('portal/courses/sessions/assignments/submit-assignments.html', assignments=assignments)
 
 @bp.route('/<session_id>/create-assignment', methods=('GET', 'POST'))
