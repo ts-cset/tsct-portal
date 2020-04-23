@@ -1,6 +1,7 @@
 from flask import (
-    abort, Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, abort
 )
+
 import functools
 from . import db
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -95,7 +96,7 @@ def teacher_required(view):
     @functools.wraps(view)
     def wrapped(**kwargs):
         if g.user['role'] != 'teacher':
-            return redirect(url_for('index'))
+            abort(403)
 
         return view(**kwargs)
 

@@ -165,7 +165,7 @@ def test_unique_teacher(client):
     with client:
         response = client.get('courses/216/edit', follow_redirects=True)
         # Ensure that it redirects to index if teacher does not own course
-        assert b'Course Management' in response.data
+        assert b'403' in response.data
         assert b'Home' in response.data
 
     rv = logout(client)
