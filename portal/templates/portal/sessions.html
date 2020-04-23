@@ -4,6 +4,12 @@
 
 {% block content %}
 {% if g.user['role'] == 'teacher' %}
+
+
+<h1>Sessions</h1>
+
+<p class='assign-title'>{{ coursename }}</p>
+
 <a class='fake-button' href="{{ url_for('sessions.session_create', course_id=course_id) }}">Create New Session</a>
 
 <ul>

@@ -97,15 +97,3 @@ def user_assignments(course_id, section):
 
     student_assignments = cur.fetchall()
     return student_assignments
-
-
-#-- Function for grabbing course and section -----------------------------------
-def course(course_id, section):
-    cur = get_db().cursor()
-    # Course name where it matches course id
-    cur.execute("""SELECT name FROM courses WHERE id = %s;""",
-                (course_id,))
-    course = cur.fetchall()[0][0]
-
-    name = course + ' - ' + section
-    return name

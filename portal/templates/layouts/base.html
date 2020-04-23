@@ -27,6 +27,7 @@
 
       {% if g.user.role == 'teacher' %}
       <a class="buttons" href="{{ url_for('courses.courses') }}">Courses</a>
+      <a class="buttons" href="{{ url_for('sessions.sessions', all=1) }}">All Sessions</a>
       {% endif %}
 
       {% if g.user.role == 'student' %}
