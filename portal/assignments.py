@@ -3,11 +3,13 @@ from flask import (
 )
 
 from portal.db import get_db
+from portal.auth import teacher_required, login_required
 
 bp = Blueprint('assignments', __name__)
 
 #-- Assignments --#
 @bp.route('/assignments')
+@login_required
 def assignments():
     """View for the assignments"""
     course_id = request.args.get('course_id')
@@ -26,12 +28,9 @@ def assignments():
 
 #-- Create Assignments --#
 @bp.route('/createassignment', methods=("GET", "POST"))
+@teacher_required
 def assignments_create():
     """View for creating an Assignment"""
-
-    if session['user'][4] != 'teacher':  # only if they are a teacher
-        return render_template('portal/home.html')
-
     if request.method == "POST":
         course_id = request.args.get('course_id')
         section = request.args.get('section')
@@ -75,11 +74,11 @@ def student_sess_id(course_id, section):
 #-- Assignments for student/s --------------------------------------------------
 def user_assignments(course_id, section):
     # get the id of the student
-    user = session['user'][0]
+    user = g.user['id']
     cur = get_db().cursor()
 
     #Shows students assingments
-    if session['user'][4] == 'student':
+    if g.user['role'] == 'student':
         # pulls out all assignments for student id
         cur.execute("""SELECT * FROM assignments AS a
                        JOIN student_sessions AS ss
@@ -89,7 +88,7 @@ def user_assignments(course_id, section):
                        AND ss.student_id = %s;""", (course_id, section, user))
 
     #Show teachers assignments
-    if session['user'][4] == 'teacher':
+    if g.user['role'] == 'teacher':
     # Pulls out all assignments for the course
         cur.execute("""SELECT * FROM assignments AS a
                        JOIN sessions AS s

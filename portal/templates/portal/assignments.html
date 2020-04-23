@@ -6,7 +6,7 @@
 <h1>{{ coursename }}</h1>
 <p class='assign-title'>Assignments</p>
 
-{% if session['user'][4] == 'teacher' %}
+{% if g.user['role'] == 'teacher' %}
   <a class='fake-button' href="{{ url_for('assignments.assignments_create', course_id=course_id, section=section) }}">Create New Assignment</a>
 {% endif %}
 
