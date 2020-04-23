@@ -8,9 +8,14 @@ INSERT INTO courses (course_code, course_name, major, description, teacher_id)
 VALUES ('180', 'Big Software Energy', 'CSET', 'A class that really makes you FEEL like a developer', 1),
        ('155', 'Bigger Software Energy', 'CSET', 'Big boi energy', 1);
 
+<<<<<<< HEAD
 INSERT INTO sessions (session_name, meeting_days, meeting_place, meeting_time, course_id)
 VALUES ('A', 'MTWThF', 'Greenfield', '12:00-16:30', 1),
        ('B', 'M', 'Remote', '12:01-16:31', 1);
+=======
+INSERT INTO sessions (session_name, meeting_days, meeting_place, meeting_time course_id)
+VALUES ('A', 'MTWThF', 'Greenfield', '12:00-16:30' 1);
+>>>>>>> 29e4733ad68fb4258be605bb44d7a8438277c043
 
 INSERT INTO roster (student_id, session_id)
 VALUES (2, 1);
