@@ -21,7 +21,7 @@ VALUES (180, 'Software Project 2', 'Recreation of the portal', 3, 1, 1),
          (111, 'Tig Welding Basics', 'Learning how to operate and use the TIG welder',
          3, 3, 3);
 
-INSERT INTO sessions (times, name, room_number, location, course_id)
+INSERT INTO sessions (times, session_name, room_number, location, course_id)
 VALUES ('We meet every Tues-Thurs at 1:30 to 2:45', 'ENG-216-D',
 307, 'Main campus in Mellor', 216),
       ('We meet every day at Mon-Fri at 12:00-4:30 except on Wends which we start

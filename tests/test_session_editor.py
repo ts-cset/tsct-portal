@@ -127,17 +127,16 @@ def test_unique_teacher(client):
     with client:
         response = client.get('courses/180/sessions', follow_redirects=True)
         # Ensure that it redirects to index if teacher does not own course
-        print(response.data)
-        assert b'Course Management' in response.data
+        assert b'403' in response.data
         assert b'Home' in response.data
 
         response_2 = client.get('/courses/180/sessions/create', follow_redirects=True)
 
-        assert b'Course Management' in response_2.data
+        assert b'403' in response_2.data
 
         response_3 = client.get('/courses/180/sessions/2/edit', follow_redirects=True)
 
-        assert b'Course Management' in response_3.data
+        assert b'403' in response_3.data
 
 
         rv = logout(client)

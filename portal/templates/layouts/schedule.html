@@ -1,0 +1,30 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Schedule{% endblock %}
+
+{% block content %}
+
+  <table border=1 class="schedule">
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Time</th>
+      <th>Location</th>
+      <th>Room Number</th>
+      <th>Teacher Name</th>
+    </tr>
+  {% for info in infos %}
+    {% if g.user['id'] == info['user_id'] %}
+      <tr>
+        <td>{{ info['session_name'] }}</td>
+        <td>{{ info['description'] }}</td>
+        <td>{{ info['times'] }}</td>
+        <td>{{ info['location'] }}</td>
+        <td>{{ info['room_number'] }}</td>
+        <td>{{ info['name'] }}</td>
+      </tr>
+    {% endif %}
+  {% endfor %}
+  </table>
+
+{% endblock %}
