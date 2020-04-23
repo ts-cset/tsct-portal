@@ -150,18 +150,17 @@ def edit_assignments(course_id, session_id, id):
 
 @bp.route('/course/<int:course_id>/session/<int:session_id>/assignment/<int:id>/delete', methods=['POST'])
 @login_required
-
+@teacher_required
 def delete_assignments(id, course_id, session_id):
-
     """Deletes any unwanted assignments."""
 
+    assignment = get_assignment(id)
+    assignment_id = assignment['assignment_id']
+    # Query to delete an assignment from the database
     con = db.get_db()
     cur = con.cursor()
-
-    # Query to delete an assignment from the database
-    cur.execute("""
-    DELETE FROM assignments WHERE assignment_id = %s
-    """, (id,))
+    cur.execute("""DELETE FROM assignments WHERE assignment_id = %s
+    """, (assignment_id,))
     g.db.commit()
 
     cur.close()

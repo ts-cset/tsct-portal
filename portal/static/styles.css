@@ -610,3 +610,17 @@ td  {
   border-bottom: 2px solid black;
   padding-bottom: 20px;
 }
+
+.assignment-grade {
+  width: 80%;
+}
+.grade {
+  text-align: right;
+  background-color: #fac0c0;
+}
+
+.assignment-grade {
+  background-color: #fac0c0;
+  border-bottom: 2px solid black;
+  padding: 5px;
+}
