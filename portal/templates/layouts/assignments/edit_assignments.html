@@ -6,9 +6,9 @@
   <label class="form-label" for="name">Assignment Name:</label>
   <input type="text" name="name" value="{{assignment['name']}}">
 <label class="form-label" for="name">Description:</label>
-  <textarea class="course-description" value="{{ assignment['description'] }}" name="description"></textarea>
+  <textarea class="course-description" name="description">{{ assignment['description'] }}</textarea>
 <label class="form-label" for="date">Assignment Due:</label>
-  <input type="date" name="date" value="{{ assignment['date']}}" required>
+  <input type="date" name="date" value="{{ assignment['due_date']}}" required>
   <input  class="submit" type="submit" value="save changes">
 </form>
 

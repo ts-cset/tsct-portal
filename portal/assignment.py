@@ -28,11 +28,15 @@ def get_assignment(id):
         abort(400, """You cannot modify this assignment""")
     else:
         cur = con.cursor()
-        cur.execute("""SELECT * FROM assignments
+        cur.execute("""SELECT assignments.assignment_id, assignments.name, assignments.description,
+                    assignments.due_date
+                    FROM assignments
                     WHERE assignment_id = %s""",
                     (id,))
         assignment = cur.fetchone()
         cur.close()
+
+        return assignment
 
 
 @bp.route('/course/<int:course_id>/session/<int:id>/create_assignment', methods=('GET', 'POST'))
@@ -122,6 +126,7 @@ def edit_assignments(course_id, session_id, id):
         description = request.form['description']
         due_date = request.form['date']
 
+        con = db.get_db()
         cur = con.cursor()
         # Query to update the information for an assignment
         cur.execute("""
