@@ -38,15 +38,15 @@ def view_session(course_id, session_id):
 @teacher_required
 def create_session(course_id):
     text = request.args.get('text')
-    text = '{}{}{}'.format('%',text,'%')
-    if text == None:
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT * FROM users
+                WHERE role = 'student'""")
+    students = cur.fetchall()
+    cur.close()
+
+    if text != None:
         cur = db.get_db().cursor()
-        cur.execute("""SELECT * FROM users
-                    WHERE role = 'student'""")
-        students = cur.fetchall()
-        cur.close()
-    else:
-        cur = db.get_db().cursor()
+        text = '{}{}{}'.format('%',text,'%')
         cur.execute("""SELECT * FROM users
                     WHERE role = 'student' and name ILIKE %s""", (text,))
         students = cur.fetchall()
