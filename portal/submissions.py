@@ -76,9 +76,12 @@ def submission_list(course_id, session_id, assignment_id):
 @auth.login_required
 @auth.teacher_required
 def grade_submission(course_id, session_id, assignment_id, submission_id):
+    """Handles the page where a teacher can enter a grade + feedback for a
+    student's submission"""
 
     with db.get_db() as con:
         with con.cursor() as cur:
+            # Retrieve all of the necessary attributes from the database
 
             cur.execute('SELECT id, course_id FROM sessions WHERE id = %s', (session_id,))
 
@@ -100,4 +103,35 @@ def grade_submission(course_id, session_id, assignment_id, submission_id):
 
             student = cur.fetchone()
 
-    return render_template('submissions/feedback.html', assignment=assignment, student=student['name'], session=session, submission_id=submission_id)
+    if request.method == 'POST':
+
+        grade = request.form['grade']
+        feedback = request.form['feedback']
+        error = None
+
+        # Check that grade is a number
+        try:
+            int(grade)
+        except ValueError:
+            error = 'Grade needs to be a number'
+
+        # Insert grade + feedback into the appropriate submission
+        if error == None:
+
+            with db.get_db() as con:
+                with con.cursor() as cur:
+
+                    cur.execute("""UPDATE submissions
+                        SET grade = %s,
+                            feedback = %s
+                        WHERE id = %s""", (grade, feedback, submission['id']))
+
+                    con.commit()
+
+                    # Retrieve the updated submission info
+                    cur.execute('SELECT * FROM submissions WHERE id = %s', (submission_id,))
+                    submission = cur.fetchone()
+                    print(submission)
+
+
+    return render_template('submissions/feedback.html', assignment=assignment, student=student['name'], session=session, submission=submission)
