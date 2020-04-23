@@ -2,6 +2,7 @@ import os
 
 import pytest
 
+
 from portal import create_app
 from portal import db
 
@@ -55,8 +56,8 @@ class AuthActions(object):
     def logout(self):
         return self._client.get('/logout')
 
+
 # When auth is called itmakes both logins and the logout available
 @pytest.fixture
 def auth(client):
     return AuthActions(client)
-
