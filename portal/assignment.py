@@ -4,58 +4,7 @@ from . import db
 
 from portal.auth import login_required, admin
 from portal.teacher import bp
-@bp.route('/assignments/create', methods=('GET', 'POST'))
-def create_assignments():
-    if request.method == 'POST':
-        name = request.form['name']
-        description = request.form['description']
-        points = request.form['points']
-        course = request.form['course']
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    INSERT INTO assignments (name, description, points, course_id)
-                    VALUES (%s, %s, %s, %s)
-                """, (name, description, points, course))
-                print(g.user['id'])
-                return redirect(url_for('teacher.assignments'))
-    with db.get_db() as con:
-        with con.cursor() as cur:
-            cur.execute("""
-                SELECT * FROM courses
-                WHERE teacher_id = %s
-            """, (g.user['id'],))
-            courses = cur.fetchall()
-    return render_template('create-assignments.html', courses=courses)
-    
-@bp.route('/assignments/assign/submit', methods=('GET', 'POST'))
-def assign_submit():
-     if request.method == 'POST':
-        date = request.form['date']
-        assign_id = request.form['assign_id']
-        session_id = request.form['session_id']
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    INSERT INTO session_assignments (session_id, assignment_id, due_date)
-                    VALUES (%s, %s, %s)
-                    """, (session_id, assign_id, date, ))
-     return redirect(url_for('teacher.sessions'))
-@bp.route('/assignments/assign', methods=('GET', 'POST'))
-def assign_work():
-    if request.method == 'POST':
-        session_id = request.form['session_id']
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    SELECT * FROM assignments
-                    WHERE course_id IN (SELECT course_id FROM sessions WHERE id = %s)
-                    AND id NOT IN (SELECT assignment_id FROM session_assignments
-                                   WHERE session_id = %s)
-                """, (session_id, session_id))
-                assigns = cur.fetchall()
-        return render_template('assign-work.html', assigns=assigns, session_id=session_id)
-    return redirect(url_for('teacher.sessions'))
+from portal.session import bp
 
 @bp.route('/assignments', methods=('GET', 'POST'))
 @login_required
@@ -84,7 +33,7 @@ def assignments():
             """, (g.user['id'],))
             assignments = cur.fetchall()
 
-    return render_template('assignments.html', assignments=assignments)
+    return render_template('layouts/teacher/assignments/assignments.html', assignments=assignments)
 
 @bp.route('/assignments/edit', methods=('GET', 'POST'))
 @login_required
@@ -99,7 +48,7 @@ def edit_assignments():
                     WHERE id = %s
                     """, (assignment_id,))
                 info = cur.fetchone()
-        return render_template('assignments/edit-assignments.html', info=info)
+        return render_template('layouts/teacher/assignments/edit-assignments.html', info=info)
     return redirect(url_for('teacher.assignments'))
 
 @bp.route('/assignments/submit', methods=('GET', 'POST'))
@@ -120,6 +69,60 @@ def submit_assignments():
                 """, (name, desc, points, id))
     return redirect(url_for('teacher.assignments'))
 
+@bp.route('/assignments/create', methods=('GET', 'POST'))
+def create_assignments():
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        points = request.form['points']
+        course = request.form['course']
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO assignments (name, description, points, course_id)
+                    VALUES (%s, %s, %s, %s)
+                """, (name, description, points, course))
+                print(g.user['id'])
+                return redirect(url_for('teacher.assignments'))
+    with db.get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("""
+                SELECT * FROM courses
+                WHERE teacher_id = %s
+            """, (g.user['id'],))
+            courses = cur.fetchall()
+    return render_template('layouts/teacher/assignments/create-assignments.html', courses=courses)
+
+@bp.route('/assignments/assign', methods=('GET', 'POST'))
+def assign_work():
+    if request.method == 'POST':
+        session_id = request.form['session_id']
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    SELECT * FROM assignments
+                    WHERE course_id IN (SELECT course_id FROM sessions WHERE id = %s)
+                    AND id NOT IN (SELECT assignment_id FROM session_assignments
+                                   WHERE session_id = %s)
+                """, (session_id, session_id))
+                assigns = cur.fetchall()
+        return render_template('layouts/teacher/assignments/assign-work.html', assigns=assigns, session_id=session_id)
+    return redirect(url_for('teacher.sessions'))
+
+@bp.route('/assignments/assign/submit', methods=('GET', 'POST'))
+def assign_submit():
+     if request.method == 'POST':
+        date = request.form['date']
+        assign_id = request.form['assign_id']
+        session_id = request.form['session_id']
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO session_assignments (session_id, assignment_id, due_date)
+                    VALUES (%s, %s, %s)
+                    """, (session_id, assign_id, date, ))
+     return redirect(url_for('teacher.sessions'))
+
 @bp.route('/assignments/grade', methods=('GET','POST'))
 @login_required
 @admin
@@ -139,8 +142,9 @@ def grade():
                 WHERE a.assignment_id = %s
                 """, (code, ))
                 informations = cur.fetchall()
-        return render_template('assignments/teacher-assignments.html', informations=informations)
+        return render_template('layouts/teacher/assignments/teacher-assignments.html', informations=informations)
     return redirect(url_for('teacher.courses'))
+
 
 @bp.route('/assignments/view', methods=('GET', 'POST'))
 @login_required
@@ -151,18 +155,17 @@ def view_assignments():
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
-                SELECT a.name, a.description, a.points, c.course_name, a.id, p.work_id
-                FROM sessions s JOIN session_assignments p
-                ON s.id = p.session_id
-                JOIN assignments a
-                ON p.assignment_id = a.id
-                JOIN courses c
-                ON c.id = s.course_id
-                WHERE s.id = %s
+                    SELECT a.name, a.description, a.points, c.course_name, a.id, p.work_id
+                    FROM sessions s JOIN session_assignments p
+                    ON s.id = p.session_id
+                    JOIN assignments a
+                    ON p.assignment_id = a.id
+                    JOIN courses c
+                    ON c.id = s.course_id
+                    WHERE s.id = %s
                 """, (code,))
                 assignments = cur.fetchall()
-        return render_template('assignments/view-assignments.html', assignments=assignments)
-
+        return render_template('layouts/teacher/assignments/view-assignments.html', assignments=assignments)
     return redirect(url_for('teacher.courses'))
 
 @bp.route('/grade/submission', methods=('GET', 'POST'))
