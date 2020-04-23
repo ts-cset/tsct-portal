@@ -1,6 +1,6 @@
 import pytest
 from portal.student_views import view_schedule
-from .test_course_editor import login, logout
+from .test_courses import login, logout
 
 # I need to verify that there is a connection to the database
 #

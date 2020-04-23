@@ -1,7 +1,7 @@
 from flask import g, session, url_for
 import pytest
 from portal.db import get_db
-from portal.auth import login, logout
+# from portal.auth import login, logout
 import os
 import tempfile
 
@@ -144,7 +144,7 @@ def test_create_course_validation(client, courseNumber, courseTitle, courseCredi
             'major_name': major_name,
             'description': 'hello'
         })
-    
+
     # Make sure errors display on page
     assert error in response.data
 

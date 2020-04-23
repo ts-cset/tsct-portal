@@ -1,10 +1,10 @@
 from flask import redirect, g, url_for, render_template, session, request, Blueprint, flash, abort
 import functools
-from . import course_editor
+from . import courses
 from . import db
 from portal.auth import login_required, teacher_required
 
-bp = Blueprint("session_editor", __name__)
+bp = Blueprint("sessions", __name__)
 
 @bp.route("/courses/<int:course_id>/sessions/<int:sessions_id>/edit", methods=('GET', 'POST'))
 @login_required
@@ -14,7 +14,7 @@ def session_edit(course_id, sessions_id):
     """Allows teachers to edit a specific session of a
     specific course"""
     session = get_session(sessions_id)
-    course = course_editor.get_course(session['course_id'])
+    course = courses.get_course(session['course_id'])
     if g.user['id'] != course['teacher_id']:
         return redirect(url_for('index'))
 
@@ -54,12 +54,12 @@ def session_edit(course_id, sessions_id):
                         )
                     con.commit()
 
-                    return redirect(url_for( 'session_editor.session_manage', course_id=course['course_num']))
+                    return redirect(url_for( 'sessions.session_manage', course_id=course['course_num']))
 
         flash(error)
 
 
-    return render_template("layouts/editSession.html", course=course, session=session)
+    return render_template("layouts/sessions/editSession.html", course=course, session=session)
 
 
 @bp.route("/courses/<int:course_id>/sessions/create", methods=('GET','POST'))
@@ -68,7 +68,7 @@ def session_edit(course_id, sessions_id):
 def session_create(course_id):
     """Allows a teacher to create a speficic session in  a
     specific course"""
-    course = course_editor.get_course(course_id)
+    course = courses.get_course(course_id)
     students = get_students()
     if g.user['id'] != course['teacher_id']:
         return redirect(url_for('index'))
@@ -104,11 +104,11 @@ def session_create(course_id):
                     )
                     con.commit()
 
-                    return redirect(url_for("session_editor.session_manage", course_id=course['course_num']))
+                    return redirect(url_for("sessions.session_manage", course_id=course['course_num']))
 
                 flash(error)
 
-    return render_template("layouts/createSession.html", course=course)
+    return render_template("layouts/sessions/createSession.html", course=course)
 
 
 @bp.route("/courses/<int:course_id>/sessions", methods=('GET', 'POST'))
@@ -118,7 +118,7 @@ def session_manage(course_id):
     """The management page of all the sessions in
     a specific course"""
 
-    course = course_editor.get_course(course_id)
+    course = courses.get_course(course_id)
     if g.user['id'] != course['teacher_id']:
         return redirect(url_for('index'))
 
@@ -130,7 +130,7 @@ def session_manage(course_id):
 
     cur.close()
 
-    return render_template("layouts/sessionManage.html", course=course, sessions=sessions)
+    return render_template("layouts/sessions/sessionManage.html", course=course, sessions=sessions)
 
 def get_session(sessions_id):
     """Gets the session from the database"""

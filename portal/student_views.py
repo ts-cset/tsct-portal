@@ -38,4 +38,4 @@ def view_schedule():
 
     cur.close()
 
-    return render_template("layouts/schedule.html", infos=infos)
+    return render_template("layouts/student_views/schedule.html", infos=infos)
