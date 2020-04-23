@@ -51,14 +51,18 @@ def view_sessions(course_id):
                 (course_id,))
     sessions = cur.fetchall()
 
-    cur.execute("""SELECT courses.course_id, courses.name, courses.major, courses.description, courses.teacherid, users.name AS teacher_name FROM courses INNER JOIN users ON courses.teacherid = users.id WHERE courses.course_id = %s""",
+    cur.execute("""SELECT courses.course_id, courses.name, courses.major,
+                courses.description, courses.teacherid, users.name AS teacher_name
+                FROM courses INNER JOIN users ON courses.teacherid = users.id
+                WHERE courses.course_id = %s""",
                 (course_id,))
     course = cur.fetchone()
 
     cur.close()
     con.close()
 
-    return render_template("layouts/sessions/view_sessions.html", sessions=sessions, course=course)
+    return render_template("layouts/sessions/view_sessions.html",
+                           sessions=sessions, course=course)
 
 
 @login_required
@@ -106,7 +110,9 @@ def create(course_id):
     cur.close()
 
     if course == None:
-        abort(400, 'Either the course does not exist, or you do not have permission to create session for this course.')
+        con.close()
+        abort(400, """Either the course does not exist,
+           or you do not have permission to create session for this course.""")
 
     if request.method == 'POST':
 
