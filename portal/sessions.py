@@ -1,5 +1,6 @@
 import os
 from portal.db import get_db
+from portal.auth import teacher_required, login_required
 
 from flask import (
     Flask, Blueprint, flash, g, redirect, render_template, request, url_for, session
@@ -10,6 +11,7 @@ bp = Blueprint('sessions', __name__)
 
 
 @bp.route('/sessions', methods=('GET', 'POST'))
+@login_required
 def sessions():
     cur = get_db().cursor()
 
@@ -17,21 +19,21 @@ def sessions():
     course_id = request.args.get('course_id')
 
     # shows student sessions
-    if session['user'][4] == 'student':
+    if g.user['role'] == 'student':
         cur.execute('SELECT * FROM sessions AS s JOIN student_sessions AS ss ON (s.course_id = ss.course_id and s.section = ss.section) WHERE ss.student_id = %s;',
-                    (session['user'][0],))
+                    (g.user['id'],))
 
     # shows teachers session according to which course they are looking at
-    if session['user'][4] == 'teacher':
+    if g.user['role'] == 'teacher':
         if(course_id == None):
             return redirect(url_for('courses.courses'))
         cur.execute('SELECT * FROM sessions WHERE teacher_id = %s AND course_id = %s;',
-                    (session['user'][0], course_id))
+                    (g.user['id'], course_id))
 
     sessions = cur.fetchall()
     classes = []
     sections = []
-    if session['user'][4] == 'student':
+    if g.user['role'] == 'student':
         course_id = []
     cur.close()
 
@@ -43,19 +45,20 @@ def sessions():
         cur.execute('SELECT name FROM courses WHERE id = %s;',
                     (sess[0],))
         classname = cur.fetchall()
-        if session['user'][4] == 'student':
+        if g.user['role'] == 'student':
             course_id.append(sess[0])
         # pulling string out of nested list
         classes.append(classname[0][0])
         sections.append(sess[2])
-    if session['user'][4] == 'teacher':
+    if g.user['role'] == 'teacher':
         return render_template('portal/sessions.html', sessions=classes, sections=sections, course_id=course_id)
 
-    if session['user'][4] == 'student':
+    if g.user['role'] == 'student':
         return render_template('portal/sessions.html', sessions=classes, sections=sections, course_id=course_id)
 
 
 @bp.route('/createsession', methods=("GET", "POST"))
+@teacher_required
 def session_create():
     """View for creating a session"""
     cur = get_db().cursor()
@@ -74,7 +77,7 @@ def session_create():
         section = request.form['section']
         meeting_time = request.form['meeting']
         location = request.form['location']
-        teacher_id = session['user'][0]
+        teacher_id = g.user['id']
         students = request.form.getlist('students')
 
         cur = get_db().cursor()
@@ -117,19 +120,19 @@ def session_create():
 # def session_edit(course_id, section):
 #     """Edits the session name/info"""
 #     cur = get_db().cursor()
-#     teacher = session['user'][0]
+#     teacher = g.user['id']
 #     cur.execute("SELECT * FROM sessions WHERE section= %s AND course_id = %s;",
 #                 (section, course_id))
 #     selected_session = cur.fetchone()
 #
-#     if session['user'][4] == 'teacher':
+#     if g.user['role'] == 'teacher':
 #         return render_template('portal/home.html')
 #
 #     if request.method == "POST":
 #         section = request.form['section']
 #         meeting_time = request.form['meeting']
 #         location = request.form['location']
-#         teacher_id = session['user'][0]
+#         teacher_id = g.user['id']
 #         students = request.form.getlist('students')
 #
 #         cur.execute("DELETE FROM student_sessions WHERE section = %s AND course_id = %s;",
@@ -150,6 +153,7 @@ def session_create():
 
 
 @bp.route('/viewsession', methods=('GET', 'POST'))
+@login_required
 def session_view():
     """View for seeing more session details."""
     cur = get_db().cursor()
@@ -165,20 +169,18 @@ def session_view():
 
 
 @bp.route('/deletesession', methods=("POST",))
+@teacher_required
 def session_delete():
     """View for deleting session"""
-    if session['user'][4] != 'teacher':
-        return render_template('portal/home.html')  # if the are a teacher
-        # TODO: check teacher id
     course_id = request.form['course_id']
     section = request.form['section']
-    teacher = session['user'][0]
+    teacher = g.user['id']
     cur = get_db().cursor()
     cur.execute("SELECT * FROM sessions WHERE  course_id= %s and section = %s",
                 (course_id, section))
     session_information = cur.fetchone()
     if session_information['teacher_id'] != teacher:
-        return render_template('portal/home.html')
+        return redirect(url_for('sessions.sessions'))
 
     if request.method == 'POST':
         cur.execute("SELECT * FROM assignments WHERE course_id= %s AND section = %s;",
@@ -192,5 +194,3 @@ def session_delete():
         get_db().commit()
 
         return redirect(url_for('courses.courses'))
-    else:  # if not a teacher, send to home
-        return render_template('portal/home.html')

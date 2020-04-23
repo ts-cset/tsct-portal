@@ -3,8 +3,7 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-<p>welcome {{session['user'][3]}} to portal you are a {{session['user'][4]}}</p>
-{% if session['user'][4] == 'teacher' %}
+{% if g.user['role'] == 'teacher' %}
 <a class='fake-button' href="{{ url_for('sessions.session_create', course_id=course_id) }}">Create New Session</a>
 
 <ul>
@@ -15,7 +14,7 @@
   <a class='fake-button'  href="{{ url_for('assignments.assignments', course_id=course_id, section=sections[loop.index0]) }}">Assignments</a>
 </li>
   {% endfor %}
-{% elif session['user'][4] == 'student' %}
+{% elif g.user['role'] == 'student' %}
 
 {% for class in sessions %}
 <li class="session-li">

@@ -6,12 +6,12 @@
 
 <h1>Viewing: {{ classname }}-{{ section }}</h1>
 
-{% if session['user'][4] == 'teacher' %}
+{% if g.user['role'] == 'teacher' %}
 
 <form class="button" action="{{ url_for('sessions.session_delete')}}" method="post">
   <input type="hidden" name="course_id" value="{{session_info['course_id']}}">
   <input type="hidden" name="section" value="{{session_info['section']}}">
-  <button type="submit" class="fake-button" name="session_to_delete">Delete Course</button>
+  <button type="submit" class="fake-button" name="session_to_delete">Delete Session</button>
 </form>
 {% endif %}
 
