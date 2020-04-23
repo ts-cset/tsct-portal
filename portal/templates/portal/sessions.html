@@ -1,0 +1,29 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+<p>welcome {{session['user'][3]}} to portal you are a {{session['user'][4]}}</p>
+{% if session['user'][4] == 'teacher' %}
+<a class='fake-button' href="{{ url_for('sessions.session_create', course_id=course_id) }}">Create New Session</a>
+
+<ul>
+
+{% for class in sessions %}
+<li class="session-li">
+  <a class="session" href="{{ url_for('sessions.session_view', class=class, course_id=course_id, section=sections[loop.index0]) }}">{{ class }}</a>
+  <a class='fake-button'  href="{{ url_for('assignments.assignments', course_id=course_id, section=sections[loop.index0]) }}">Assignments</a>
+</li>
+  {% endfor %}
+{% elif session['user'][4] == 'student' %}
+
+{% for class in sessions %}
+<li class="session-li">
+  <a class="session" href="{{ url_for('sessions.session_view', class=class, course_id=course_id[loop.index0], section=sections[loop.index0]) }}">{{ class }}</a>
+  <a  class='fake-button' href="{{ url_for('assignments.assignments', course_id=course_id[loop.index0], section=sections[loop.index0]) }}">Assignments</a>
+</li>
+  {% endfor %}
+{% endif %}
+
+</ul>
+  {% endblock %}

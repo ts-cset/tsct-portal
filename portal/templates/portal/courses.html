@@ -1,0 +1,20 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+<h1>Courses</h1>
+<a class="fake-button" href="{{ url_for('courses.courses_create') }}">Create a New Course</a>
+
+<ul>
+  {% for course in teacher_courses %}
+  <li>{{ course['name'] }}
+    <div class="button-group">
+      <a class="fake-button" href="{{ url_for('courses.courses_edit', cour_id=course.id) }}">Edit</a>
+      <a class="fake-button" href="{{ url_for('courses.courses_view', cour_id=course.id) }}">View</a>
+      <a class="fake-button" href="{{ url_for('sessions.sessions', course_id=course.id) }}">sessions</a>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

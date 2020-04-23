@@ -17,11 +17,11 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
 }
 
-
 /**
  * Layout
  */
 body {
+  background-color: #8b1e41;
   justify-content: space-between;
   display: flex;
   flex-direction: column;
@@ -29,23 +29,68 @@ body {
   padding: 1rem;
 }
 
+header, footer {
+  background-color: white;
+  border: #8b1e41 1vw solid;
+  border-radius: 1em;
+  padding-left: 1em;
+}
+
+main {
+  background-color: white;
+  border: #8b1e41 1vw solid;
+  border-radius: 1em;
+  padding: 1em;
+}
+
 @media (min-width: 760px) {
   footer {
     display: flex;
     justify-content: space-between;
   }
+
   footer h2,
   footer address {
     width: 40%;
   }
 }
 
+.fake-button {
+  background: white;
+  border: solid grey 2px;
+  border-radius: 1em;
+  padding: 5px;
+  text-decoration: none;
+  color: black;
+  box-shadow: 1px 2px 1px 1px lightgrey;
+  text-align: center;
+}
 
+.button-group {
+  display: inline-flex;
+  align-items: center;
+}
+
+.button {
+  width: auto;
+  padding: 1rem 1rem 1rem 0rem;
+  border: none;
+  margin: 12px;
+}
+
+.course-list {
+  list-style-type: none;
+  padding-left: 0px;
+}
+
+.assignments-list {
+  display: flex;
+  flex-direction: row;
+}
 /**
  * Forms
  */
 form {
-  border: 1px solid black;
   margin: 0 auto;
   padding: 1rem;
   width: 35vw;
@@ -56,8 +101,88 @@ label {
   padding-bottom: 1rem;
 }
 
+.students {
+  display: inline;
+}
+
 label input {
   width: 100%;
 }
 
+/**
+ * Session
+ */
 
+.session-li {
+  margin: 1.25em;
+  list-style: none;
+}
+
+.session {
+  text-decoration: none;
+  list-style: none;
+  color: black;
+  border: 1px solid lightgrey;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.session:hover {
+  background-color: #8b1e41;
+  color:  white;
+}
+
+/**
+ * Nav
+ */
+.nav {
+  margin: 5px;
+  clear: both;
+}
+
+.nav-name {
+  float: right;
+  margin-right: 1em;
+}
+
+.nav-title {
+  float: left;
+}
+
+.nav-logout {
+  float: right;
+  margin: .75em;
+  padding: .25em;
+  border-radius: 3px;
+  text-decoration: none;
+  background-color: #8b1e41;
+  color: white;
+}
+
+.nav a {
+  text-decoration: none;
+  border-radius: 2px 2px 0px 0px;
+  padding: .25em;
+  color: white;
+  background-color: #8b1e41;
+}
+
+.nav a:hover,
+.nav-logout:hover,
+.fake-button:hover {
+  background-color: white;
+  color: #8b1e41;
+}
+
+/**
+ * Assign
+ */
+
+.assign-li {
+  list-style: none;
+}
+
+.assign-title {
+  font-size: 1.25em;
+  text-decoration: underline;
+}

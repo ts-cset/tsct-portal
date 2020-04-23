@@ -1,0 +1,58 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+<form method="post">
+  <label for="name">Name
+  <input type="text" id="name" name="name" required>
+  </label>
+
+  <label for=type">Type
+  <input type="text" id="type" name="type"  required>
+  </label>
+
+  <label for=points">Total Points
+  <input type="number" id="points" min="0" max="999" name="points" required>
+  </label>
+
+  <label for="duedate">Due date
+  <input type="date" id="duedate" name="duedate" value="NOW()" min='GETDATE()' required>
+  </label>
+
+  <fieldset class="fallbackDatePicker" hidden>
+   <legend class="fallbackLabel"></legend>
+
+   <label>
+     Day:
+     <select name="day"></select>
+   </label>
+
+   <label>
+     Month:
+     <select name="month">
+       <option>January</option>
+       <option>February</option>
+       <option>March</option>
+       <option>April</option>
+       <option>May</option>
+       <option>June</option>
+       <option>July</option>
+       <option>August</option>
+       <option>September</option>
+       <option>October</option>
+       <option>November</option>
+       <option>December</option>
+     </select>
+   </label>
+
+   <label>
+     Year:
+     <select name="year"></select>
+   </label>
+
+ </fieldset>
+
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}

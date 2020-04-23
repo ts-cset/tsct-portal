@@ -5,8 +5,9 @@ import psycopg2.extras
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
+from werkzeug.security import generate_password_hash
 
-
+#------- Get Database -----------------------------------------------------------------
 def get_db():
     """Get a PostgreSQL database connection object."""
 
@@ -29,6 +30,7 @@ def get_db():
 
     return g.db
 
+#------- Close Database -----------------------------------------------------------------
 def close_db(e=None):
     """Close the current PostgreSQL connection"""
 
@@ -40,6 +42,7 @@ def close_db(e=None):
         db.close()
 
 
+#------- Initialize Database -----------------------------------------------------------------
 def init_db():
     """Clear any existing data and create all tables."""
 
@@ -53,14 +56,7 @@ def init_db():
                 cur.execute(f.read())
 
 
-@click.command("init-db")
-@with_appcontext
-def init_db_command():
-    """CLI command to clear any existing data and create all tables."""
-    init_db()
-    click.echo("Initialized the database.")
-
-
+#------- Mock Database -----------------------------------------------------------------
 def mock_db():
     """Seed the database with mock data."""
 
@@ -70,6 +66,41 @@ def mock_db():
         with get_db() as con:
             with con.cursor() as cur:
                 cur.execute(f.read())
+
+
+#------- Import CSV -----------------------------------------------------------------
+def import_csv():
+    """ import csv """
+    file = os.path.join(os.path.dirname(__file__), os.pardir, "portal_users.csv")
+    with open(file) as sql:
+        with get_db() as con:
+            with con.cursor() as cur:
+
+                cur.copy_from(sql, 'users', sep=",")
+
+                cur.execute("SELECT password FROM users")
+                passwords = cur.fetchall()
+                for password in passwords:
+                    cur.execute("UPDATE users SET password = %s WHERE password = %s", (generate_password_hash(password[0]), password[0]))
+
+                sql.close()
+
+
+#------- Click Commands -----------------------------------------------------------------
+@click.command("init-db")
+@with_appcontext
+def init_db_command():
+    """CLI command to clear any existing data and create all tables."""
+    init_db()
+    click.echo("Initialized the database.")
+
+
+@click.command("import-csv")
+@with_appcontext
+def import_csv_command():
+    """CLI command to seed the database with mock data."""
+    import_csv()
+    click.echo("Inserted csv data.")
 
 
 @click.command("mock-db")
@@ -85,4 +116,4 @@ def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
     app.cli.add_command(mock_db_command)
-
+    app.cli.add_command(import_csv_command)
