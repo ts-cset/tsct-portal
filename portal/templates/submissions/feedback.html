@@ -11,15 +11,15 @@
 
 <form class="submit_grade" method="post">
 
-  <label>Enter Grade:
-    <input type="number" name="grade" value="{{ submission['grade'] }}">/{{ assignment['points'] }}
+  <label class="grade"><span class="underline">Enter Grade:</span>
+    <div><input type="number" name="grade" value="{{ submission['grade'] }}">/{{ assignment['points'] }}</div>
   </label>
 
-  <label>Enter feedback (Optional):
-    <textarea name="feedback" rows="8" cols="80">{{ submission['feedback'] }}</textarea>
+  <label><span class="underline">Enter feedback (Optional):</span>
+    <textarea name="feedback" rows="8" cols="80">{% if submission['feedback'] %}{{ submission['feedback'] }}{% endif %}</textarea>
   </label>
 
-  <input type="submit" name="submit">Submit</input>
+  <input type="submit" value="Save"/>
 </form>
 
 
