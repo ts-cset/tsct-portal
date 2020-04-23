@@ -15,7 +15,7 @@ def assignments():
     coursename = course(course_id, section)
 
     # Grabs all the assignments user and session specific
-    student_assignments = assignments(course_id, section)
+    student_assignments = user_assignments(course_id, section)
 
     return render_template("portal/assignments.html",
                             student_assignments=student_assignments,
@@ -73,7 +73,7 @@ def student_sess_id(course_id, section):
 
 
 #-- Assignments for student/s --------------------------------------------------
-def assignments(course_id, section):
+def user_assignments(course_id, section):
     # get the id of the student
     user = session['user'][0]
     cur = get_db().cursor()
