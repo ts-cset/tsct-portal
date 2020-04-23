@@ -21,7 +21,7 @@
    <td class="session-table">{{ session['class_time']}}</td>
    <td class="session-table">{{ session['location']}}</td>
    <td class="table-buttons"><a href="{{ url_for('course.view', id=session['course_id']) }}">view course</a></td>
-   <td class="table-buttons"><a href="">assignments</a></td>
+   <td class="table-buttons"><a href="{{url_for('assignment.view_assignments', id=session['id'], course_id=session['course_id'])}}">assignments</a></td>
 
     </tr>
  {% endfor %}

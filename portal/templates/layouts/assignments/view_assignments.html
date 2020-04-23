@@ -3,33 +3,43 @@
 {% block title %}Assignments{% endblock %}
 
 {% block content %}
-
+{% if g.user['id'] == course['teacherid'] %}
 <a href="{{ url_for('assignment.create_assignment', id=id, course_id=course['course_id'])}}" class="view-assignment-link">
   create new assignment
 </a>
+{% endif %}
 <h3>{{ course['class_name']}}</h3>
 <h3>SESSION {{id}}</h3>
-{% for assignment in assignments %}
 
-<section class="assignment_forms">
-  <h3 class="assignment-title">{{ assignment['name'] }} ID: {{ assignment['assignment_id']}}</h3>
-    <p class="assignment-item">{{ assignment['description'] }}</p>
-  <h3 class="assignment-date">assignment due:</h3>
-    <p class="assignment-item">{{ assignment['due_date'] }}</p>
-    <ul class="course-options">
-    <li class="course-options-item"><a href="{{ url_for('assignment.edit_assignments',
-    id=assignment['assignment_id'], session_id=assignment['session_id'], course_id=course['course_id']) }}">edit</a></li>
-    <li class="course-options-item">
-      <form action="{{ url_for('assignment.delete_assignments',
-      id=assignment['assignment_id'], session_id=assignment['session_id'], course_id=course['course_id']) }}" method="post">
-        <input type="submit" name="delete" value="delete">
-      </form>
-    </li>
-    </ul>
+<section class="assignments">
+  <table class="assignment-table">
+    <tbody>
+      <tr>
+        <th class="th1">id</th>
+         <th class="th3">name</th>
+         <th class="th5">description</th>
+         <th class="th3">due date</th>
+         <th></th>
+      </tr>
+      {% for assignment in assignments %}
+      <tr>
+        <td class="td-assign">{{ assignment['assignment_id']}}</td>
+        <td class="td-assign">{{ assignment['name'] }}</td>
+        <td class="td-assign">{{ assignment['description'] }}</td>
+        <td class="td-assign">{{ assignment['due_date'] }}</td>
+    {% if g.user['id'] == course['teacherid'] %}
+        <td class="td-assign-button" ><a href="{{ url_for('assignment.edit_assignments',
+    id=assignment['assignment_id'], session_id=assignment['session_id'],
+    course_id=course['course_id']) }}">edit</a></td>
+      <td class="td-assign-button" ><a href="{{ url_for('assignment.delete_assignments',
+    id=assignment['assignment_id']) }}">delete</a></td>
+    {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
 
 </section>
-
-{% endfor %}
 
 
 {% endblock %}
