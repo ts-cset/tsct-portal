@@ -16,15 +16,13 @@
 
 <body>
   <header>
-    <h1>{{ self.title() }}</h1>
+    <h1 class='nav-title'>{{ self.title() }}</h1>
 
     {% if session['user'] %}
     <a class="nav-logout" href="{{ url_for('auth.logout') }}">Logout</a>
     <p class='nav-name'>Welcome Back {{ session['user'][3] }}!</p>
-    {% endif %}
 
     <ul class="nav">
-      {% if session['user'] %}
       <a class="buttons" href="{{ url_for('auth.home') }}">Home</a>
 
       {% if session['user'][4] == 'teacher' %}
@@ -35,7 +33,6 @@
       <a class="buttons" href="{{ url_for('sessions.sessions') }}">Sessions</a>
       {% endif %}
 
-      <a class="buttons" href="{{ url_for('assignments.assignments') }}">Assignments</a>
       {% endif %}
     </ul>
 

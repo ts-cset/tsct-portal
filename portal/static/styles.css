@@ -110,6 +110,29 @@ label input {
 }
 
 /**
+ * Session
+ */
+
+.session-li {
+  margin: 1.25em;
+  list-style: none;
+}
+
+.session {
+  text-decoration: none;
+  list-style: none;
+  color: black;
+  border: 1px solid lightgrey;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.session:hover {
+  background-color: #8b1e41;
+  color:  white;
+}
+
+/**
  * Nav
  */
 .nav {
@@ -149,4 +172,17 @@ label input {
 .fake-button:hover {
   background-color: white;
   color: #8b1e41;
+}
+
+/**
+ * Assign
+ */
+
+.assign-li {
+  list-style: none;
+}
+
+.assign-title {
+  font-size: 1.25em;
+  text-decoration: underline;
 }
