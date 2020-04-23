@@ -47,58 +47,40 @@ def test_submit_assignments(client, auth):
     response = client.get('/teacher/assignments')
     assert b'Biggerest' in response.data
 
-def test_create_assignments(client, auth, app):
+def test_grade_assignments(client, auth,app):
     auth.teacher_login()
-
-    # On a GET request, user should see a form for creating new assignments
-    response = client.get('/teacher/assignments/create')
-    assert b'Assignment Creation' in response.data
-
-    # On POST, user should be able to insert new assignments into the database
-    client.post(
-        '/teacher/assignments/create',
-        data={'name': 'Wumbo Software', 'description': 'I wumbo, you wumbo, he, she, it... wumbo.',
-              'points': 900, 'course': 1}
-    )
+    response = client.get('/teacher/grade/submission')
+    assert response.status_code == 302
     with app.app_context():
-        with get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("SELECT * FROM assignments WHERE id = 5")
-                assert cur.fetchone()['name'] == 'Wumbo Software'
-
-def test_assign_work(client, auth):
-    auth.teacher_login()
-
-    # GET requests are redirected
-    response = client.get('/teacher/assignments/assign')
-    assert 'http://localhost/teacher/sessions' == response.headers['Location']
-
-    # On POST, user should be able to see assignments that belong to posted course id
-    # but only ones that have not been assigned already
-    response = client.post(
-        '/teacher/assignments/assign',
-        data={'session_id': 1}
-    )
-    assert b'Mondo Software' in response.data
-    assert b'Bigger Software' not in response.data
-
-def test_assign_submit(client, auth, app):
-    auth.teacher_login()
-
-    # GET requests are redirected
-    response = client.get('/teacher/assignments/assign/submit')
-    assert 'http://localhost/teacher/sessions' == response.headers['Location']
-
-    # On POST, user should be able to insert assignments into the session_assignments
-    # junction table with a due date
-    response = client.post(
-        '/teacher/assignments/assign/submit',
-        data={'date': '2020-05-08', 'session_id': 1, 'assign_id': 4}
-    )
-    with app.app_context():
+        assert client.post('/teacher/grade/submission', data={'grade-submission' : 100, 'submission': "(2, 1)"}).status_code == 302
         with get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
-                    SELECT * FROM session_assignments where assignment_id = 4 AND session_id = 1
+                SELECT * FROM assignment_grades
                 """)
-                assert cur.fetchone() is not None
+                res = cur.fetchone()
+                assert res[2] == '100'
+        client.post('/teacher/grade/submission', data={'grade-submission' : 200, 'submission': "(2, 1)"})
+        with get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                SELECT * FROM assignment_grades
+                """)
+                res = cur.fetchone()
+                assert res[2] == '200'
+
+def test_view_assignments(client,auth):
+    auth.teacher_login()
+
+    assert client.post('/teacher/assignments/view', data={'view-grade': 1}).status_code == 200
+    assert b'List of assignments' in client.post('/teacher/assignments/view', data={'view-grade': 1}).data
+    response = client.get('/teacher/assignments/view')
+    assert response.status_code == 302
+
+def test_grade(client,auth,app):
+    auth.teacher_login()
+    with app.app_context():
+        assert client.post('/teacher/assignments/grade', data={'grade': 1}).status_code == 200
+        assert b'Kevstice--Lueklee' in client.post('/teacher/assignments/grade', data={'grade': 1}).data
+        response = client.get('/teacher/assignments/grade')
+        assert response.status_code == 302
