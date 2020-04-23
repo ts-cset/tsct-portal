@@ -138,8 +138,8 @@ def update_course(course_id):
                 return redirect(url_for('portal.userpage'))
     return render_template('portal/courses/update-course.html')
 
-@bp.route('/<route>/')
+@bp.route('/<path:subpath>/')
 @login_required
-def course_error(route=None):
+def course_error(subpath=None):
     error = "404 Not found"
     return render_template('error.html', error=error)

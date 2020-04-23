@@ -88,8 +88,8 @@ def create_session(course_id):
             return redirect(url_for('sessions.create_session', course_id=course_id))
     return render_template('portal/courses/sessions/create-session.html', students=students)
 
-@bp.route('/<route>/')
+@bp.route('/<path:subpath>/')
 @login_required
-def error(route=None):
+def session_error(subpath=None):
     error = "404 Not found"
     return render_template('error.html', error=error)
