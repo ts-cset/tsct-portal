@@ -9,6 +9,10 @@
   <a class="back" href="{{ url_for('submissions.submission_list', course_id = session['course_id'], session_id = session['id'], assignment_id = assignment['id'], submission_id = submission['id']) }}">Back</a>
 </header>
 
+{% for message in get_flashed_messages() %}
+  <p class="flash">{{ message }}</p>
+{% endfor %}
+
 <form class="submit_grade" method="post">
 
   <label class="grade"><span class="underline">Enter Grade:</span>

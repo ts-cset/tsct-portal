@@ -20,19 +20,21 @@ def submission_list(course_id, session_id, assignment_id):
 
             session = cur.fetchone()
 
-            cur.execute('SELECT * FROM courses WHERE course_num = %s', (session['course_id'],))
+            if session:
 
-            course = cur.fetchone()
+                cur.execute('SELECT * FROM courses WHERE course_num = %s', (session['course_id'],))
+
+                course = cur.fetchone()
+
+                cur.execute('SELECT * FROM rosters WHERE session_id = %s', (session['id'],))
+
+                students = cur.fetchall()
 
             cur.execute('SELECT * FROM assignments WHERE id = %s', (assignment_id,))
 
             assignment = cur.fetchone()
 
-            cur.execute('SELECT * FROM rosters WHERE session_id = %s', (session['id'],))
-
-            students = cur.fetchall()
-
-    if session == None:
+    if session == None or assignment == None:
 
         abort(404)
 
@@ -44,24 +46,28 @@ def submission_list(course_id, session_id, assignment_id):
 
         abort(403)
 
+    # Create a record in submissions for every student in the session
+    # who does not already have one
+    # (This may not be necessary once students are able to submit assignments themselves)
     for student in students:
 
         with db.get_db() as con:
             with con.cursor() as cur:
 
-                cur.execute('SELECT * FROM submissions WHERE student_id = %s',
-                    (student['user_id'],))
+                cur.execute('SELECT * FROM submissions WHERE student_id = %s AND assignment_id = %s',
+                    (student['user_id'], assignment['id'],))
 
                 if cur.fetchone() == None:
+                    print('hi')
 
                     cur.execute("""INSERT INTO submissions (assignment_id, student_id)
                                    VALUES (%s, %s)""", (assignment['id'], student['user_id'],))
 
-
+    # Retrieve all of the submissions for the assignment
     with db.get_db() as con:
         with con.cursor() as cur:
 
-            # Each submissin has it's id and its student's name
+            # Each submission has it's id and its student's name
             cur.execute("""SELECT s.id, u.name
                 FROM submissions s JOIN users u ON s.student_id = u.id
                 WHERE assignment_id = %s""", (assignment['id'],))
@@ -87,9 +93,11 @@ def grade_submission(course_id, session_id, assignment_id, submission_id):
 
             session = cur.fetchone()
 
-            cur.execute('SELECT teacher_id FROM courses WHERE course_num = %s', (session['course_id'],))
+            if session:
 
-            course = cur.fetchone()
+                cur.execute('SELECT teacher_id FROM courses WHERE course_num = %s', (session['course_id'],))
+
+                course = cur.fetchone()
 
             cur.execute('SELECT * FROM assignments WHERE id = %s', (assignment_id,))
 
@@ -108,7 +116,7 @@ def grade_submission(course_id, session_id, assignment_id, submission_id):
 
         abort(403)
 
-    if submission == None or assignment == None:
+    if submission == None or assignment == None or session == None:
 
         abort(404)
 
@@ -150,5 +158,6 @@ def grade_submission(course_id, session_id, assignment_id, submission_id):
                     submission = cur.fetchone()
                     print(submission)
 
+        flash(error)
 
     return render_template('submissions/feedback.html', assignment=assignment, student=student['name'], session=session, submission=submission)

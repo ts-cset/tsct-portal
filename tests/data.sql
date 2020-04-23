@@ -42,4 +42,5 @@ VALUES (2, 'exam1', 'first exam of course', 25, '2020-06-22 19:10'),
 
 
 INSERT INTO submissions (assignment_id, student_id)
-VALUES (2, 5)
+VALUES (2, 5),
+       (1, 2);
