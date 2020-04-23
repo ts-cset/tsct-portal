@@ -23,10 +23,3 @@ def home():
     cur.close()
 
     return render_template("layouts/home.html", courses=courses)
-
-
-# Route for showing the home for students
-# @bp.route("/student")
-# @login_required
-# def student():
-#     return render_template("layouts/student-home.html")
