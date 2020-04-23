@@ -3,14 +3,21 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-<h1>Assignments</h1>
+<h1>{{ coursename }}</h1>
+<p class='assign-title'>Assignments</p>
+
+{% if session['user'][4] == 'teacher' %}
+  <a class='fake-button' href="{{ url_for('assignments.assignments_create', course_id=course_id, section=section) }}">Create New Assignment</a>
+{% endif %}
+
+<ul class='assign-ul'>
 {% for assignments in student_assignments %}
 
-<ul class="assignments-list">
-  <li>Name: {{ assignments['name'] }}</li>
-  <li>Points: {{ assignments['points'] }}</li>
-</ul>
-
+  <li class='assign-li'>
+    {{ assignments["name"] }} ({{ assignments["points"] }} Points)
+  </li>
 
 {% endfor %}
+</ul>
+
 {% endblock %}

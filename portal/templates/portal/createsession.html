@@ -3,17 +3,16 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-<p>welcome {{session['user'][3]}} to portal you are a {{session['user'][4]}}</p>
 
 <form method="post">
   <label for="section">Section
-    <input name="section" id="section" maxlength="1">
+    <input name="section" id="section" maxlength="1" value="{{session.section}}">
   </label>
   <label for="end">Meeting Time
-    <input type="time" name="meeting" id="meeting">
+    <input type="time" name="meeting" id="meeting" value='{{session.meeting}}'>
   </label>
   <label for="location"> Location
-    <input name="location" id="location">
+    <input name="location" id="location" value="{{session.location}}">
   </label>
 
   <p>add students to roster</p>
