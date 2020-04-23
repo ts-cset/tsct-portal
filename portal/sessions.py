@@ -171,7 +171,6 @@ def session_delete():
     if session['user'][4] != 'teacher':
         return render_template('portal/home.html')  # if the are a teacher
         # TODO: check teacher id
-    session_info = request.form['session_to_delete']
     course_id = request.form['course_id']
     section = request.form['section']
     teacher = session['user'][0]
@@ -183,13 +182,19 @@ def session_delete():
         return render_template('portal/home.html')
 
     if request.method == 'POST':
-        cur.execute("DELETE FROM assignments WHERE  course_id= %s and section = %s;",
+        cur.execute("SELECT * FROM assignments WHERE course_id= %s AND section = %s;",
+                    (course_id, section))
+        selected = cur.fetchall()
+        print(section)
+        print(course_id)
+        print(selected)
+        cur.execute("DELETE FROM assignments WHERE (course_id= %s AND section = %s);",
                     (course_id, section))
         get_db().commit()
-        cur.execute("DELETE FROM student_sessions WHERE  course_id= %s and section = %s;",
+        cur.execute("DELETE FROM student_sessions WHERE  course_id= %s AND section = %s;",
                     (course_id, section))
         get_db().commit()
-        cur.execute("DELETE FROM sessions WHERE course_id = %s and section = %s;",
+        cur.execute("DELETE FROM sessions WHERE course_id = %s AND section = %s;",
                     (course_id, section))
         get_db().commit()
 
