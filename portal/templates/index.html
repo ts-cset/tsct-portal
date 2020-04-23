@@ -21,7 +21,7 @@
 
     {% if g.user['role'] == 'student' %}
 
-    <a href="{{ url_for('schedule.view_schedule') }}">View your schedule</a>
+    <a href="{{ url_for('student_views.view_schedule') }}">View your schedule</a>
 
     {% endif %}
 

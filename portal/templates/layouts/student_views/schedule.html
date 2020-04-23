@@ -16,7 +16,7 @@
   {% for info in infos %}
     {% if g.user['id'] == info['user_id'] %}
       <tr>
-        <td>{{ info['session_name'] }}</td>
+        <td><a href="{{ url_for('student_views.session_assignments', session_id=info['id']) }}">{{ info['session_name'] }}</a></td>
         <td>{{ info['description'] }}</td>
         <td>{{ info['times'] }}</td>
         <td>{{ info['location'] }}</td>

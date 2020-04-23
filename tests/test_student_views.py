@@ -22,3 +22,18 @@ def test_schedule_view(client):
     # test logging out
     rv = logout(client)
     assert b'TSCT Portal Login' in rv.data
+
+def test_assign_view(client):
+    assert client.get('/your_assignments').status_code == 302
+    # login to check database
+    rv = login(client, 'student@stevenscollege.edu', 'asdfgh')
+    assert b'Logged in' in rv.data
+    # go to schedule view to test data on page
+    assert client.get('/your_assignments').status_code == 200
+    response = client.get('/your_assignments')
+    # test to see if mock data is on page, and see if the location/url is correct
+    assert b'Assignment Name' in response.data
+    assert b'Exam 1' in response.data
+    # test logging out
+    rv = logout(client)
+    assert b'TSCT Portal Login' in rv.data

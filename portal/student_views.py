@@ -1,13 +1,13 @@
 from flask import Blueprint, g, render_template
 from . import db
 from portal.auth import login_required, student_required
+from portal import sessions, assign
 
-bp = Blueprint("schedule", __name__)
+bp = Blueprint("student_views", __name__)
 
 
 # Page where students can view their schedules
 @bp.route("/schedule", methods=('GET', 'POST'))
-# I don't think I need the methods here (?)
 @login_required
 @student_required
 def view_schedule():
@@ -21,6 +21,7 @@ def view_schedule():
     cur = db.get_db().cursor()
     cur.execute("""
         SELECT sessions.session_name,
+                sessions.id,
                 sessions.location,
                 sessions.room_number,
                 sessions.times,
@@ -39,3 +40,28 @@ def view_schedule():
     cur.close()
 
     return render_template("layouts/student_views/schedule.html", infos=infos)
+
+@bp.route("/your_assignments/session/<int:session_id>", methods=('GET', 'POST'))
+@login_required
+@student_required
+def session_assignments(session_id):
+    """Allows students to view their assignments for a specific course"""
+    session = sessions.get_session(session_id)
+    cur = db.get_db().cursor()
+    cur.execute("""
+            SELECT * FROM assignments
+            WHERE sessions_id = %s""",
+            (session_id,))
+    assignments = cur.fetchall()
+    cur.close()
+    return render_template("layouts/student_views/your_assignments.html", session=session, assignments=assignments)
+
+
+@bp.route("/session/<int:session_id>/assignment_details/<int:assign_id>", methods=('GET', 'POST'))
+@login_required
+@student_required
+def assign_view(assign_id, session_id):
+    """Allows students to view a specific assignment's details for a specific course"""
+    assignment = assign.get_assignment(assign_id)
+    session = sessions.get_session(session_id)
+    return render_template("layouts/student_views/assignment_details.html", session=session, assignment=assignment)
