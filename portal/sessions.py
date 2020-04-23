@@ -187,12 +187,6 @@ def session_delete():
         print(section)
         print(course_id)
         print(selected)
-        cur.execute("DELETE FROM assignments WHERE (course_id= %s AND section = %s);",
-                    (course_id, section))
-        get_db().commit()
-        cur.execute("DELETE FROM student_sessions WHERE  course_id= %s AND section = %s;",
-                    (course_id, section))
-        get_db().commit()
         cur.execute("DELETE FROM sessions WHERE course_id = %s AND section = %s;",
                     (course_id, section))
         get_db().commit()

@@ -98,12 +98,7 @@ def courses_delete():
             course_to_delete = request.form['course_to_delete']
             teacher = session['user'][0]
             cur = get_db().cursor()
-            cur.execute("DELETE FROM student_sessions WHERE course_id = %s;",
-                        (course_to_delete,))
-            get_db().commit()
-            cur.execute("DELETE FROM sessions WHERE course_id = %s;",
-                        (course_to_delete,))
-            get_db().commit()
+
             cur.execute("DELETE FROM courses WHERE teacher_id = %s AND id = %s;",
                         (teacher, course_to_delete))
             get_db().commit()
