@@ -90,6 +90,37 @@ def create_assignment(session_id):
              (session_id, name, date, description, points))
             db.get_db().commit()
 
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             cur.execute("""SELECT assignments.id FROM assignments WHERE name = %s and session_id = %s;
              """,
              (name, session_id))
