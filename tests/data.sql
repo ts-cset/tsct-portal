@@ -25,7 +25,6 @@ VALUES (1,'A', 2), -- Software A
        (1,'B', 2); -- Software B
 
 -- Assignments
-<<<<<<< HEAD
 INSERT INTO assignments (course_id,section, name, type, points, due_date, student_sessions_id)
 VALUES (1, 'A', 'homework', 'paper', 10, 'now', 1),
        (1,'B', 'website', 'final', 50, 'now', 2),
@@ -36,10 +35,3 @@ VALUES (1, 'A', 'homework', 'paper', 10, 'now', 1),
 INSERT INTO grades (student_session_id, assignment_id, points_earned)
 VALUES (1, 1, 10),
        (2, 2, 40);
-=======
-INSERT INTO assignments (course_id, section, name, type, points, due_date, student_sessions_id)
-VALUES (1, 'A', 'homework', 'paper', 10, 'now', 1), -- Software A
-       (1,'B', 'website', 'final', 50, 'now', 2), -- Software B
-       (1,'A', 'application', 'final', 100, 'now', 1), -- Software A
-       (2,'A', 'Write', 'essay', 15, 'now', 3); -- Web A
->>>>>>> e23a9838743f936f63b4566d69d8ba7b38406f5b
