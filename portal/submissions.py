@@ -58,7 +58,6 @@ def submission_list(course_id, session_id, assignment_id):
                     (student['user_id'], assignment['id'],))
 
                 if cur.fetchone() == None:
-                    print('hi')
 
                     cur.execute("""INSERT INTO submissions (assignment_id, student_id)
                                    VALUES (%s, %s)""", (assignment['id'], student['user_id'],))
@@ -156,7 +155,7 @@ def grade_submission(course_id, session_id, assignment_id, submission_id):
                     # Retrieve the updated submission info
                     cur.execute('SELECT * FROM submissions WHERE id = %s', (submission_id,))
                     submission = cur.fetchone()
-                    print(submission)
+
 
         flash(error)
 
