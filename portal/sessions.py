@@ -43,14 +43,25 @@ def create_session(course_id):
                 WHERE role = 'student'""")
     students = cur.fetchall()
     cur.close()
+    try:
+        text = int(text)
+    except:
+        print("not a number")
 
-    if text != None:
+    if text != None and not isinstance(text, int):
         cur = db.get_db().cursor()
         text = '{}{}{}'.format('%',text,'%')
         cur.execute("""SELECT * FROM users
                     WHERE role = 'student' and name ILIKE %s""", (text,))
         students = cur.fetchall()
         cur.close()
+    elif isinstance(text, int):
+        cur = db.get_db().cursor()
+        cur.execute("""SELECT * FROM users
+                    WHERE role = 'student' and id = %s""", (text,))
+        students = cur.fetchall()
+        cur.close()
+
 
     if request.method == 'POST':
         name = request.form['name']

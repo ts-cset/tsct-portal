@@ -22,6 +22,7 @@
 {% for student in students %}
 <input type="checkbox" id='students' name='students' value="{{ student['id'] }}">
 <label for="students">{{ student['name'] }}</label>
+<label for="students">{{ student['id'] }}</label>
 {% endfor %}
   <input type="submit" value="Create Session" />
 </form>
