@@ -9,6 +9,18 @@
     <!-- Greets user -->
     <h2>Hello <span class="greetingname">{{ g.user['first_name']}}!</span></h2>
   </section>
+  <!-- g.user looks for information in user table.
+  This will loop and see how many classes the user has
+  and then put them in a list element -->
+  <!-- {% if g.user %}
+
+    <ul>
+      {% for name in courses %}
+        The content in the list element should be an anchor to the course page
+        <li>{{ name['course_name'] }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %} -->
 
   <!-- Shows scheduling for classes -->
   <section id="schedule">
