@@ -37,8 +37,7 @@ def index():
             #Return different views for a teacher vs student
             if user['role'] == 'teacher':
                 return redirect(url_for('teacher.home'))
-            elif user['role'] == 'student':
-                # return "hello student"
+            else:
                 return redirect(url_for('student.home'))
 
         flash(error)
