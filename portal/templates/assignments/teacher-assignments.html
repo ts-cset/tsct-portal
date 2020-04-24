@@ -14,7 +14,7 @@
 <label>Grade
   <label><input type='text' name='grade-submission'>/{{ information['points'] }}</input></label>
 </label>
-<button type="submit" formaction="{{ url_for('teacher.grade_submission') }}" value="{{ student['id'], student['work_id'] }}" name="submission">Submit grades</button>
+<button type="submit" formaction="{{ url_for('teacher.grade_submission') }}" value="{{ information['id'], information['work_id'] }}" name="submission">Submit grades</button>
 </form>
   {% endfor %}
 
