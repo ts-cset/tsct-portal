@@ -18,25 +18,31 @@
         <th class="th1">id</th>
          <th class="th3">name</th>
          <th class="th5">description</th>
-         <th class="th3">due date</th>
-         <th></th>
+         <th class="th1">due date</th>
+         <th class="th1"></th>
+         <th class="th1"></th>
       </tr>
       {% for assignment in assignments %}
       <tr>
-        <td class="td-assign">{{ assignment['assignment_id']}}</td>
-        <td class="td-assign">{{ assignment['name'] }}</td>
-        <td class="td-assign">{{ assignment['description'] }}</td>
-        <td class="td-assign">{{ assignment['due_date'] }}</td>
+        <td >{{ assignment['assignment_id']}}</td>
+        <td >{{ assignment['name'] }}</td>
+        <td >{{ assignment['description'] }}</td>
+        <td >{{ assignment['due_date'] }}</td>
     {% if g.user['id'] == course['teacherid'] %}
-        <td class="td-assign-button" ><a href="{{ url_for('assignment.edit_assignments',
+        <td ><a class="edit-button2" href="{{ url_for('assignment.edit_assignments',
     id=assignment['assignment_id'], session_id=assignment['session_id'],
     course_id=course['course_id']) }}">edit</a></td>
-      <td class="td-assign-button">
-        <form class ="edit-button" action="{{ url_for('assignment.delete_assignments',
+      <td class="td-assign">
+        <form class ="delete-form" action="{{ url_for('assignment.delete_assignments',
       id=assignment['assignment_id'], session_id=assignment['session_id'], course_id=course['course_id']) }}" method="post">
-        <input class="edit" onclick="submit" type="submit" name="delete" value="delete">
+        <input class="edit-button" onclick="submit" type="submit" name="delete" value="delete">
       </form>
       </td>
+    {% endif %}
+    {% if g.user['role'] == 'student' %}
+      <td class="td-assign-button"><a class="link" href="{{ url_for('student.assignment_grade',
+        id =assignment['assignment_id'], session_id=assignment['session_id'],
+        course_id=course['course_id']) }}">see grade </a></td>
     {% endif %}
     </tr>
     {% endfor %}

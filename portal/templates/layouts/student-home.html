@@ -7,25 +7,25 @@
 <table>
   <tbody>
     <tr>
-      <th class="th1">session id</th>
       <th class="th3">class name</th>
       <th class="th3">days</th>
       <th class="th3">class time</th>
       <th class="th3">location</th>
     </tr>
-  {% for session in sessions %}
+  {% for class in student_classes %}
     <tr>
-   <td class="session-table">{{ session['id']}}</td>
-   <td class="session-table">{{ session['class_name']}}</td>
-   <td class="session-table">{{ session['days']}}</td>
-   <td class="session-table">{{ session['class_time']}}</td>
-   <td class="session-table">{{ session['location']}}</td>
-   <td class="table-buttons"><a href="{{ url_for('course.view', id=session['course_id']) }}">view course</a></td>
-   <td class="table-buttons"><a href="{{url_for('assignment.view_assignments', id=session['id'], course_id=session['course_id'])}}">assignments</a></td>
+   <td class="session-table">{{ class['class_name']}}</td>
+   <td class="session-table">{{ class['days']}}</td>
+   <td class="session-table">{{ class['class_time']}}</td>
+   <td class="session-table">{{ class['location']}}</td>
+   <td class="td-assign-button"><a class="link" href="{{ url_for('course.view', id=class['course_id']) }}">view course</a></td>
+   <td class="td-assign-button"><a class="link" href="{{url_for('assignment.view_assignments', id=class['session_id'], course_id=class['course_id'])}}">assignments</a></td>
 
     </tr>
  {% endfor %}
  </tbody>
 </table>
+
+<a class="link-button" href="{{ url_for('student.view_student_gradebook')}}">student gradebook</a>
 
 {% endblock %}

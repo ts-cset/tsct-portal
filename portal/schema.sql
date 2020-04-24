@@ -110,7 +110,8 @@ CREATE TABLE grades(
   points_received decimal(5,2),
   total_points integer,
   feedback text,
-  submission text
+  submission text,
+  UNIQUE (grade_id, student_id, assignment_id)
 );
 
 ALTER TABLE grades

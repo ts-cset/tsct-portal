@@ -5,9 +5,9 @@
 {% block content %}
 <aside>
 <ul class="course-options">
-  <li class="course-options-item"><a href="{{ url_for('session.view_sessions', course_id=course['course_id']) }}">sessions</a></li>
+  <li class="course-options-item"><a class="link" href="{{ url_for('session.view_sessions', course_id=course['course_id']) }}">sessions</a></li>
 {% if g.user['id'] == course['teacherid'] %}
-  <li class="course-options-item"><a href="{{ url_for('course.edit', id=course['course_id']) }}">edit course</a></li>
+  <li class="course-options-item"><a class="link" href="{{ url_for('course.edit', id=course['course_id']) }}">edit course</a></li>
 {% endif %}
 </ul>
 </aside>
