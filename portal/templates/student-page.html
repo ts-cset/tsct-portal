@@ -29,11 +29,11 @@
         {% for scheduling in courses %}
           <li>
             {{ scheduling['course_name'] }}
-            {{ scheduling['course_code'] }}
+            {{ scheduling['course_code'] }},
 
-            {{ scheduling['session_name'] }}
-            {{ scheduling['meeting_days'] }}
-            {{ scheduling['meeting_time'] }}
+            {{ scheduling['session_name'] }},
+            {{ scheduling['meeting_days'] }},
+            {{ scheduling['meeting_time'] }},
             {{ scheduling['meeting_place'] }}
             <button type="submit" name="scheduling['session_id']" value="scheduling['session_id']" formaction="url_for('student.assignments')">assignments</button>
           </li>
