@@ -15,7 +15,7 @@ INSERT INTO assignments (name, description, points, course_id)
 VALUES ('Big Software', 'You need to create some big software with lots of big software energy', 200, 1),
        ('Bigger Software', 'You need to create some big software with lots of big software energy', 300, 1),
        ('Biggest Software', 'You need to create some big software with lots of big software energy', 400, 1),
-       ('Mondo Software', 'Very mondo my dude', 25, 1);
+       ('Mondo Software', 'Very mondo my dude', 25, 1),
        ('Breaking bricks', 'Break a brick on your head', 600,2);
 
 INSERT INTO session_assignments (session_id, assignment_id, due_date)

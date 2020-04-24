@@ -66,6 +66,7 @@ CREATE TABLE assignments (
 -- Session Assignments
 -- Create a many-to-many relationship between course sessions and assignments for those sessions
 CREATE TABLE session_assignments (
+  -- Create ID for the specific instance of the assignment, assigned to this session
   work_id bigserial PRIMARY KEY,
   -- Create a one-to-many relationship between sessions and assignments
   session_id bigint REFERENCES sessions(id) NOT NULL,
@@ -77,7 +78,9 @@ CREATE TABLE session_assignments (
 );
 
 CREATE TABLE assignment_grades(
+-- Create a one to one relationship between grade and users
 owner_id bigint REFERENCES users(id) NOT NULL,
+-- Create a one to one relationship to the session_assignment
 assigned_id bigint REFERENCES session_assignments(work_id) NOT NULL,
 grades varchar(100)
 );

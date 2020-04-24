@@ -47,7 +47,7 @@ def edit_assignments():
                     WHERE id = %s
                     """, (assignment_id,))
                 info = cur.fetchone()
-        return render_template('edit-assignments.html', info=info)
+        return render_template('assignments/edit-assignments.html', info=info)
     return redirect(url_for('teacher.assignments'))
 
 @bp.route('/assignments/submit', methods=('GET', 'POST'))
@@ -87,7 +87,7 @@ def grade():
                 """, (code, ))
                 students = cur.fetchall()
                 print(students)
-        return render_template('teacher-assignments.html', students=students)
+        return render_template('assignments/teacher-assignments.html', students=students)
     return redirect(url_for('teacher.courses'))
 @bp.route('/assignments/view', methods=('GET', 'POST'))
 @login_required
@@ -110,7 +110,7 @@ def view_assignments():
                 assignments = cur.fetchall()
             print(code)
             print(assignments)
-        return render_template('view-assignments.html', assignments=assignments)
+        return render_template('assignments/view-assignments.html', assignments=assignments)
 
     return redirect(url_for('teacher.courses'))
 @bp.route('/grade/submission', methods=('GET', 'POST'))
@@ -120,8 +120,6 @@ def grade_submission():
     if request.method == 'POST':
         grade = request.form['grade-submission']
         user = list(request.form['submission'])
-        student_id = user[1]
-        assignment_ref = user[4]
         with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
