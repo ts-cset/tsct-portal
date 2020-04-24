@@ -94,16 +94,15 @@ def courses_view(cour_id):
 def courses_delete():
     """View for deleting courses"""
     if session['user'][4] == 'teacher':  # if the are a teacher
-        if request.method == 'POST':
-            course_to_delete = request.form['course_to_delete']
-            teacher = session['user'][0]
-            cur = get_db().cursor()
+        course_to_delete = request.form['course_to_delete']
+        teacher = session['user'][0]
+        cur = get_db().cursor()
 
-            cur.execute("DELETE FROM courses WHERE teacher_id = %s AND id = %s;",
-                        (teacher, course_to_delete))
-            get_db().commit()
-            cur.close()
-            return redirect(url_for('courses.courses'))
+        cur.execute("DELETE FROM courses WHERE teacher_id = %s AND id = %s;",
+                    (teacher, course_to_delete))
+        get_db().commit()
+        cur.close()
+        return redirect(url_for('courses.courses'))
     else:  # if not a teacher, send to home
         return render_template('portal/home.html')
 

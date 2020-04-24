@@ -103,6 +103,7 @@ def test_course_id_length(app, client, auth):
 def test_edit_course_id_length(app, client, auth):
     with app.app_context():
         auth.teacher_login()
+        client.get('')
         response = client.post('/1/editcourse', data={'cour_name': 'something', 'cour_num': 111,
                                                       'cour_maj': 'CSETtt', 'cour_cred': 1, 'cour_desc': 'test description'})
         assert b'<div class="flash">course major name can only be 4 letters</div>' in response.data
@@ -123,6 +124,29 @@ def test_delete_course(app, client, auth):
         assert check is None
 
 
+@pytest.mark.parametrize(('url'), (
+    ('/createcourse'),
+    ('/1/editcourse'),
+    ('/courses'),
+    ('1/viewcourse'),
+    ('/deletecourse')
+))
+def test_teacher_check(app, client, auth, url):
+    with app.app_context():
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.login()
+        if url == '/deletecourse':
+            response = client.post(url, data={'course_to_delete': 4})
+        else:
+            response = client.get(url)
+        home = client.get('/home')
+
+        assert response.data == home.data
+
+
 def test_course_view(app, client, auth):
     with app.app_context():
         db = get_db()
@@ -132,6 +156,20 @@ def test_course_view(app, client, auth):
         auth.teacher_login()
 
         response = client.get('/1/viewcourse')
+
+        assert b'Software Project II' in response.data
+        assert b'blaaah' in response.data
+
+
+def test_get_edit(app, client, auth):
+    with app.app_context():
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.teacher_login()
+
+        response = client.get('/1/editcourse')
 
         assert b'Software Project II' in response.data
         assert b'blaaah' in response.data
