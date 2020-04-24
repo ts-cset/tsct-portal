@@ -124,7 +124,7 @@ def sessions():
                 WHERE c.teacher_id = %s
             """, (g.user['id'],))
             sessions = cur.fetchall()
-    return render_template('sessions.html', sessions=sessions)
+    return render_template('assignments/sessions.html', sessions=sessions)
 
 
 @bp.route('/sessions/create', methods=('GET', 'POST'))
