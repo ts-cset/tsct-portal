@@ -98,6 +98,7 @@ def test_course_id_length(app, client, auth):
         response = client.post('/createcourse', data={'cour_name': 'djhcd', 'cour_num': 111,
                                                       'cour_maj': 'CSETt', 'cour_cred': 1, 'cour_desc': 'test description'})
         assert b'<div class="flash">course major name can only be 4 letters</div>' in response.data
+        # b'Course Majors can only have a maximum of 4 letters.'
 
 
 def test_edit_course_id_length(app, client, auth):
@@ -107,6 +108,7 @@ def test_edit_course_id_length(app, client, auth):
         response = client.post('/1/editcourse', data={'cour_name': 'something', 'cour_num': 111,
                                                       'cour_maj': 'CSETtt', 'cour_cred': 1, 'cour_desc': 'test description'})
         assert b'<div class="flash">course major name can only be 4 letters</div>' in response.data
+        # b'Course Majors can only have a maximum of 4 letters.'
 
 
 def test_delete_course(app, client, auth):

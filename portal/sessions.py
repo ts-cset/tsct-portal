@@ -58,6 +58,8 @@ def sessions():
 @bp.route('/createsession', methods=("GET", "POST"))
 def session_create():
     """View for creating a session"""
+    if session['user'][4] != 'teacher':
+        return render_template('portal/home.html')
     cur = get_db().cursor()
     course_id = request.args.get('course_id')
     # grabbing name of the course by session's fk

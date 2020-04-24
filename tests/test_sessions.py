@@ -79,3 +79,41 @@ def test_delete_sessions(app, client, auth):
             "SELECT * FROM sessions WHERE section = 'A' and course_id = '1';")
         check = cur.fetchone()
         assert check is None
+
+
+@pytest.mark.parametrize(('url'), (
+    ('/createsession'),
+    ('/courses'),
+    ('/deletesession')
+))
+def test_teacher_check(app, client, auth, url):
+    with app.app_context():
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.login()
+        if url == '/deletesession':
+            response = client.post(url, data={'course_to_delete': 4})
+        else:
+            response = client.get(url)
+        home = client.get('/home')
+
+        assert response.data == home.data
+
+
+@pytest.mark.parametrize(('role'), (
+    ('teacher'),
+    ('student'),
+))
+def test_session_role(app, client, auth, role):
+    with app.app_context():
+        if role == 'teacher':
+            auth.teacher_login()
+            request = client.get('/sessions')
+            course = client.get('/courses')
+            assert b'tically to target URL: <a href="/courses">/courses</a>.' in request.data
+        else:
+            auth.login()
+            request = client.get('/sessions')
+            assert b'Software Project II' in request.data
