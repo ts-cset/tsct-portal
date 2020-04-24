@@ -42,6 +42,9 @@ body {
 
 @media (min-width: 760px) {
   footer {
+    margin-top: 30px;
+    background-color: #e6e6e6;
+    border-top: 1px solid black;
     display: flex;
     justify-content: space-between;
   }
@@ -102,6 +105,11 @@ a {
   text-decoration: none;
   padding: 4px;
 }
+
+.namebar-logout:hover{
+  background-color: darkgrey;
+  color: white;
+}
 .return {
   background-color: lightgrey;
   border: 1px solid darkgrey;
@@ -109,6 +117,11 @@ a {
   font-variant: small-caps;
   padding-top: 2px;
   margin-right: 20px;
+}
+
+.return:hover{
+  background-color: darkgrey;
+  color: white;
 }
 
 .home-buttons {
@@ -123,7 +136,11 @@ a {
   font-size: 18px;
   font-variant: small-caps;
   text-decoration: none;
+}
 
+.home-button:hover{
+  color: white;
+  background-color: darkgrey;
 }
 
 .teacher_forms {
@@ -153,6 +170,11 @@ a {
   width: 20%;
 }
 
+.submit:hover{
+  background-color: darkgrey;
+  color: white;
+}
+
 .form-label {
   margin-top: 10px;
   font-variant: small-caps;
@@ -167,9 +189,8 @@ a {
 }
 
 .course-list-action {
-  width: 100px;
   border: none;
-  padding: 15px;
+  padding: 15px 0 0 0;
   margin: 0;
 }
 .course-description {
@@ -292,22 +313,31 @@ aside {
   margin: 5px 10px 5px 0px;
 }
 
-.session-add-button {
-  background-color: #fac0c0;
-  font-variant: small-caps;
-  border: 1px solid darkgrey;
-  padding: 3px 5px 3px 5px;
-  margin: 10px 0 20px 0;
+.course-options-item:hover{
+  color: white;
+  background-color: #660000;
 }
 
 .course-button {
-  background-color: #fac0c0;
+  color: black;
+  background-color: lightgrey;
   border: 1px solid black;
   font-variant: small-caps;
-  width: 80px;
-  margin: 5px;
+  width: 100px;
+  margin: 5px 0 5px 0;
 }
 
+.course-button:hover {
+  color:white;
+  background-color: darkgrey;
+}
+
+.link {
+  color: #660000;
+}
+.link:hover {
+  color: white;
+}
 .course-view {
   font-size: 26px;
   font-variant: small-caps;
@@ -328,6 +358,11 @@ aside {
   width: 15%;
   margin: 10px;
   padding: 5px;
+}
+
+.link-button:hover {
+  background-color: #fac0c0;
+  color: #660000;
 }
 
 .session-table-header {
@@ -422,11 +457,14 @@ aside {
   border: 1px solid darkgrey;
   text-decoration: none;
   text-align: center;
-  width: 300px;
+  width: 250px;
   margin: 10px 0 10px 0;
   color: black;
   padding: 5px 2px 7px 2px;
-
+}
+.view-assignment-link:hover{
+  background: #660000;
+  color: white;
 }
 
 .assignment-link {
@@ -503,10 +541,36 @@ th {
 .session-table {
   padding-left: 10px;
 }
+
+.delete-form{
+  background-color: lightgrey;
+  padding: 0;
+}
+
+.edit-button:hover{
+  background-color: #660000;
+  color: white;
+}
+
  .edit-button {
+   font-variant: small-caps;
+   background-color: #fac0c0;
    margin: 0;
    text-align: center;
-   padding: 0;
+   padding: 4px 15px 4px 15px;
+ }
+
+ .edit-button2 {
+   font-variant: small-caps;
+   background-color: #fac0c0;
+   margin: 0;
+   text-align: center;
+   padding: 4px 20px 4px 20px;
+ }
+
+ .edit-button2:hover {
+   background-color: #660000;
+   color: white;
  }
 
 .edit {
@@ -526,7 +590,7 @@ th {
 .th3 {
   font-variant: small-caps;
   background-color: white;
-  width: 18%;
+  width: 20%;
 }
 
 .th4 {
@@ -549,14 +613,6 @@ th {
   background-color: white;
 }
 
-.table-buttons{
-  border: 1px solid maroon;
-  background-color: #fac0c0;
-  font-variant: small-caps;
-  text-align: center;
-  width:120px;
-}
-
 .assignment-table{
   background-color: white;
 }
@@ -568,8 +624,18 @@ td  {
 }
 
 .td-assign-button{
+  color: maroon;
   border: 1px solid maroon;
   background-color: #fac0c0;
+  font-variant: small-caps;
+  text-align: center;
+  width:120px;
+}
+
+.td-assign-button:hover{
+  color: white;
+  border: 1px solid maroon;
+  background-color: #660000;
   font-variant: small-caps;
   text-align: center;
   width:120px;
@@ -623,4 +689,20 @@ td  {
   background-color: #fac0c0;
   border-bottom: 2px solid black;
   padding: 5px;
+}
+
+.course_grade {
+  padding: 10px;
+  margin:10px;
+}
+
+.grades-heading {
+  border-bottom: 2px solid black;
+  font-size: 1.5em;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  margin: 10px 0 10px 0;
+  width: 80%;
 }

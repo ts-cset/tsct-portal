@@ -1,33 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}Assignment Grades{% endblock %}
+{% block title %}Student Gradebook{% endblock %}
 
 {% block content %}
 
-<section class="assignment-grade-student">
+<section class="student-gradebook">
 
-<h3 class="assignment-grade"> {{ grade['name']}}/   SESSION: {{ grade['class_session']}}
-  /   ASSIGNMENT: {{grade['assign_name'] }}/    ID #{{grade ['assign_id']}}</h3>
-<h4 class="assignment-grade">STUDENT SUBMISSION:</h4>
-  <p>{{grade['submission']}}</p>
-<h4 class="assignment-grade">FEEDBACK:</h4>
-  <p>{{grade['feedback']}}</p>
+<h2>All Student Courses</h2>
+{% for course in courses %}
+<h3 class="assignment-grade">{{course['class_name']}}<h3>
+  <h4>{{course['teacher']}} / Session {{course['session_id']}}</h4>
 
-  <table class="assignment-table">
-    <tbody>
-      <tr>
-         <th class="th1">earned</th>
-         <th class="th1">possible</th>
-         <th class="th1">grade</th>
-      </tr>
-      <tr>
-        <td class="td-assign">{{grade['earned'] }}</td>
-        <td class="td-assign">{{grade['total'] }}</td>
-        <td class="grade">%{{grade['assignment_grade'] }}</td>
-    </tr>
-    </tbody>
-  </table>
-
+<a class="link-button" href="{{url_for('student.view_grades_by_course',
+ course_id=course['course_id'])}}">see grades</a>
+{% endfor %}
 </section>
 
 

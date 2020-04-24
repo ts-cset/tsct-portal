@@ -16,7 +16,7 @@
     <input class="submit" type="submit" value="submit changes"/>
   </form>
   <form class="course-list-action" action="{{ url_for('course.delete', id=course['course_id']) }}" method="post">
-    <button type="Submit" name="edit" class="course-button">delete</button>
+    <input class="submit" type="submit" value="delete course"/>
   </form>
 </section>
 {% endblock %}
