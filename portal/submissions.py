@@ -157,6 +157,7 @@ def grade_submission(course_id, session_id, assignment_id, submission_id):
                     submission = cur.fetchone()
 
 
-        flash(error)
+        if error != None:
+            flash(error)
 
     return render_template('submissions/feedback.html', assignment=assignment, student=student['name'], session=session, submission=submission)
