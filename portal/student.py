@@ -2,8 +2,6 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
-from . import db
-
 from portal.db import get_db
 
 from portal.auth import login_required
@@ -32,7 +30,7 @@ def home():
 def assignments():
     if request.method == 'POST':
         session_id = request.form['session_id']
-        with db.get_db() as con:
+        with get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
                     SELECT a.name, a.description, a.points, s.due_date FROM assignments a JOIN session_assignments s
