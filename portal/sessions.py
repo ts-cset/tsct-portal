@@ -56,7 +56,7 @@ def sessions():
         sections.append(sess[2])
 
         # grabs course id from the one clicked on
-        course_name = course(sess[1])
+        course_name = course(sess[0])
 
     if g.user['role'] == 'teacher':
         return render_template('portal/sessions.html',
@@ -223,14 +223,3 @@ def session_delete():
         return redirect(url_for('courses.courses'))
     else:  # if not a teacher, send to home
         return render_template('portal/home.html')
-
-
-def allsessions():
-    cur = get_db().cursor()
-    teacher_id = session['user'][0]
-
-    cur.execute("SELECT * FROM sessions WHERE teacher_id = %s",
-                (teacher_id,))
-    sessions = cur.fetchall()
-
-    return sessions
