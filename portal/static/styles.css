@@ -172,6 +172,7 @@ div.links {
   margin-bottom: 1rem;
 }
 
+
 span.underline {
   text-decoration: underline;
 }
@@ -196,6 +197,15 @@ ul.submissions li {
 
 ul.submissions li:nth-child(2n) {
   background-color: lightgrey;
+
+table, th, td {
+  border: 2px solid #8B1E41;
+}
+
+th {
+  background: #8B1E41;
+  color: white;
+
 }
 
 
