@@ -197,6 +197,7 @@ ul.submissions li {
 
 ul.submissions li:nth-child(2n) {
   background-color: lightgrey;
+}
 
 table, th, td {
   border: 2px solid #8B1E41;
@@ -354,6 +355,30 @@ p.flash {
 
 @media (min-width: 760px) {
   p.flash {
+    width: 35vw;
+  }
+}
+
+
+/**
+* Success Messages
+*/
+
+p.success {
+  align-items: center;
+  border: 1px solid black;
+  box-shadow: 2px 2px 5px black;
+  color: green;
+  display: flex;
+  font-weight: bold;
+  height: 3rem;
+  justify-content: center;
+  margin: 2rem auto 0;
+  width: 265px;
+}
+
+@media (min-width: 760px) {
+  p.success {
     width: 35vw;
   }
 }
