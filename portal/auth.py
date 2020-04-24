@@ -7,6 +7,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from portal.db import get_db
+from psycopg2 import sql
 
 bp = Blueprint('auth', __name__)
 
@@ -85,3 +86,22 @@ def admin(view):
         return view(**kwargs)
 
     return wrapped_view
+
+def validate(id, table):
+    """Check that a user's attempted action is on a database item they have access to"""
+    if table in ['sessions', 'assignments']:
+        with get_db() as con:
+            with con.cursor() as cur:
+                cur.execute(sql.SQL("""
+                    SELECT * FROM courses
+                    WHERE id IN (SELECT course_id FROM {} WHERE id = %s)
+                    AND teacher_id = %s
+                """).format(sql.Identifier(table)), (id, g.user['id']))
+                result = cur.fetchone()
+    else:
+        result = None
+
+    if not result:
+        return False
+    else:
+        return True

@@ -43,16 +43,16 @@ CREATE TABLE sessions (
   meeting_place TEXT,
   meeting_time varchar(11),
   -- Create a one-to-many relationship between courses and sessions of those courses
-  course_id bigint REFERENCES courses(id) NOT NULL
+  course_id bigint NOT NULL REFERENCES courses(id) ON DELETE CASCADE
 );
 
 -- Roster
 -- Create a many-to-many relationship between student users and course sessions
 CREATE TABLE roster (
   -- Create a one-to-many relationship between student users and course sessions they belong to
-  student_id bigint REFERENCES users(id) NOT NULL,
+  student_id bigint NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   -- Create a one-to-many relationship between course sessions and the students that belong to it
-  session_id bigint REFERENCES sessions(id) NOT NULL
+  session_id bigint NOT NULL REFERENCES sessions(id) ON DELETE CASCADE
 );
 
 -- Assignments
@@ -62,7 +62,7 @@ CREATE TABLE assignments (
   description text NOT NULL,
   points bigint NOT NULL,
   -- Create a one-to-many relationship between courses and assignments that belong to it
-  course_id bigint REFERENCES courses(id) NOT NULL
+  course_id bigint NOT NULL REFERENCES courses(id) ON DELETE CASCADE
 );
 
 -- Session Assignments
@@ -71,16 +71,18 @@ CREATE TABLE session_assignments (
   -- Create ID for the specific instance of the assignment, assigned to this session
   work_id bigserial PRIMARY KEY,
   -- Create a one-to-many relationship between sessions and assignments
-  session_id bigint REFERENCES sessions(id) NOT NULL,
+  session_id bigint NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
   -- Create a one-to-many relationship between assignments and sessions
-  assignment_id bigint REFERENCES assignments(id) NOT NULL,
+  assignment_id bigint NOT NULL REFERENCES assignments(id) ON DELETE CASCADE,
   due_date date
 );
 
+-- Assignment Grades
+-- Create a many-to-many relationship between assigned work and students with associated grades
 CREATE TABLE assignment_grades(
--- Create a one to one relationship between grade and users
-owner_id bigint REFERENCES users(id) NOT NULL,
--- Create a one to one relationship to the session_assignment
-assigned_id bigint REFERENCES session_assignments(work_id) NOT NULL,
-grades varchar(100)
+  -- Create a one-to-many relationship between users and their assigned work
+  owner_id bigint REFERENCES users(id) NOT NULL,
+  -- Create a one-to-many relationship between assigned work and users
+  assigned_id bigint REFERENCES session_assignments(work_id) NOT NULL,
+  grades varchar(100)
 );
