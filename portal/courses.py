@@ -19,7 +19,7 @@ def course_manage():
 
     cur.close()
 
-    return render_template("layouts/courses/courseMan.html", courses=courses)
+    return render_template("courses/courseMan.html", courses=courses)
 
 
 @bp.route("/courses/create", methods=('GET', 'POST'))  # Course Create
@@ -124,7 +124,7 @@ def course_create():
 
         flash(error)
 
-    return render_template('layouts/courses/courseCreate.html', all_majors=all_majors)
+    return render_template('courses/courseCreate.html', all_majors=all_majors)
 
 
 # Needs new template
@@ -175,7 +175,7 @@ def course_edit(course_id):
 
         flash(error)
 
-    return render_template("layouts/courses/courseEdit.html", course=course)
+    return render_template("courses/courseEdit.html", course=course)
 
 
 def get_course(course_id):
