@@ -4,6 +4,7 @@ from flask import (
 
 from portal.db import get_db
 from portal.auth import teacher_required, login_required
+from portal.sessions import course
 
 bp = Blueprint('assignments', __name__)
 
@@ -14,16 +15,19 @@ def assignments():
     """View for the assignments"""
     course_id = request.args.get('course_id')
     section = request.args.get('section')
-    coursename = course(course_id, section)
+
+    course_name = course(course_id)
+    course_section = course_name + ' - ' + section
 
     # Grabs all the assignments user and session specific
     student_assignments = user_assignments(course_id, section)
 
     return render_template("portal/assignments.html",
-                            student_assignments=student_assignments,
-                            course_id=course_id,
-                            section=section,
-                            coursename=coursename)
+                                student_assignments=student_assignments,
+                                course_id=course_id,
+                                section=section,
+                                course_section=course_section,
+                                course_name=course_name)
 
 
 #-- Create Assignments --#

@@ -18,10 +18,10 @@ def sessions():
 
 
     cur = get_db().cursor()
+    if course_id:
+        # grabs course id from the one clicked on
+        course_name = course(course_id)
 
-    # grabs course id from the one clicked on
-
-    coursename = course(course_id)
     # shows student sessions
     if g.user['role'] == 'student':
         cur.execute('SELECT * FROM sessions AS s JOIN student_sessions AS ss ON (s.course_id = ss.course_id and s.section = ss.section) WHERE ss.student_id = %s;',
@@ -55,35 +55,28 @@ def sessions():
         classes.append(classname[0][0])
         sections.append(sess[2])
 
-    if all == 1:
-        classes = allsessions()
-        return render_template('portal/sessions.html',
-                                sessions=classes,
-                                sections=sections,
-                                course_id=course_id)
+        # grabs course id from the one clicked on
+        course_name = course(sess[1])
 
     if g.user['role'] == 'teacher':
         return render_template('portal/sessions.html',
                                 sessions=classes,
                                 sections=sections,
                                 course_id=course_id,
-                                coursename=coursename)
+                                course_name=course_name)
 
     if g.user['role'] == 'student':
-        return render_template('portal/sessions.html', sessions=classes, sections=sections, course_id=course_id)
+        return render_template('portal/sessions.html', sessions=classes, sections=sections, course_id=course_id, course_name='None')
 
 #-- Function for grabbing course and section -----------------------------------
-def course(course_id, section = None):
+def course(course_id):
     cur = get_db().cursor()
     # Course name where it matches course id
     cur.execute("""SELECT name FROM courses WHERE id = %s;""",
                 (course_id,))
-    course = cur.fetchall()[0][0]
+    course_name = cur.fetchall()[0][0]
 
-    if section == None:
-        return course
-
-    name = course + ' - ' + section
+    name = course_name
     return name
 
 
