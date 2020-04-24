@@ -87,20 +87,24 @@ def submit_assignments():
     return redirect(url_for('teacher.assignments'))
 
 @bp.route('/assignments/create', methods=('GET', 'POST'))
+@login_required
+@admin
 def create_assignments():
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
         points = request.form['points']
         course = request.form['course']
+
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
                     INSERT INTO assignments (name, description, points, course_id)
                     VALUES (%s, %s, %s, %s)
                 """, (name, description, points, course))
-                print(g.user['id'])
+
                 return redirect(url_for('teacher.assignments'))
+
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute("""
@@ -108,9 +112,12 @@ def create_assignments():
                 WHERE teacher_id = %s
             """, (g.user['id'],))
             courses = cur.fetchall()
+
     return render_template('layouts/teacher/assignments/create-assignments.html', courses=courses)
 
 @bp.route('/assignments/assign', methods=('GET', 'POST'))
+@login_required
+@admin
 def assign_work():
     if request.method == 'POST':
         session_id = request.form['session_id']
@@ -131,11 +138,14 @@ def assign_work():
     return redirect(url_for('teacher.sessions'))
 
 @bp.route('/assignments/assign/submit', methods=('GET', 'POST'))
+@login_required
+@admin
 def assign_submit():
-     if request.method == 'POST':
+    if request.method == 'POST':
         date = request.form['date']
         assign_id = request.form['assign_id']
         session_id = request.form['session_id']
+
         if validate(assign_id, 'assignments') and validate(session_id, 'sessions'):
             with db.get_db() as con:
                 with con.cursor() as cur:
@@ -156,15 +166,15 @@ def grade():
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
-                SELECT r.name, r.description, r.points, u.first_name, u.last_name, u.id, a.work_id
-                FROM session_assignments a JOIN assignments r
-                ON a.assignment_id = r.id
-                JOIN roster d
-                ON a.session_id = d.session_id
-                JOIN users u
-                ON d.student_id = u.id
-                WHERE a.assignment_id = %s
-                """, (code, ))
+                    SELECT r.name, r.description, r.points, u.first_name, u.last_name, u.id, a.work_id
+                    FROM session_assignments a JOIN assignments r
+                    ON a.assignment_id = r.id
+                    JOIN roster d
+                    ON a.session_id = d.session_id
+                    JOIN users u
+                    ON d.student_id = u.id
+                    WHERE a.assignment_id = %s
+                """, (code,))
                 informations = cur.fetchall()
         return render_template('layouts/teacher/assignments/teacher-assignments.html', informations=informations)
     return redirect(url_for('teacher.courses'))
@@ -219,10 +229,10 @@ def grade_submission():
               with db.get_db() as con:
                   with con.cursor() as cur:
                       cur.execute("""
-                      UPDATE assignment_grades
-                      SET grades = %s
-                      WHERE owner_id = %s AND assigned_id = %s;
-                      SELECT * FROM assignment_grades
+                          UPDATE assignment_grades
+                          SET grades = %s
+                          WHERE owner_id = %s AND assigned_id = %s;
+                          SELECT * FROM assignment_grades
                       """, (grade ,user[1], user[4],))
                       res = cur.fetchall()
                       return redirect(url_for('teacher.sessions'))

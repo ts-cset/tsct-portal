@@ -14,7 +14,7 @@ VALUES ('180', 'Big Software Energy', 'CSET', 'A class that really makes you FEE
 INSERT INTO sessions (session_name, meeting_days, meeting_place, meeting_time, course_id)
 VALUES ('A', 'MTWThF', 'Greenfield', '12:00-16:30', 1),
        ('B', 'M', 'Remote', '12:01-16:31', 1),
-       ('A', 'MWF', 'Main', '7:30-8:45', 2);
+       ('A', 'MWF', 'Main', '7:30-8:45', 4);
 
 INSERT INTO roster (student_id, session_id)
 VALUES (2, 1),

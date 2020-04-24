@@ -23,7 +23,7 @@ def home():
                 WHERE r.student_id = %s
                 """, (g.user['id'],))
             courses = cur.fetchall()
-    return render_template('student-page.html', courses=courses)
+    return render_template('layouts/student/student-page.html', courses=courses)
 
 @bp.route('/assignments', methods=('GET', 'POST'))
 @login_required
@@ -39,7 +39,7 @@ def assignments():
                     AND session_id = %s
                 """, (g.user['major'], session_id,))
                 assignments = cur.fetchall()
-        return render_template('student-assignments.html', assignments=assignments)
+        return render_template('layouts/student/assignments/student-assignments.html', assignments=assignments)
     return redirect(url_for('student.home'))
 
 @bp.route('/grades', methods=('GET', 'POST'))

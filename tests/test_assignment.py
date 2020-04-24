@@ -163,7 +163,7 @@ def test_assign_work(client, auth):
     # Teachers should not be able to try to assign work to sessions that aren't theirs
     response = client.post(
         '/teacher/assignments/assign',
-        data={'session_id':2}
+        data={'session_id': 3}
     )
     assert 'http://localhost/teacher/sessions' == response.headers['Location']
 
@@ -192,7 +192,7 @@ def test_assign_submit(client, auth, app):
     client.post(
         '/teacher/assignments/assign/submit',
         # The teacher does not own this session
-        data={'date': '2020-05-08', 'session_id': 2, 'assign_id': 4}
+        data={'date': '2020-05-08', 'session_id': 3, 'assign_id': 4}
     )
     response = client.get('/teacher/sessions')
     assert b'Something went wrong' in response.data
