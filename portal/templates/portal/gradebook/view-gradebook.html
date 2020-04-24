@@ -1,0 +1,58 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+{% for course in courses %}
+<h2>Course</h2>
+<ul>
+  <li>
+    <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
+  </li>
+</ul>
+{% for session in sessions %}
+{% if session['courses_id'] == course['id'] %}
+<h3>Session</h3>
+<ul>
+  <li>
+    <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
+  </li>
+</ul>
+<h4>Roster</h4>
+{% for roster in rosters %}
+{% if roster['session_id'] == session['id'] %}
+<ul>
+  <li>
+    <p>{{ roster['users_id'] }}</p>
+  </li>
+</ul>
+{% endif %}
+{% endfor %}
+{% for assignment in assignments %}
+{% if assignment['session_id'] == session['id'] %}
+<h4>Assignment</h4>
+<ul>
+  <p>Assignment: {{ assignment['name'] }}</p>
+  <p> Due: {{ assignment['date'] }}</p>
+  <a href="{{ url_for('assignments.view_assignment', course_id=course['id'], session_id=session['id'], assignment_id=assignment['id']) }}"><input type="button" value="View Assignment"></a>
+</ul>
+{% for submission in submissions %}
+{% if submission['assignments_id'] == assignment['id'] %}
+<h5>Submission</h5>
+<a href="{{ url_for('assignments.grade_assignment', course_id=course['id'], session_id=session['id'], assignment_id=assignment['id']) }}"><input type="button" value="Grade Assignment"></a>
+<ul>
+  <li>
+    <p>Student: {{ submission['users_id'] }}</p>
+    <p>Answer: {{ submission['answer'] }}</p>
+    <p>Grade: {{ submission['letter'] }}</p>
+    <p>Points: {{ submission['points'] }}</p>
+  </li>
+</ul>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endblock %}
