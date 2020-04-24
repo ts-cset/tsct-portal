@@ -12,6 +12,7 @@ INSERT INTO sessions (session_name, meeting_days, meeting_place, meeting_time, c
 VALUES ('A', 'MTWThF', 'Greenfield', '12:00-16:30', 1),
        ('B', 'M', 'Remote', '12:01-16:31', 1);
 
+
 INSERT INTO roster (student_id, session_id)
 VALUES (2, 1);
 
