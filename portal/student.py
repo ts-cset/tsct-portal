@@ -27,16 +27,19 @@ def home():
             courses = cur.fetchall()
     return render_template('student-page.html', courses=courses)
 
-@bp.route('/assignments')
+@bp.route('/assignments', methods=('GET', 'POST'))
 @login_required
 def assignments():
-    with db.get_db() as con:
-        with con.cursor() as cur:
-            cur.execute("""
-                SELECT a.name, a.description, a.points, s.due_date FROM assignments a JOIN session_assignments s
-                ON a.id = s.assignment_id
-                WHERE course_id IN (SELECT id FROM courses WHERE major = %s)
-                AND session_id IN (SELECT session_id FROM roster WHERE student_id = %s)
-            """, (g.user['major'], g.user['id']))
-            assignments = cur.fetchall()
-    return render_template('student-assignments.html', assignments=assignments)
+    if request.method == 'POST':
+        session_id = request.form['session_id']
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    SELECT a.name, a.description, a.points, s.due_date FROM assignments a JOIN session_assignments s
+                    ON a.id = s.assignment_id
+                    WHERE course_id IN (SELECT id FROM courses WHERE major = %s)
+                    AND session_id = %s
+                """, (g.user['major'], session_id,))
+                assignments = cur.fetchall()
+        return render_template('student-assignments.html', assignments=assignments)
+    return redirect(url_for('student.home'))

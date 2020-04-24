@@ -18,12 +18,13 @@
           <li>
             {{ scheduling['course_name'] }}
             {{ scheduling['course_code'] }},
-
             {{ scheduling['session_name'] }},
             {{ scheduling['meeting_days'] }},
             {{ scheduling['meeting_time'] }},
             {{ scheduling['meeting_place'] }}
-            <button type="submit" name="scheduling['session_id']" value="scheduling['session_id']" formaction="url_for('student.assignments')">assignments</button>
+            <form action="{{ url_for('student.assignments') }}" method="post">
+              <button type="submit" name="session_id" value="{{ scheduling['id'] }}">Assignments</button>
+            </form>
           </li>
         {% endfor %}
       </ul>
