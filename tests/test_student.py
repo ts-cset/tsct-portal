@@ -7,4 +7,4 @@ def test_student_home(client, auth):
     assert 'http://localhost/' == response.headers['Location']
     auth.student_login()
     response = client.get('/student/home')
-    assert b'<li>Big Software Energy</li>' in response.data
+    assert b'Big Software Energy' in response.data
