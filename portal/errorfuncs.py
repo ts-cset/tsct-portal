@@ -34,7 +34,7 @@ def remove_prev_info(action): # action is checked for what its being used for.
             del session['meeting_time']
             del session['location']
         except KeyError: # If the key doesn't exist, take to a different page. Should never get this error.
-            redirect(url_for('sections.sections'))
+            redirect(url_for('sessions.sessions'))
 
 def validate_query(action, course_id, *query_args):
     """Used to check query arguments when creating or editting a course."""
@@ -72,7 +72,7 @@ def validate_query(action, course_id, *query_args):
     else:
         return True # If no errors in errors, return true to pass a check to go through with editing or creating a course.
 
-def validate_section(course_id, section, *section_args):
+def validate_session(course_id, section, *session_args):
     """Used for checking query arguments when creating a new course session."""
     cur = get_db().cursor() # Allows for use of DB.
     errors = [] # Create an empty list of errors.
@@ -86,10 +86,18 @@ def validate_section(course_id, section, *section_args):
         section_error = "That section already exists."
         errors.append(section_error)
 
+    if session_args[0] == "": # If the date given was empty, append error to errors.
+        time_error = "Please enter a valid time."
+        errors.append(time_error)
+
+    if session_args[1] == "": # If the location given was empty, append error to errors.
+        location_error = "Please enter a location."
+        errors.append(location_error)
+
     if errors != []: # If errors is not empty, flash those errors and reload the page with all the info kept.
         for error in errors:
             flash(error)
-            keep_prev_info('section', section, section_args[0], section_args[1])
-        return render_template('portal/createsession.html', all_students=section_args[2]) # section_args[2] is required for createsession.
+            keep_prev_info('section', section, session_args[0], session_args[1])
+        return render_template('portal/createsession.html', all_students=session_args[2]) # session_args[2] is required for createsession.
     else:
         return True # If no errors in errors, return true to pass a check to go through with creating the session.
