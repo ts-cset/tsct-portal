@@ -185,7 +185,7 @@ def test_session_submit(client, auth):
     # to the appropriate page
     response = client.post(
         '/teacher/sessions/submit',
-        data={'session_name': 'A', 'meeting_days': 'MTWThF'}
+        data={'session_name': 'A', 'meeting_days': 'MTWThF', 'meeting_place': 'Greenfield', 'meeting_time': '12:00-16:30'}
     )
     assert 'http://localhost/teacher/sessions' == response.headers['Location']
 

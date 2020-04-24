@@ -11,7 +11,17 @@ bp = Blueprint('student', __name__, url_prefix='/student')
 @bp.route('/home')
 @login_required
 def home():
-    # course_sessions is test data
-    course_sessions = [{'session_name':'CSET'},
-                       {'session_name':'brickZ'}]
-    return render_template('student-page.html', course_sessions=course_sessions)
+    with get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("""
+                SELECT c.course_name, c.course_code, s.session_name, s.meeting_days,
+                s.meeting_time, s.meeting_place, s.id, r.student_id
+                FROM courses c JOIN sessions s
+                ON c.id = s.course_id
+                JOIN roster r
+                ON s.id = r.session_id
+                WHERE r.student_id = %s
+                """, (g.user['id'],))
+            courses = cur.fetchall()
+            print(courses)
+    return render_template('student-page.html', courses=courses)
