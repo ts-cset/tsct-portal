@@ -39,6 +39,8 @@ CREATE TABLE sessions (
   id bigserial PRIMARY KEY,
   session_name varchar(1),
   meeting_days TEXT,
+  meeting_place TEXT,
+  meeting_time varchar(11),
   -- Create a one-to-many relationship between courses and sessions of those courses
   course_id bigint REFERENCES courses(id) NOT NULL
 );
