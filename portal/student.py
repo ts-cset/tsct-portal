@@ -34,7 +34,7 @@ def student_view():
 @bp.route('/student/course/<int:course_id>/session/<int:session_id>/assignment/<int:id>/grade')
 @login_required
 @student_required
-def view_assignment_grade(id, session_id, course_id):
+def assignment_grade(id, session_id, course_id):
     """student see grade for assignment"""
 
     user_id = session.get('user_id')
@@ -57,4 +57,4 @@ def view_assignment_grade(id, session_id, course_id):
     grade = cur.fetchone()
     cur.close()
 
-    return render_template("/layouts/assignments/view_assignment_grade.html", course_id=course_id, session_id=session_id,  id=id, grade=grade)
+    return render_template("/layouts/gradebook/assignment_grade.html", course_id=course_id, session_id=session_id,  id=id, grade=grade)

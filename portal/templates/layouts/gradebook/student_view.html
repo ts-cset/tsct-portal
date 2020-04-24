@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Assignment Grades{% endblock %}
+
+{% block content %}
+
+<section class="assignment-grade-student">
+
+<h3 class="assignment-grade"> {{ grade['name']}}/   SESSION: {{ grade['class_session']}}
+  /   ASSIGNMENT: {{grade['assign_name'] }}/    ID #{{grade ['assign_id']}}</h3>
+<h4 class="assignment-grade">STUDENT SUBMISSION:</h4>
+  <p>{{grade['submission']}}</p>
+<h4 class="assignment-grade">FEEDBACK:</h4>
+  <p>{{grade['feedback']}}</p>
+
+  <table class="assignment-table">
+    <tbody>
+      <tr>
+         <th class="th1">earned</th>
+         <th class="th1">possible</th>
+         <th class="th1">grade</th>
+      </tr>
+      <tr>
+        <td class="td-assign">{{grade['earned'] }}</td>
+        <td class="td-assign">{{grade['total'] }}</td>
+        <td class="grade">%{{grade['assignment_grade'] }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+</section>
+
+
+{% endblock %}
