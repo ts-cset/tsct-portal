@@ -66,3 +66,5 @@ def test_delete_session(client, auth):
 
     response = client.post('/course/2/sessions/2/delete')
     assert response.headers['Location'] == 'http://localhost/course/2/sessions'
+    # make sure the course was deleted
+    assert b'T/Th' not in response.data
