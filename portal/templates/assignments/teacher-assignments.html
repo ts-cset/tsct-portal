@@ -5,17 +5,17 @@
 
 {% block content %}
 <form method='post'>
-  {% for student in students%}
-  <h2>{{ student['first_name']}}--{{student['last_name']}}</h2>
-  <h3>Assignment name</h3>
-  <h4>{{ student['name']}}</h4>
-  <p>{{ student['description'] }}</p>
-  <label>Submission</label>
-  <label>Grade
-    <label><input type='text' name='grade-submission'>/{{ student['points'] }}</input></label>
-  </label>
-  <button type="submit" formaction="{{ url_for('teacher.grade_submission') }}" value="{{ student['id'], student['work_id'] }}" name="submission">Submit grades</button>
-  </form>
+{% for information in informations%}
+<h2>{{ information['first_name']}}--{{information['last_name']}}</h2>
+<h3>Assignment name</h3>
+<h3>{{ information['name']}}</h3>
+<p>{{ information['description'] }}</p>
+<label>Submission</label>
+<label>Grade
+  <label><input type='text' name='grade-submission'>/{{ information['points'] }}</input></label>
+</label>
+<button type="submit" formaction="{{ url_for('teacher.grade_submission') }}" value="{{ student['id'], student['work_id'] }}" name="submission">Submit grades</button>
+</form>
   {% endfor %}
 
 

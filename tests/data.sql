@@ -16,7 +16,7 @@ VALUES ('Big Software', 'You need to create some big software with lots of big s
        ('Bigger Software', 'You need to create some big software with lots of big software energy', 300, 1),
        ('Biggest Software', 'You need to create some big software with lots of big software energy', 400, 1),
        ('Mondo Software', 'Very mondo my dude', 25, 1),
-       ('Breaking bricks', 'Break a brick on your head', 600,2);
+       ('Breaking bricks', 'Break a brick on your head', 600, 2);
 
 INSERT INTO session_assignments (session_id, assignment_id, due_date)
 VALUES (1, 1, '4/25/2020'),
@@ -25,4 +25,4 @@ VALUES (1, 1, '4/25/2020'),
        (2, 4, '08/01/2020');
 INSERT INTO roster(student_id, session_id)
 VALUES(2, 1),
-      (2, 2)
+      (2, 2);

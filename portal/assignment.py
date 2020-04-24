@@ -4,6 +4,57 @@ from . import db
 
 from portal.auth import login_required, admin
 from portal.teacher import bp
+@bp.route('/assignments/create', methods=('GET', 'POST'))
+def create_assignments():
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        points = request.form['points']
+        course = request.form['course']
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO assignments (name, description, points, course_id)
+                    VALUES (%s, %s, %s, %s)
+                """, (name, description, points, course))
+                print(g.user['id'])
+                return redirect(url_for('teacher.assignments'))
+    with db.get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("""
+                SELECT * FROM courses
+                WHERE teacher_id = %s
+            """, (g.user['id'],))
+            courses = cur.fetchall()
+    return render_template('create-assignments.html', courses=courses)
+@bp.route('/assignments/assign/submit', methods=('GET', 'POST'))
+def assign_submit():
+     if request.method == 'POST':
+        date = request.form['date']
+        assign_id = request.form['assign_id']
+        session_id = request.form['session_id']
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO session_assignments (session_id, assignment_id, due_date)
+                    VALUES (%s, %s, %s)
+                    """, (session_id, assign_id, date, ))
+     return redirect(url_for('teacher.sessions'))
+@bp.route('/assignments/assign', methods=('GET', 'POST'))
+def assign_work():
+    if request.method == 'POST':
+        session_id = request.form['session_id']
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    SELECT * FROM assignments
+                    WHERE course_id IN (SELECT course_id FROM sessions WHERE id = %s)
+                    AND id NOT IN (SELECT assignment_id FROM session_assignments
+                                   WHERE session_id = %s)
+                """, (session_id, session_id))
+                assigns = cur.fetchall()
+        return render_template('assign-work.html', assigns=assigns, session_id=session_id)
+    return redirect(url_for('teacher.sessions'))
 
 @bp.route('/assignments', methods=('GET', 'POST'))
 @login_required
@@ -85,9 +136,8 @@ def grade():
                 ON d.student_id = u.id
                 WHERE a.assignment_id = %s
                 """, (code, ))
-                students = cur.fetchall()
-                print(students)
-        return render_template('assignments/teacher-assignments.html', students=students)
+                informations = cur.fetchall()
+        return render_template('assignments/teacher-assignments.html', informations=informations)
     return redirect(url_for('teacher.courses'))
 @bp.route('/assignments/view', methods=('GET', 'POST'))
 @login_required
@@ -108,8 +158,6 @@ def view_assignments():
                 WHERE s.id = %s
                 """, (code,))
                 assignments = cur.fetchall()
-            print(code)
-            print(assignments)
         return render_template('assignments/view-assignments.html', assignments=assignments)
 
     return redirect(url_for('teacher.courses'))
@@ -127,8 +175,6 @@ def grade_submission():
                     WHERE owner_id = %s AND assigned_id = %s
                     """, (user[1], user[4], ))
                     search = cur.fetchall()
-                    print(search)
-                    print(type(search))
         if not search:
             with db.get_db() as con:
                 with con.cursor() as cur:
@@ -137,8 +183,6 @@ def grade_submission():
                     SELECT * FROM assignment_grades
                     """, (user[1], user[4], grade, ))
                     res = cur.fetchall()
-                    print(res)
-                    print('Has been registered')
                     return redirect(url_for('teacher.sessions'))
         else :
               with db.get_db() as con:
@@ -150,6 +194,5 @@ def grade_submission():
                       SELECT * FROM assignment_grades
                       """, (grade ,user[1], user[4],))
                       res = cur.fetchall()
-                      print(res)
                       return redirect(url_for('teacher.sessions'))
     return redirect(url_for('teacher.courses'))
