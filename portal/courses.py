@@ -42,7 +42,7 @@ def courses_create():
             cur = get_db().cursor()
             cur.execute("""INSERT INTO courses (major, name, num, description, credits, teacher_id)
                             VALUES (%s, %s, %s, %s, %s, %s);""", (cour_maj, cour_name, cour_num, cour_desc, cour_cred, teacher))
-            remove_prev_info()
+            remove_prev_info('create')
             get_db().commit()
             cur.close()
 
@@ -109,7 +109,7 @@ def courses_edit(cour_id):
                     WHERE id = %s AND teacher_id = %s ;""",
                     (cour_maj, cour_name, cour_num, cour_cred, cour_desc, cour_id, teacher)
             )
-            remove_prev_info()
+            remove_prev_info('edit')
             get_db().commit()
             cur.close()
 

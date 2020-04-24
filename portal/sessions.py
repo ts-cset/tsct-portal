@@ -1,6 +1,7 @@
 import os
 from portal.db import get_db
 from portal.auth import teacher_required, login_required
+from portal.errorfuncs import validate_section, remove_prev_info, keep_prev_info
 
 from flask import (
     Flask, Blueprint, flash, g, redirect, render_template, request, url_for, session
@@ -81,75 +82,30 @@ def session_create():
         students = request.form.getlist('students')
 
         cur = get_db().cursor()
-        cur.execute(
-            """SELECT * FROM sessions WHERE course_id = %s and section = %s;""", (course_id, section))
-        existingsection = cur.fetchall()
-        if existingsection != []:
-            error = 'Section Already Exists'
-            # TODO: don't remove entered info
-            session['section'] = section
-            session['meeting'] = meeting_time
-            session['location'] = location
-            flash(error)
-            return render_template('portal/createsession.html', all_students=all_students)
-        cur.execute("""INSERT INTO sessions (course_id,section, meeting_time, location, teacher_id)
-                        VALUES (%s, %s, %s, %s, %s);""", (course_id, section, meeting_time, location, teacher_id))
-        get_db().commit()
-        session['section'] = ''
-        session['meeting'] = ''
-        session['location'] = ''
-
-        for student in students:
-            # find student in user db then grab it by name
-            cur = get_db().cursor()
-            cur.execute('SELECT * FROM users WHERE name = %s;', (student,))
-            student_info = cur.fetchone()
-            student_id = student_info[0]
-            # create a new session for each student
-            cur.execute("""INSERT INTO student_sessions (course_id, section, student_id)
-                                    VALUES (%s, %s, %s);""", (course_id, section, student_id))
+        check = validate_section(course_id, section, meeting_time, location, all_students)
+        if check == True:
+            cur.execute("""INSERT INTO sessions (course_id,section, meeting_time, location, teacher_id)
+                            VALUES (%s, %s, %s, %s, %s);""", (course_id, section, meeting_time, location, teacher_id))
             get_db().commit()
-            cur.close()
+            remove_prev_info('section')
 
-        return redirect(url_for('courses.courses'))
+            for student in students:
+                # find student in user db then grab it by name
+                cur = get_db().cursor()
+                cur.execute('SELECT * FROM users WHERE name = %s;', (student,))
+                student_info = cur.fetchone()
+                student_id = student_info[0]
+                # create a new session for each student
+                cur.execute("""INSERT INTO student_sessions (course_id, section, student_id)
+                                        VALUES (%s, %s, %s);""", (course_id, section, student_id))
+                get_db().commit()
+                cur.close()
+
+            return redirect(url_for('courses.courses'))
+        else:
+            return check
 
     return render_template('portal/createsession.html', all_students=all_students)
-
-
-# @bp.route('/<int:course_id>/<section>/editsession', methods=("GET", "POST"))
-# def session_edit(course_id, section):
-#     """Edits the session name/info"""
-#     cur = get_db().cursor()
-#     teacher = g.user['id']
-#     cur.execute("SELECT * FROM sessions WHERE section= %s AND course_id = %s;",
-#                 (section, course_id))
-#     selected_session = cur.fetchone()
-#
-#     if g.user['role'] == 'teacher':
-#         return render_template('portal/home.html')
-#
-#     if request.method == "POST":
-#         section = request.form['section']
-#         meeting_time = request.form['meeting']
-#         location = request.form['location']
-#         teacher_id = g.user['id']
-#         students = request.form.getlist('students')
-#
-#         cur.execute("DELETE FROM student_sessions WHERE section = %s AND course_id = %s;",
-#                     (section, course_id))
-#         # Remove all students from previous sessions
-#
-#         cur.execute(
-#             """UPDATE sessions SET (course_id,section, meeting_time, location, teacher_id) = (%s, %s, %s, %s, %s)
-#                 WHERE section = %s AND course_id = %s ;""", (course_id, section, meeting_time, location, teacher_id, section, course_id)
-#         )
-#
-#         get_db().commit()
-#         cur.close()
-#
-#         return redirect(url_for('courses.courses'))
-#
-#     return render_template("portal/editsession.html", course=course)
 
 
 @bp.route('/viewsession', methods=('GET', 'POST'))
