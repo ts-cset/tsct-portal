@@ -84,6 +84,29 @@ def create_course():
             return render_template('error.html', error=error)
 
         if error is None:
+            cur.execute("""
+             INSERT INTO courses (course_number, major, name, description, credits, teacher)
+             VALUES (%s, %s, %s, %s, %s, %s);
+             """,
+             (course_number, g.users['major'], name, description, credits, g.users['id']))
+            db.get_db().commit()
+           
+
+
+            #routing 
+            cur.execute("""
+            SELECT id FROM courses WHERE name = %s AND course_number = %s;
+            """,
+            (name, course_number))
+            courses_tuple = cur.fetchone()
+            course_id = courses_tuple[0]
+
+           
+
+
+
+
+            return redirect(url_for('courses.view_course', course_id=course_id))
             try:
                 cur.execute("""
                  INSERT INTO courses (course_number, major, name, description, credits, teacher)
@@ -96,7 +119,7 @@ def create_course():
                 error="There was a problem creating that course"
                 return render_template('error.html', error=error)
             else:
-                return redirect(url_for('portal.userpage'))
+                return redirect(url_for('courses.view_course', course_id=course_id))
 
     return render_template('portal/courses/create-course.html')
 
@@ -123,6 +146,25 @@ def update_course(course_id):
             return render_template('error.html', error=error)
 
         if error is None:
+            cur.execute("""
+             UPDATE courses SET course_number = %s, major = %s, name = %s, description = %s, credits = %s, teacher = %s
+             WHERE id = %s;
+             """,
+             (course_number, g.users['major'], name, description, credits, g.users['id'], course_id))
+            db.get_db().commit()
+            
+
+            #START OF NEW CODE 
+    
+            cur.execute("""
+            SELECT id FROM courses WHERE name = %s AND course_number = %s;
+            """,
+            (name, course_number))
+            courses_tuple = cur.fetchone()
+            course_id = courses_tuple[0]
+
+
+            return redirect(url_for('courses.view_course', course_id=course_id))
             try:
                 cur.execute("""
                  UPDATE courses SET course_number = %s, major = %s, name = %s, description = %s, credits = %s, teacher = %s
@@ -138,8 +180,8 @@ def update_course(course_id):
                 return redirect(url_for('portal.userpage'))
     return render_template('portal/courses/update-course.html')
 
-@bp.route('/<route>/')
+@bp.route('/<path:subpath>/')
 @login_required
-def course_error(route=None):
+def course_error(subpath=None):
     error = "404 Not found"
     return render_template('error.html', error=error)

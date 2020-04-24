@@ -11,8 +11,8 @@ bp = Blueprint('portal', __name__, url_prefix='/portal')
 def userpage():
     return render_template('account/home.html')
 
-@bp.route('/<route>')
+@bp.route('/<path:subpath>/')
 @login_required
-def error(route=None):
+def portal_error(subpath=None):
     error = "404 Not found"
     return render_template('error.html', error=error)
