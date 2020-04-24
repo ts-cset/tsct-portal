@@ -4,8 +4,9 @@
 
 {% block content %}
 <article class="majors-list">
- <h2>view courses by</h2>
- <a href="">majors</a>
+ <h2>view courses</h2>
+ <a class="link-button" href="{{url_for('main.home')}}">all</a>
+ <a class="link-button" href="{{url_for('main.my_courses')}}">my courses</a>
 </article>
 
     <h2>Course List</h2>
@@ -15,7 +16,7 @@
       <table>
         <tbody>
         <tr>
-          <th class="th1"> course id:</th>
+          <th class="th1"> id:</th>
           <th class="th2"> course name:</th>
           <th class="th2"> teacher:</th>
           <th class="th2"> major:</th>

@@ -23,3 +23,24 @@ def home():
     cur.close()
 
     return render_template("layouts/home.html", courses=courses)
+
+
+@bp.route("/home/mycourses", methods=['GET'])
+@teacher_required
+@login_required
+def my_courses():
+
+    user_id = session.get('user_id')
+
+    cur = db.get_db().cursor()
+    cur.execute(
+        """SELECT courses.course_id, courses.name, courses.major,
+        users.name AS teacher_name FROM courses
+        INNER JOIN users ON courses.teacherid = users.id
+        WHERE users.id = %s """,
+        (user_id,))
+
+    courses = cur.fetchall()
+    cur.close()
+
+    return render_template("layouts/home.html", courses=courses)
