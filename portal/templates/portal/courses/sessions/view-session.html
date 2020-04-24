@@ -34,9 +34,12 @@
 {% if g.users['role'] == 'teacher' %}
 <h4>Roster</h4>
 <ul>
-  {% for roster in rosters %}
+  
+  {%for student in students %}
   <li>
-  <p>{{ roster['users_id'] }}</p>
+  <p>{{ student['name'] }}</p>
+  <p>{{ student['users_id'] }}</p>
+  <p>{{ student['email'] }}</p>
   </li>
   {% endfor %}
 </ul>
