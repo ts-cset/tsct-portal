@@ -27,6 +27,7 @@ def create_assignments():
             """, (g.user['id'],))
             courses = cur.fetchall()
     return render_template('create-assignments.html', courses=courses)
+    
 @bp.route('/assignments/assign/submit', methods=('GET', 'POST'))
 def assign_submit():
      if request.method == 'POST':
@@ -118,6 +119,7 @@ def submit_assignments():
                     WHERE id = %s
                 """, (name, desc, points, id))
     return redirect(url_for('teacher.assignments'))
+
 @bp.route('/assignments/grade', methods=('GET','POST'))
 @login_required
 @admin
@@ -139,6 +141,7 @@ def grade():
                 informations = cur.fetchall()
         return render_template('assignments/teacher-assignments.html', informations=informations)
     return redirect(url_for('teacher.courses'))
+
 @bp.route('/assignments/view', methods=('GET', 'POST'))
 @login_required
 @admin
@@ -161,6 +164,7 @@ def view_assignments():
         return render_template('assignments/view-assignments.html', assignments=assignments)
 
     return redirect(url_for('teacher.courses'))
+
 @bp.route('/grade/submission', methods=('GET', 'POST'))
 @login_required
 @admin

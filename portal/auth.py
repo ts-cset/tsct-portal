@@ -59,7 +59,7 @@ def load_logged_in_user():
         )
         g.user = cur.fetchone()
         cur.close()
-        print(g.user['id'])
+
 @bp.route('/logout')
 def logout():
     session.clear()
