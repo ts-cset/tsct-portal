@@ -5,7 +5,7 @@
 
 {% block content %}
 <form method='post'>
-{% for information in informations%}
+  {% for information in informations%}
   <h2>{{ information['first_name']}}--{{information['last_name']}}</h2>
   <h3>Assignment name</h3>
   <h3>{{ information['name']}}</h3>
@@ -15,7 +15,7 @@
     <label><input type='text' name='grade-submission'>/{{ information['points'] }}</input></label>
   </label>
   <button type="submit" formaction="{{ url_for('teacher.grade_submission') }}" value="{{ information['id'], information['work_id'] }}" name="submission">Submit grades</button>
-{% endfor %}
+  {% endfor %}
 </form>
 
 
