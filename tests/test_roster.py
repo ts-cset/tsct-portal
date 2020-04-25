@@ -19,6 +19,6 @@ def test_roster_delete(client, auth):
     # posts a request to remove a student from the roster
     auth.login()
     response = client.post('/course/2/session/2/roster', data={
-    'sname': 'Test Student',
-    'rname': ''})
-    assert b'Test Student' in response.data
+    'sname': '',
+    'rname': 'Test Student'})
+    assert b'  <li class="student-name">Test Student</li>' not in response.data
