@@ -55,8 +55,7 @@ def grades():
                     JOIN session_assignments s
                     ON s.assignment_id = a.id
                     WHERE session_id = %s
-                    AND owner_id = %s
-                """, (session_id, g.user['id']))
+                """, (session_id,))
                 assignments = cur.fetchall()
 
                 cur.execute("""
