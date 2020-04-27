@@ -68,3 +68,18 @@ def test_delete_session(client, auth):
     assert response.headers['Location'] == 'http://localhost/course/2/sessions'
     # make sure the course was deleted
     assert b'T/Th' not in response.data
+
+
+def test_my_sessions(client, auth):
+    # login as a teacher
+    auth.login()
+    # view the my sessions page
+    response = client.get('/home/my_sessions')
+    # make sure all the teachers current course sessions are listed
+    assert b'METAL 155' in response.data
+    assert b'CSET 180' in response.data
+    assert b'DRAW 201' in response.data
+    assert b'ENG 101'not in response.data
+    # ensure the teacher os able to delete a session from this page
+    response = client.post('/home/my_sessions/2/delete')
+    assert response.headers['Location'] == 'http://localhost/home/my_sessions'
