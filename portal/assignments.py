@@ -239,6 +239,13 @@ def grade_assignment(course_id, session_id, assignment_id):
              (points[count], grade_id, user[0], assignment_id))
             db.get_db().commit()
             count += 1
+
+            cur.execute("""SELECT users.id, users.email, users.name, roster.users_id FROM roster
+                        JOIN users ON users.id= roster.users_id
+                        WHERE roster.session_id = %s;""",
+                    (session_id,))
+            students = cur.fetchall()
+
         return redirect(url_for('portal.userpage'))
 
     return render_template('portal/courses/sessions/assignments/grade-assignments.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions)
