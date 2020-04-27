@@ -8,6 +8,7 @@
 
 <h2>Grades for Assignment</h2>
 {% for grade in grades %}
+<<<<<<< HEAD
 <table>
   <tbody>
     <tr>
@@ -23,6 +24,13 @@
       <td></td>
       <td><a class="course-options-item" href="{{ url_for('main.input_grade', grade_id=grade['grade_id'],
   assignment_id=assignment_id, session_id=session_id, course_id=course_id) }}">input grade</a></td>
+=======
+
+  <p>{{grade['name']}}</p>
+  <a href="{{ url_for('main.input_grade', grade_id=grade['grade_id'],
+  assignment_id=assignment_id, session_id=session_id, course_id=course_id) }}">Input Grade</a>
+
+>>>>>>> 5764ab1c12d841e0f857cb0504bbf0bf1b0ced67
 {% endfor %}
     </tr>
     </tbody>
