@@ -3,35 +3,38 @@ from flask import (
 )
 
 from portal.db import get_db
+from portal.auth import teacher_required, login_required
+from portal.sessions import course
 
 bp = Blueprint('assignments', __name__)
 
 #-- Assignments --#
 @bp.route('/assignments')
+@login_required
 def assignments():
     """View for the assignments"""
     course_id = request.args.get('course_id')
     section = request.args.get('section')
-    coursename = course(course_id, section)
+
+    course_name = course(course_id)
+    course_section = course_name + ' - ' + section
 
     # Grabs all the assignments user and session specific
     student_assignments = user_assignments(course_id, section)
 
     return render_template("portal/assignments.html",
-                            student_assignments=student_assignments,
-                            course_id=course_id,
-                            section=section,
-                            coursename=coursename)
+                                student_assignments=student_assignments,
+                                course_id=course_id,
+                                section=section,
+                                course_section=course_section,
+                                course_name=course_name)
 
 
 #-- Create Assignments --#
 @bp.route('/createassignment', methods=("GET", "POST"))
+@teacher_required
 def assignments_create():
     """View for creating an Assignment"""
-
-    if session['user'][4] != 'teacher':  # only if they are a teacher
-        return render_template('portal/home.html')
-
     if request.method == "POST":
         course_id = request.args.get('course_id')
         section = request.args.get('section')
@@ -75,11 +78,11 @@ def student_sess_id(course_id, section):
 #-- Assignments for student/s --------------------------------------------------
 def user_assignments(course_id, section):
     # get the id of the student
-    user = session['user'][0]
+    user = g.user['id']
     cur = get_db().cursor()
 
     #Shows students assingments
-    if session['user'][4] == 'student':
+    if g.user['role'] == 'student':
         # pulls out all assignments for student id
         cur.execute("""SELECT * FROM assignments AS a
                        JOIN student_sessions AS ss
@@ -89,7 +92,7 @@ def user_assignments(course_id, section):
                        AND ss.student_id = %s;""", (course_id, section, user))
 
     #Show teachers assignments
-    if session['user'][4] == 'teacher':
+    if g.user['role'] == 'teacher':
     # Pulls out all assignments for the course
         cur.execute("""SELECT * FROM assignments AS a
                        JOIN sessions AS s
@@ -98,15 +101,3 @@ def user_assignments(course_id, section):
 
     student_assignments = cur.fetchall()
     return student_assignments
-
-
-#-- Function for grabbing course and section -----------------------------------
-def course(course_id, section):
-    cur = get_db().cursor()
-    # Course name where it matches course id
-    cur.execute("""SELECT name FROM courses WHERE id = %s;""",
-                (course_id,))
-    course = cur.fetchall()[0][0]
-
-    name = course + ' - ' + section
-    return name
