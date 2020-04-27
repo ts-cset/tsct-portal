@@ -6,14 +6,27 @@
 
 <section class="teacher-gradebook">
 
-<h2>Grades for course</h2>
+<h2>Grades for Assignment</h2>
 {% for grade in grades %}
-
-  <p>{{grade['name']}}</p>
-  <a href="{{ url_for('main.input_grade', grade_id=grade['grade_id'],
-  assignment_id=assignment_id, session_id=session_id) }}">Input Grade</a>
-
+<table>
+  <tbody>
+    <tr>
+      <th class="th3">Student</th>
+      <th class="th3">points</th>
+      <th class="th3">possible</th>
+      <th class="th3">grade</th>
+    </tr>
+    <tr>
+      <td>{{grade['name']}}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><a class="course-options-item" href="{{ url_for('main.input_grade', grade_id=grade['grade_id'],
+  assignment_id=assignment_id, session_id=session_id, course_id=course_id) }}">input grade</a></td>
 {% endfor %}
+    </tr>
+    </tbody>
+  </table>
 </section>
 
 
