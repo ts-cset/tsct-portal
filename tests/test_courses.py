@@ -1,6 +1,5 @@
 import pytest
 
-from flask import session
 from portal.db import get_db
 
 
