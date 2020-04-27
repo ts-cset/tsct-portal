@@ -167,3 +167,25 @@ def grade_submission(course_id, session_id, assignment_id, submission_id):
             flash(success_message, 'success')
 
     return render_template('submissions/feedback.html', assignment=assignment, student=student['name'], session=session, submission=submission)
+
+
+def letter_grade(points, total):
+    """Given an amount of points and the total points availage,
+    returns the corresponding letter grade for the average"""
+
+    # letter_grade(9, 10) returns 'A'
+
+    avg = (points / total) * 100
+    scale = [
+        (60, 'D'),
+        (70, 'C'),
+        (80, 'B'),
+        (90, 'A')
+    ]
+    grade = 'F'
+
+    for value in scale:
+        if avg >= value[0]:
+            grade = value[1]
+
+    return grade
