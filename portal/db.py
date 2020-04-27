@@ -126,7 +126,8 @@ def import_csv():
                         (hashed, password[0]))
 
                     g.db.commit()
-                    cur.close()
+
+                cur.close()
 
 
 @click.command("import-csv")
