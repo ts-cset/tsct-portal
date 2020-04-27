@@ -152,3 +152,66 @@ def delete_session(id, course_id):
     cur.close()
     con.close()
     return redirect(url_for('session.view_sessions', course_id=course_id))
+
+
+@bp.route("/home/my_sessions", methods=['GET'])
+@teacher_required
+@login_required
+def my_sessions():
+
+    user_id = session.get('user_id')
+    con = db.get_db()
+    cur = con.cursor()
+
+    cur.execute("""SELECT name FROM users where id = %s """,
+                (user_id,))
+    teacher_name = cur.fetchone()
+
+    cur.execute("""SELECT courses.name as class_name, users.name as teacher_name,
+            sessions.id as session_id, sessions.days as class_days, sessions.class_time as class_time,
+            sessions.course_id as course_id, sessions.location as loca
+            FROM users JOIN courses on users.id = courses.teacherid
+            JOIN sessions on courses.course_id = sessions.course_id
+            WHERE users.id =  %s ORDER BY sessions.course_id ASC """,
+                (user_id,))
+    sessions = cur.fetchall()
+    cur.close()
+    con.close()
+
+    return render_template("layouts/sessions/my_sessions.html", sessions=sessions, teacher_name=teacher_name)
+
+
+@bp.route("/home/my_sessions/<int:id>/delete", methods=['POST'])
+@teacher_required
+@login_required
+def delete_my_session(id):
+    """Delete unwanted session"""
+
+    session = get_session(id)
+    id = session['id']
+    con = db.get_db()
+    cur = con.cursor()
+    cur.execute('DELETE FROM sessions where id = %s',
+                (id,))
+    g.db.commit()
+
+    user_id = session.get('user_id')
+    con = db.get_db()
+    cur = con.cursor()
+
+    cur.execute("""SELECT name FROM users where id = %s """,
+                (user_id,))
+    teacher_name = cur.fetchone()
+
+    cur.execute("""SELECT courses.name as class_name, users.name as teacher_name,
+            sessions.id as session_id, sessions.days as class_days, sessions.class_time as class_time,
+            sessions.course_id as course_id, sessions.location as loca
+            FROM users JOIN courses on users.id = courses.teacherid
+            JOIN sessions on courses.course_id = sessions.course_id
+            WHERE users.id =  %s ORDER BY sessions.course_id ASC """,
+                (user_id,))
+    sessions = cur.fetchall()
+    cur.close()
+    con.close()
+
+    return redirect(url_for("session.my_sessions", sessions=sessions, teacher_name=teacher_name))
