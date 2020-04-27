@@ -102,7 +102,8 @@ def input_grade(course_id, session_id, assignment_id, grade_id):
         cur.close()
         con.close()
 
-        return redirect('main.teacher_view_assignments', course_id, session_id, assignment_id)
+        return redirect(url_for('main.teacher_assignment_grades', course_id=course_id,
+         session_id=session_id, assignment_id=assignment_id))
 
     cur.close()
     con.close()
