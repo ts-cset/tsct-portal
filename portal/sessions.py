@@ -1,6 +1,7 @@
 import os
 from portal.db import get_db
 from portal.auth import teacher_required, login_required
+from portal.errorfuncs import validate_session, remove_prev_info, keep_prev_info
 
 from flask import (
     Flask, Blueprint, flash, g, redirect, render_template, request, url_for, session
@@ -86,17 +87,11 @@ def session_create():
     """View for creating a session"""
     cur = get_db().cursor()
     course_id = request.args.get('course_id')
-    # grabbing name of the course by session's fk
 
-    # ---join for grabbing enrolled_students---
-    # cur.execute('SELECT * FROM student_sessions JOIN users ON student_id =users.id  WHERE session_id = %s;',
-    #             (1,))
-    # enrolled_students = cur.fetchall()
     cur.execute('SELECT * FROM users WHERE role = %s;', ('student',))
     all_students = cur.fetchall()
 
     if request.method == "POST":
-
         section = request.form['section']
         meeting_time = request.form['meeting']
         location = request.form['location']
@@ -104,40 +99,30 @@ def session_create():
         students = request.form.getlist('students')
 
         cur = get_db().cursor()
-        cur.execute(
-            """SELECT * FROM sessions WHERE course_id = %s and section = %s;""", (course_id, section))
-        existingsection = cur.fetchall()
-        if existingsection != []:
-            error = 'Section Already Exists'
-            # TODO: don't remove entered info
-            session['section'] = section
-            session['meeting'] = meeting_time
-            session['location'] = location
-            flash(error)
-            return render_template('portal/createsession.html', all_students=all_students)
-        cur.execute("""INSERT INTO sessions (course_id,section, meeting_time, location, teacher_id)
-                        VALUES (%s, %s, %s, %s, %s);""", (course_id, section, meeting_time, location, teacher_id))
-        get_db().commit()
-        session['section'] = ''
-        session['meeting'] = ''
-        session['location'] = ''
-
-        for student in students:
-            # find student in user db then grab it by name
-            cur = get_db().cursor()
-            cur.execute('SELECT * FROM users WHERE name = %s;', (student,))
-            student_info = cur.fetchone()
-            student_id = student_info[0]
-            # create a new session for each student
-            cur.execute("""INSERT INTO student_sessions (course_id, section, student_id)
-                                    VALUES (%s, %s, %s);""", (course_id, section, student_id))
+        check = validate_session(course_id, section, meeting_time, location, all_students)
+        if check == True:
+            cur.execute("""INSERT INTO sessions (course_id,section, meeting_time, location, teacher_id)
+                            VALUES (%s, %s, %s, %s, %s);""", (course_id, section, meeting_time, location, teacher_id))
             get_db().commit()
-            cur.close()
+            remove_prev_info('section')
 
-        return redirect(url_for('courses.courses'))
+            for student in students:
+                # find student in user db then grab it by name
+                cur = get_db().cursor()
+                cur.execute('SELECT * FROM users WHERE name = %s;', (student,))
+                student_info = cur.fetchone()
+                student_id = student_info[0]
+                # create a new session for each student
+                cur.execute("""INSERT INTO student_sessions (course_id, section, student_id)
+                                        VALUES (%s, %s, %s);""", (course_id, section, student_id))
+                get_db().commit()
+                cur.close()
+
+            return redirect(url_for('sessions.sessions', course_id=course_id))
+        else:
+            return check
 
     return render_template('portal/createsession.html', all_students=all_students)
-
 
 # @bp.route('/<int:course_id>/<section>/editsession', methods=("GET", "POST"))
 # def session_edit(course_id, section):
@@ -173,7 +158,6 @@ def session_create():
 #         return redirect(url_for('courses.courses'))
 #
 #     return render_template("portal/editsession.html", course=course)
-
 
 @bp.route('/viewsession', methods=('GET', 'POST'))
 @login_required

@@ -2,6 +2,7 @@ from flask import (
     Blueprint, g, render_template, redirect, url_for, session, request, flash
 )
 
+from portal.errorfuncs import validate_query, keep_prev_info, remove_prev_info
 from portal.auth import teacher_required
 from portal.db import get_db
 
@@ -35,38 +36,19 @@ def courses_create():
         cour_maj = request.form['cour_maj']
         cour_cred = request.form['cour_cred']
         cour_desc = request.form['cour_desc']
-        # checks major name length
-        if len(cour_maj) > 4:
-            error = 'course major name can only be 4 letters'
-            flash(error)
-            return render_template('portal/createcourse.html')
-        # make a query that inserts into courses table with this info and teacher id
-        cur = get_db().cursor()
-        cur.execute("SELECT * FROM courses WHERE name = %s;", (cour_name,))
-        existingcourse = cur.fetchall()
-        print('print')
-        print(existingcourse)
-        if existingcourse != []:
-            error = "Name already exists"
-            # TODO: don't clear user data
-            session['cour_name'] = cour_name
-            session['cour_num'] = cour_num
-            session['cour_maj'] = cour_maj
-            session['cour_cred'] = cour_cred
-            session['cour_desc'] = cour_desc
-            flash(error)
-            return render_template('portal/createcourse.html')
-        cur.execute("""INSERT INTO courses (major, name, num, description, credits, teacher_id)
-                        VALUES (%s, %s, %s, %s, %s, %s);""", (cour_maj, cour_name, cour_num, cour_desc, cour_cred, teacher))
-        session['cour_name'] = ''
-        session['cour_num'] = ''
-        session['cour_maj'] = ''
-        session['cour_cred'] = ''
-        session['cour_desc'] = ''
-        get_db().commit()
-        cur.close()
 
-        return redirect(url_for('courses.courses'))
+        check = validate_query('create', 0, cour_name, cour_num, cour_maj, cour_cred, cour_desc)
+        if check == True:
+            cur = get_db().cursor()
+            cur.execute("""INSERT INTO courses (major, name, num, description, credits, teacher_id)
+                            VALUES (%s, %s, %s, %s, %s, %s);""", (cour_maj, cour_name, cour_num, cour_desc, cour_cred, teacher))
+            remove_prev_info('create')
+            get_db().commit()
+            cur.close()
+
+            return redirect(url_for('courses.courses'))
+        else:
+            return check
 
     return render_template('portal/createcourse.html')
 
@@ -119,40 +101,20 @@ def courses_edit(cour_id):
         cour_cred = request.form['cour_cred']
         cour_desc = request.form['cour_desc']
 
-        if len(cour_maj) > 4:
-            error = 'course major name can only be 4 letters'
-            flash(error)
-            return render_template("portal/editcourse.html")
+        check = validate_query('edit', cour_id, cour_name, cour_num, cour_maj, cour_cred, cour_desc, course)
+        if check == True:
+            # Update the course
+            cur.execute(
+                """UPDATE courses SET (major, name, num, credits, description) = (%s, %s, %s, %s, %s)
+                    WHERE id = %s AND teacher_id = %s ;""",
+                    (cour_maj, cour_name, cour_num, cour_cred, cour_desc, cour_id, teacher)
+            )
+            remove_prev_info('edit')
+            get_db().commit()
+            cur.close()
 
-        cur.execute(
-            "SELECT * FROM courses WHERE name = %s and id != %s;", (cour_name, cour_id))
-        existingcourse = cur.fetchall()
-        print('print')
-        print(existingcourse)
-        if existingcourse != []:
-            error = "Name already exists"
-            # TODO: don't clear user data
-            session['cour_name'] = cour_name
-            session['cour_num'] = cour_num
-            session['cour_maj'] = cour_maj
-            session['cour_cred'] = cour_cred
-            session['cour_desc'] = cour_desc
-            flash(error)
-            return render_template('portal/createcourse.html')
-
-        # Update the course
-        cur.execute(
-            """UPDATE courses SET (major, name, num, credits, description) = (%s, %s, %s, %s, %s)
-                WHERE id = %s AND teacher_id = %s ;""", (cour_maj, cour_name, cour_num, cour_cred, cour_desc, cour_id, teacher)
-        )
-        session['cour_name'] = ''
-        session['cour_num'] = ''
-        session['cour_maj'] = ''
-        session['cour_cred'] = ''
-        session['cour_desc'] = ''
-        get_db().commit()
-        cur.close()
-
-        return redirect(url_for('courses.courses'))
+            return redirect(url_for('courses.courses'))
+        else:
+            return check
 
     return render_template("portal/editcourse.html", course=course)
