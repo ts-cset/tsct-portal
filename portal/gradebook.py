@@ -6,7 +6,7 @@ from . import db
 
 bp = Blueprint('gradebook', __name__, url_prefix='/gradebook')
 
-@bp.route('/gradebook')
+@bp.route('/')
 @login_required
 def gradebook():
     if g.users['role'] == 'teacher':
