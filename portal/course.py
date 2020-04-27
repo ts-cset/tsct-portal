@@ -106,9 +106,9 @@ def create():
         credits = request.form['credits']
         cur = db.get_db().cursor()
         cur.execute("""
-        INSERT INTO courses (name, major, description, teacherId)
-        VALUES (%s, %s, %s, %s)""",
-                    (course_name, major, course_description, teacherId,))
+        INSERT INTO courses (name, major, description, teacherId, credits)
+        VALUES (%s, %s, %s, %s, %s)""",
+                    (course_name, major, course_description, teacherId, credits))
 
         g.db.commit()
         cur.close()
