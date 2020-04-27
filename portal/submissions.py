@@ -176,6 +176,8 @@ def letter_grade(points, total):
     # letter_grade(9, 10) returns 'A'
 
     avg = (points / total) * 100
+    # more specific grades (B-, C+, etc.) can be added to scale,
+    # as long as it remains in ascending order (low to high)
     scale = [
         (60, 'D'),
         (70, 'C'),
