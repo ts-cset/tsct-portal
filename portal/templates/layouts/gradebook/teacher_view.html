@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Gradebook{% endblock %}
+
+{% block content %}
+
+<section class="teacher-gradebook">
+
+<h2>Grades for course</h2>
+{% for grade in grades %}
+
+  <p>{{grade['name']}}</p>
+  <a href="{{ url_for('main.input_grade', grade_id=grade['grade_id'],
+  assignment_id=assignment_id, session_id=session_id) }}">Input Grade</a>
+
+{% endfor %}
+</section>
+
+
+{% endblock %}
