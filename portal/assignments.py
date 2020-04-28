@@ -53,6 +53,27 @@ def submit_assignment(assignment_id):
         answer = request.form['answer']
         error = None
         cur = db.get_db().cursor()
+
+        #need to pull the session_id and the course_id to go back to view assignment
+        #only have the assignment_id to take and join tables from to make sure the ids are the same
+
+        #code for reference
+        
+        cur.execute("""SELECT session_id FROM assignments
+                   WHERE id = %s;""",
+                   (assignment_id,))
+        sessions = cur.fetchone()
+        session_id = sessions[0]
+
+        
+        cur.execute("""SELECT courses_id FROM session
+                   WHERE id = %s;""",
+                   (session_id,))
+        courses = cur.fetchone()
+        course_id = courses[0]
+
+
+
         try:
             cur.execute("""
             UPDATE submissions SET answer = %s
@@ -62,6 +83,8 @@ def submit_assignment(assignment_id):
         except:
             error = "There was a problem with this submission"
             return render_template('error.html', error=error)
+
+    
         else:
             return redirect(url_for('assignments.view_assignment', course_id=course_id, session_id=session_id, assignment_id=assignment_id))
     return render_template('portal/courses/sessions/assignments/submit-assignments.html', assignments=assignments)
@@ -245,7 +268,7 @@ def grade_assignment(course_id, session_id, assignment_id):
 
 
 
-        return redirect(url_for('portal.userpage'))
+        return redirect(url_for('assignments.view_assignment', course_id=course_id, session_id=session_id, assignment_id=assignment_id))
 
     return render_template('portal/courses/sessions/assignments/grade-assignments.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions)
 
