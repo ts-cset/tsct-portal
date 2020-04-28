@@ -98,6 +98,14 @@ def validate(id, table):
                     AND teacher_id = %s
                 """).format(sql.Identifier(table)), (id, g.user['id']))
                 result = cur.fetchone()
+    elif table == 'courses':
+        with get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    SELECT * FROM courses
+                    WHERE id = %s AND teacher_id = %s
+                """, (id, g.user['id']))
+                result = cur.fetchone()
     else:
         result = None
 
@@ -105,3 +113,10 @@ def validate(id, table):
         return False
     else:
         return True
+
+def validate_text(input, max_length):
+    """Check that text entry is within reasonable limits"""
+    if len(input) <= max_length:
+        return True
+    else:
+        return False

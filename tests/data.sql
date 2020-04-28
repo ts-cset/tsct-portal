@@ -9,7 +9,7 @@ INSERT INTO courses (course_code, course_name, major, description, teacher_id)
 VALUES ('180', 'Big Software Energy', 'CSET', 'A class that really makes you FEEL like a developer', 1),
        ('500', 'Brick smashing', 'MASN', 'Smashing bricks and smashing brick sciences', 1),
        ('155', 'Bigger Software Energy', 'CSET', 'Big boi energy', 1),
-       ('155', 'Big Database Energy', 'CSET', 'A class that really makes you design databases', 2);
+       ('155', 'Big Database Energy', 'CSET', 'A class that really makes you design databases', 3);
 
 INSERT INTO sessions (session_name, meeting_days, meeting_place, meeting_time, course_id)
 VALUES ('A', 'MTWThF', 'Greenfield', '12:00-16:30', 1),

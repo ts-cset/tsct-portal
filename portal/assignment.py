@@ -39,6 +39,7 @@ def assignments():
                 FROM assignments a JOIN courses c
                 ON a.course_id = c.id
                 WHERE c.teacher_id = %s
+                ORDER BY a.id
             """, (g.user['id'],))
             assignments = cur.fetchall()
 

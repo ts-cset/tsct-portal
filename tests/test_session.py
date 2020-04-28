@@ -18,16 +18,40 @@ def test_sessions(client, auth):
     # Session 1 should now be deleted and no longer shown
     assert b'180 A' not in response.data
 
+    # Teachers should not able able to delete sessions they don't own
+    response = client.post(
+        '/teacher/sessions',
+        data={'id': 3}
+    )
+    assert b'Something went wrong.' in response.data
+
 
 def test_make_session(client, auth):
     auth.teacher_login()
+
+    # On a GET request where session creation is not underway, users should be
+    # redirected to the courses page
     response = client.get('teacher/sessions/create')
-    assert 'http://localhost/teacher/home' == response.headers['Location']
+    assert 'http://localhost/teacher/courses' == response.headers['Location']
+
+    # Teachers should be able to begin creating a session via POST request
     response = client.post(
         '/teacher/sessions/create',
-        data={'session':1}
+        data={'course_id': 1}
     )
+    # Teacher should see a student's name if session creation begins successfully
     assert b'Lueklee, Kevstice' in response.data
+
+    # Cancel the session creation before next request
+    client.get('teacher/sessions/cancel')
+
+    # Teachers should not be able to create sessions for courses they don't own
+    client.post(
+        '/teacher/sessions/create',
+        data={'course_id': 4}
+    )
+    response = client.get('/teacher/courses')
+    assert b'Something went wrong.' in response.data
 
 def test_session_add(client, auth):
     auth.teacher_login()
@@ -47,7 +71,7 @@ def test_session_add(client, auth):
     # Now we begin creating a session
     client.post(
         '/teacher/sessions/create',
-        data={'session':1}
+        data={'course_id':1}
     )
     # Students may then be added with checkbox interface
     response = client.post(
@@ -78,7 +102,7 @@ def test_session_remove(client, auth):
     # Now we begin creating a session
     client.post(
         '/teacher/sessions/create',
-        data={'session':1}
+        data={'course_id':1}
     )
     # Students need to be added before they can be removed
     client.post(
@@ -103,26 +127,57 @@ def test_session_submit(client, auth):
     response = client.get('/teacher/sessions/submit')
     assert 'http://localhost/teacher/sessions/create' == response.headers['Location']
 
-    # Session creation must be underway to add students to the roster for it
+    # Session creation must be underway to submit other information to finalize it,
     # otherwise the user will simply be redirected away
     response = client.post(
         '/teacher/sessions/submit',
-        data={'session_name': 'A', 'meeting_days': 'MTWThF'}
+        data={
+            'session_name': 'A',
+            'meeting_days': 'MTWThF',
+            'meeting_place': 'Mellor',
+            'meeting_time': '12-4:30'
+        }
     )
     assert 'http://localhost/teacher/sessions/create' == response.headers['Location']
 
     client.post(
         '/teacher/sessions/create',
-        data={'session':1}
+        data={'course_id':1}
     )
 
     # If the user successfully submits the post request, they should be redirected
     # to the appropriate page
     response = client.post(
         '/teacher/sessions/submit',
-        data={'session_name': 'A', 'meeting_days': 'MTWThF'}
+        data={
+            'session_name': 'A',
+            'meeting_days': 'MTWThF',
+            'meeting_place': 'Mellor',
+            'meeting_time': '12-4:30'
+        }
     )
     assert 'http://localhost/teacher/sessions' == response.headers['Location']
+
+    # If the user attempts to submit invalid data (excessive text length)
+    # it should not be sent to the database
+    # Re-start session creation
+    client.post(
+        '/teacher/sessions/create',
+        data={'course_id':1}
+    )
+    # Post some invalid data
+    client.post(
+        '/teacher/sessions/submit',
+        data={
+            'session_name': 'A',
+            'meeting_days': 'MTWThF',
+            'meeting_place': 'This text is way too long for this field',
+            'meeting_time': '12-4:30'
+        }
+    )
+    # Get a page that will display the warning that should be flashed
+    response = client.get('teacher/courses')
+    assert b'Something went wrong.' in response.data
 
 def test_session_cancel(client, auth):
     auth.teacher_login()
@@ -136,15 +191,15 @@ def test_session_cancel(client, auth):
     # The user begins creation of a session
     client.post(
         '/teacher/sessions/create',
-        data={'session':1}
+        data={'course_id':1}
     )
     # The user cancels creation of a session
     response = client.get('/teacher/sessions/cancel')
     assert 'http://localhost/teacher/home' == response.headers['Location']
     # If the user now tries to view the session creation window, they will be
-    # redirected to the teacher home
+    # redirected to the courses page
     response = client.get('/teacher/sessions/create')
-    assert 'http://localhost/teacher/home' == response.headers['Location']
+    assert 'http://localhost/teacher/courses' == response.headers['Location']
 
 def test_session_edit(client, auth, app):
     auth.teacher_login()
@@ -161,6 +216,17 @@ def test_session_edit(client, auth, app):
     )
     # They should then see the editing page
     assert b'Edit a Session' in response.data
+
+    # Cancel edit to prepare for next request
+    client.get('/teacher/sessions/cancel')
+
+    # Teachers should not be able to edit sessions they do not own
+    client.post(
+        '/teacher/sessions/edit',
+        data={'edit': 3}
+    )
+    response = client.get('teacher/home')
+    assert b'Something went wrong.' in response.data
 
 def test_edit_mode(client, auth):
     auth.teacher_login()

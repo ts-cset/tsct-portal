@@ -4,9 +4,15 @@
 
 {% block content %}
   <form action="{{ url_for('teacher.submit_assignments') }}" method="post">
-    <input type="text" name="name" value="{{ info['name'] }}">
-    <textarea name="description" rows="5" cols="40">{{ info['description']}}</textarea>
-    <input type="number" name="points" value="{{ info['points'] }}">
+    <label> Assignment Name:
+      <input type="text" name="name" value="{{ info['name'] }}">
+    </label>
+    <label> Description:
+      <textarea name="description" rows="5" cols="40">{{ info['description']}}</textarea>
+    </label>
+    <label> Points:
+      <input type="number" name="points" value="{{ info['points'] }}">
+    </label>
     <button type="submit" name="submit" value="{{ info['id'] }}">Save</button>
   </form>
 {% endblock %}

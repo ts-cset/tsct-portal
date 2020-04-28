@@ -2,7 +2,7 @@ from flask import Flask, render_template, Blueprint, request, redirect, url_for,
 
 from . import db
 
-from portal.auth import login_required, admin
+from portal.auth import login_required, admin, validate, validate_text
 from portal.teacher import bp
 
 @bp.route('/sessions', methods=('GET', 'POST'))
@@ -10,21 +10,25 @@ from portal.teacher import bp
 @admin
 def sessions():
     if request.method == 'POST':
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                for item in request.form.getlist('id'):
-                    cur.execute("""
-                        DELETE FROM roster
-                        WHERE session_id = %s
-                    """, (item,))
-                    cur.execute("""
-                        DELETE FROM session_assignments
-                        WHERE session_id = %s
-                    """, (item,))
+
+        items = []
+        error = None
+
+        for item in request.form.getlist('id'):
+            if validate(item, 'sessions'):
+                items.append(int(item))
+            else:
+                error = 'Something went wrong.'
+                break
+        if not error:
+            with db.get_db() as con:
+                with con.cursor() as cur:
                     cur.execute("""
                         DELETE FROM sessions
-                        WHERE id = %s
-                    """, (item,))
+                        WHERE id = ANY(%s)
+                    """, (items,))
+        else:
+            flash(error)
 
     with db.get_db() as con:
         with con.cursor() as cur:
@@ -33,6 +37,7 @@ def sessions():
                 FROM sessions s JOIN courses c
                 ON s.course_id = c.id
                 WHERE c.teacher_id = %s
+                ORDER BY c.major, s.session_name
             """, (g.user['id'],))
             sessions = cur.fetchall()
     return render_template('layouts/teacher/sessions/sessions.html', sessions=sessions)
@@ -43,20 +48,24 @@ def sessions():
 @admin
 def make_session():
     if request.method == "POST":
-        course_id = request.form['session']
-        session['course_id'] = course_id
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    INSERT INTO sessions (course_id)
-                    VALUES (%s);
-                    SELECT * FROM sessions
-                    WHERE course_id = %s
-                    ORDER BY id DESC
-                """, (course_id, course_id))
+        course_id = request.form['course_id']
 
-                session_id = cur.fetchone().get('id')
-                session['class_session'] = session_id
+        if validate(course_id, 'courses'):
+            session['course_id'] = course_id
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("""
+                        INSERT INTO sessions (course_id)
+                        VALUES (%s);
+                        SELECT * FROM sessions
+                        WHERE course_id = %s
+                        ORDER BY id DESC
+                    """, (course_id, course_id))
+
+                    session_id = cur.fetchone().get('id')
+                    session['class_session'] = session_id
+        else:
+            flash('Something went wrong.')
 
     if session.get('class_session'):
         with db.get_db() as con:
@@ -84,7 +93,7 @@ def make_session():
 
         return render_template('layouts/teacher/sessions/create-sessions.html', students=students, roster=roster)
     else:
-        return redirect(url_for('teacher.home'))
+        return redirect(url_for('teacher.courses'))
 
 
 @bp.route('/sessions/add', methods=('GET', 'POST'))
@@ -131,17 +140,36 @@ def session_submit():
         if session.get('class_session'):
             session_name = request.form['session_name']
             meeting_days = request.form['meeting_days']
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("""
-                        UPDATE sessions
-                        SET session_name = %s, meeting_days = %s
-                        WHERE id = %s
-                    """, (session_name, meeting_days, session['class_session']))
+            meeting_place = request.form['meeting_place']
+            meeting_time = request.form['meeting_time']
+            # validate length of text input before proceeding
+            if (
+                validate_text(session_name, 1) and
+                validate_text(meeting_days, 6) and
+                validate_text(meeting_place, 10) and
+                validate_text(meeting_time, 11)
+                ):
+                # if all validation passes, open a DB connection
+                with db.get_db() as con:
+                    with con.cursor() as cur:
+                        cur.execute("""
+                            UPDATE sessions
+                            SET session_name = %s,
+                                meeting_days = %s,
+                                meeting_place = %s,
+                                meeting_time = %s
+                            WHERE id = %s
+                        """, (session_name, meeting_days, meeting_place, meeting_time, session['class_session']))
+
+                return redirect(url_for('teacher.sessions'))
+            # if any validation fails, store an error and continue to redirect
+            else:
+                flash('Something went wrong. Editing canceled.')
+
             session.pop('class_session', None)
             session.pop('course_id', None)
             session.pop('edit', None)
-            return redirect(url_for('teacher.sessions'))
+
     if not session.get('edit'):
         return redirect(url_for('teacher.make_session'))
     else:
@@ -155,10 +183,6 @@ def session_cancel():
         if not session.get('edit'):
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute("""
-                        DELETE FROM roster
-                        WHERE session_id = %s
-                    """, (session['class_session'],))
                     cur.execute("""
                         DELETE FROM sessions
                         WHERE id = %s
@@ -183,8 +207,12 @@ def session_cancel():
 @admin
 def session_edit():
     if request.method == "POST":
-        session['class_session'] = request.form['edit']
-        session['edit'] = True
+        session_id = request.form['edit']
+        if validate(session_id, 'sessions'):
+            session['class_session'] = session_id
+            session['edit'] = True
+        else:
+            flash('Something went wrong.')
 
     if session.get('edit'):
         with db.get_db() as con:
