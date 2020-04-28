@@ -1,27 +1,24 @@
 {% extends "layouts/base.html" %}
 {% include 'layouts/teacher-nav.html' %}
 
-{% block title %}Course creation{% endblock %}
+{% block title %}Course-Edit{% endblock %}
 
 {% block content %}
-  <form method="post" class="createCourse">
+  <form method="post">
     <label for="code">Course Code
-      <input type="number" name="code" max="999" required/>
+      <input type="number" name="code" required/>
     </label>
     <label for="name">Course Name
       <input type="text" name="name" required/>
     </label>
-    <label for="major-select">Choose a Major:
       <select name="major">
         <option value="CSET" selected>CSET</option>
         <option value="GEN">GEN</option>
-        <option value="ARCH">ARCH</option>
+        <option value="MASN">MASN</option>
       </select>
-    </label>
     <label for="description">Course description
       <input type="text" name="description" required/>
     </label>
-    <input class="submitCourse" type="submit"/>
+    <input type="submit" />
   </form>
-  <a href="{{ url_for('teacher.home') }}">Cancel</a>
 {% endblock %}
