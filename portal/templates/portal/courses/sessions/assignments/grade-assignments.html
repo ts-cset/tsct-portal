@@ -10,11 +10,13 @@
 <div class="grades">
   <form method="post">
   {% for submission in submissions %}
-  <p>Student: {{ submission['users_id'] }} Answer: {{ submission['answer'] }}</p>
-  <label for="points">Points
-  <input class"points" name="points" required />
-  <p>/{{ assignment['points'] }}</p>
-  </label>
+  <li>
+    <p>Student: {{ submission['users_id'] }} Answer: {{ submission['answer'] }}</p>
+    <label for="points">Points
+      <input name="points" type="number" required/>
+    </label>
+    <p>/{{ assignment['points'] }}</p>
+  </li>
   {% endfor %}
   <input class="submit" type="submit" value="Submit Grade" />
   </form>
