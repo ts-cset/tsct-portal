@@ -17,7 +17,6 @@ def sessions():
     course_id = request.args.get('course_id')
     all = request.args.get('all')
 
-
     cur = get_db().cursor()
     if course_id:
         # grabs course id from the one clicked on
@@ -61,15 +60,17 @@ def sessions():
 
     if g.user['role'] == 'teacher':
         return render_template('portal/sessions.html',
-                                sessions=classes,
-                                sections=sections,
-                                course_id=course_id,
-                                course_name=course_name)
+                               sessions=classes,
+                               sections=sections,
+                               course_id=course_id,
+                               course_name=course_name)
 
     if g.user['role'] == 'student':
         return render_template('portal/sessions.html', sessions=classes, sections=sections, course_id=course_id, course_name='None')
 
-#-- Function for grabbing course and section -----------------------------------
+# -- Function for grabbing course and section -----------------------------------
+
+
 def course(course_id):
     cur = get_db().cursor()
     # Course name where it matches course id
@@ -85,8 +86,6 @@ def course(course_id):
 @teacher_required
 def session_create():
     """View for creating a session"""
-    if session['user'][4] != 'teacher':
-        return render_template('portal/home.html')
     cur = get_db().cursor()
     course_id = request.args.get('course_id')
 
@@ -101,7 +100,8 @@ def session_create():
         students = request.form.getlist('students')
 
         cur = get_db().cursor()
-        check = validate_session(course_id, section, meeting_time, location, all_students)
+        check = validate_session(
+            course_id, section, meeting_time, location, all_students)
         if check == True:
             cur.execute("""INSERT INTO sessions (course_id,section, meeting_time, location, teacher_id)
                             VALUES (%s, %s, %s, %s, %s);""", (course_id, section, meeting_time, location, teacher_id))
@@ -160,6 +160,7 @@ def session_create():
 #         return redirect(url_for('courses.courses'))
 #
 #     return render_template("portal/editsession.html", course=course)
+
 
 @bp.route('/viewsession', methods=('GET', 'POST'))
 @login_required

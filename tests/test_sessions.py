@@ -42,10 +42,10 @@ def test_create_session(app, client, auth):
         auth.teacher_login()
 
         # create a new software project session
-        client.post('/createsession?course_id=1', data={
+        client.post('createsession?course_id=1', data={
             'section': 'H', 'meeting': '09:18', 'location': '100', 'students': 'kyle'})
 
-        response = client.get('/sessions?course_id=1')
+        response = client.get('sessions?course_id=1')
         assert response.data.count(b'Software Project II') == 4
 
 
@@ -96,9 +96,8 @@ def test_teacher_check(app, client, auth, url):
             response = client.post(url, data={'course_to_delete': 4})
         else:
             response = client.get(url)
-        home = client.get('/home')
 
-        assert response.data == home.data
+        assert b'Redirect' in response.data
 
 
 @pytest.mark.parametrize(('role'), (

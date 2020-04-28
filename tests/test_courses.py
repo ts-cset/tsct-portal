@@ -46,11 +46,10 @@ def test_create_save_data(app, auth, client):
         auth.teacher_login()
 
         # post it
-        client.post('/createcourse', data={'cour_maj': 'CSET', 'cour_name': 'Metal',
-                                           'cour_num': 100, 'cour_desc': 'test description', 'cour_cred': 3})
+        response = client.post('/createcourse', data={'cour_maj': 'CSET', 'cour_name': 'Metal',
+                                                      'cour_num': 100, 'cour_desc': 'test description', 'cour_cred': 3})
         # create a class that already exists
-        response = client.get('/createcourse')
-        assert b'<input type="number" id="cour_cred" name="cour_cred" value=\'3\' min="1" max="4" required>' in response.data
+        assert b'A course already exists with that name.' in response.data
 
 
 def test_edit_course(app, client, auth):
@@ -88,7 +87,7 @@ def test_edit_save_data(app, client, auth):
         response = client.post('/1/editcourse', data={'cour_name': 'Metal', 'cour_num': 111,
                                                       'cour_maj': 'CSET', 'cour_cred': 1, 'cour_desc': 'test description'})
         # check if it's been updated
-        assert b'<input type="number" id="cour_cred" name="cour_cred" value=\'1\' min="1" max="4" required>' in response.data
+        assert b'value="1"' in response.data
 
 
 def test_course_id_length(app, client, auth):
@@ -96,7 +95,7 @@ def test_course_id_length(app, client, auth):
         auth.teacher_login()
         response = client.post('/createcourse', data={'cour_name': 'djhcd', 'cour_num': 111,
                                                       'cour_maj': 'CSETt', 'cour_cred': 1, 'cour_desc': 'test description'})
-        assert b'<div class="flash">course major name can only be 4 letters</div>' in response.data
+        assert b'Course Majors can only have a maximum of 4 letters.' in response.data
         # b'Course Majors can only have a maximum of 4 letters.'
 
 
@@ -106,7 +105,7 @@ def test_edit_course_id_length(app, client, auth):
         client.get('')
         response = client.post('/1/editcourse', data={'cour_name': 'something', 'cour_num': 111,
                                                       'cour_maj': 'CSETtt', 'cour_cred': 1, 'cour_desc': 'test description'})
-        assert b'<div class="flash">course major name can only be 4 letters</div>' in response.data
+        assert b'Course Majors can only have a maximum of 4 letters.' in response.data
         # b'Course Majors can only have a maximum of 4 letters.'
 
 
@@ -143,9 +142,8 @@ def test_teacher_check(app, client, auth, url):
             response = client.post(url, data={'course_to_delete': 4})
         else:
             response = client.get(url)
-        home = client.get('/home')
 
-        assert response.data == home.data
+        assert b'Redirect' in response.data
 
 
 def test_course_view(app, client, auth):
