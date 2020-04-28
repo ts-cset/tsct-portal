@@ -179,10 +179,18 @@ def letter_grade(points, total):
     # more specific grades (B-, C+, etc.) can be added to scale,
     # as long as it remains in ascending order (low to high)
     scale = [
-        (60, 'D'),
-        (70, 'C'),
-        (80, 'B'),
-        (90, 'A')
+        (60, 'D-'),
+        (64, 'D'),
+        (67, 'D+'),
+        (70, 'C-'),
+        (74, 'C'),
+        (77, 'C+'),
+        (80, 'B-'),
+        (84, 'B'),
+        (87, 'B+'),
+        (90, 'A-'),
+        (94, 'A'),
+        (97, 'A+')
     ]
     grade = 'F'
 
