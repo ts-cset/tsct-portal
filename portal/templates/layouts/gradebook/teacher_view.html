@@ -21,8 +21,8 @@
       <td>{{grade['name']}}</td>
       <td>{{grade['points_received']}}</td>
       <td>{{grade['total_points']}}</td>
-      <td class="grade">{{grade['assignment_grade']}}</td>
-      <td><a class="course-options-item" href="{{ url_for('main.input_grade', grade_id=grade['grade_id'],
+      <td class="grade">%{{grade['assignment_grade']}}</td>
+      <td><a class="course-options-item2" href="{{ url_for('main.input_grade', grade_id=grade['grade_id'],
   assignment_id=assignment_id, session_id=session_id, course_id=course_id) }}">input grade</a></td>
 {% endfor %}
     </tr>
