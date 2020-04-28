@@ -70,16 +70,18 @@ def courses_view(cour_id):
 @teacher_required
 def courses_delete():
     """View for deleting courses"""
-    if request.method == 'POST':
-        course_to_delete = request.form['course_to_delete']
-        teacher = g.user['id']
-        cur = get_db().cursor()
+    course_to_delete = request.form['course_to_delete']
+    teacher = g.user['id']
 
-        cur.execute("DELETE FROM courses WHERE teacher_id = %s AND id = %s;",
-                    (teacher, course_to_delete))
-        get_db().commit()
-        cur.close()
-        return redirect(url_for('courses.courses'))
+
+
+    cur = get_db().cursor()
+
+    cur.execute("DELETE FROM courses WHERE teacher_id = %s AND id = %s;",
+                (teacher, course_to_delete))
+    get_db().commit()
+    cur.close()
+    return redirect(url_for('courses.courses'))
 
 
 # ------- Edit Courses -----------------------------------------------------------------
@@ -93,6 +95,7 @@ def courses_edit(cour_id):
                 (teacher, cour_id))
     course = cur.fetchone()
 
+
     if request.method == "POST":
         error = None
         cour_name = request.form['cour_name']
@@ -100,6 +103,7 @@ def courses_edit(cour_id):
         cour_maj = request.form['cour_maj']
         cour_cred = request.form['cour_cred']
         cour_desc = request.form['cour_desc']
+
 
         check = validate_query('edit', cour_id, cour_name, cour_num, cour_maj, cour_cred, cour_desc, course)
         if check == True:
