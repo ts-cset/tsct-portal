@@ -23,16 +23,18 @@ def login():
         cur.close()
 
         if user is None:
-            error = 'Incorrect email or password.'
-            return render_template('error.html', error=error)
+            error = 'Incorrect email or password'
+
         elif not check_password_hash(user['password'], password):
-            error = 'Incorrect email or password.'
-            return render_template('error.html', error=error)
+            error = 'Incorrect email or password'
+
 
         if error is None:
             session.clear()
             session['users_id'] = user['id']
             return redirect(url_for('portal.userpage'))
+        flash(error)
+
 
     return render_template('account/login.html')
 

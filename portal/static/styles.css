@@ -56,6 +56,10 @@ form {
   width: 35vw;
 }
 
+.login_form {
+  margin-bottom: 7.5%;
+}
+
 label {
   display: block;
   padding-bottom: 1rem;
@@ -132,4 +136,10 @@ width: 350px;
   display: block;
  margin-right: auto;
  margin-left: auto;
+}
+/**
+*flash styling
+*/
+.base_flash { margin: 0 auto;
+  margin-top: 7.5%;
 }
