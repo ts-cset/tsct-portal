@@ -11,9 +11,24 @@ from werkzeug.security import check_password_hash, generate_password_hash
 bp = Blueprint('sessions', __name__)
 
 @bp.route('/sessions')
-@bp.route('/sessions/<int:course_id>', methods=('GET', 'POST'))
 @login_required
-def sessions(course_id=None):
+def sessions_for_students():
+    if g.user['role'] == 'teacher':
+        return redirect(url_for('courses.courses'))
+
+    cur = get_db().cursor()
+
+    cur.execute("""SELECT c.name, ss.course_id, ss.section
+                   FROM student_sessions AS ss JOIN courses AS c
+                   ON (ss.course_id = c.id) WHERE student_id = %s;""",
+                   (g.user['id'],)) # getting user data about sessions
+    all_student_sessions = cur.fetchall()
+
+    return render_template('portal/student_schedule.html', all_student_sessions=all_student_sessions)
+
+@bp.route('/sessions/<int:course_id>')
+@teacher_required
+def sessions_by_course(course_id=None):
     #course_id = request.args.get('course_id')
     all = request.args.get('all')
 
@@ -25,7 +40,9 @@ def sessions(course_id=None):
 
     # shows student sessions
     if g.user['role'] == 'student':
-        cur.execute('SELECT * FROM sessions AS s JOIN student_sessions AS ss ON (s.course_id = ss.course_id and s.section = ss.section) WHERE ss.student_id = %s;',
+        cur.execute("""SELECT * FROM sessions AS s JOIN student_sessions AS ss
+                       ON (s.course_id = ss.course_id and s.section = ss.section)
+                       WHERE ss.student_id = %s;""",
                     (g.user['id'],))
 
     # shows teachers session according to which course they are looking at
@@ -36,6 +53,9 @@ def sessions(course_id=None):
                     (g.user['id'], course_id))
 
     sessions = cur.fetchall()
+    print(sessions)
+    for thing in sessions:
+        print(thing)
     classes = []
     sections = []
     if g.user['role'] == 'student':
