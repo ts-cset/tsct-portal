@@ -10,11 +10,11 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 bp = Blueprint('sessions', __name__)
 
-
-@bp.route('/sessions', methods=('GET', 'POST'))
+@bp.route('/sessions')
+@bp.route('/sessions/<int:course_id>', methods=('GET', 'POST'))
 @login_required
-def sessions():
-    course_id = request.args.get('course_id')
+def sessions(course_id=None):
+    #course_id = request.args.get('course_id')
     all = request.args.get('all')
 
 
@@ -159,14 +159,14 @@ def session_create():
 #
 #     return render_template("portal/editsession.html", course=course)
 
-@bp.route('/viewsession', methods=('GET', 'POST'))
+@bp.route('/viewsession/<int:course_id>/<section>/<classname>', methods=('GET', 'POST'))
 @login_required
-def session_view():
+def session_view(course_id, section, classname):
     """View for seeing more session details."""
     cur = get_db().cursor()
-    course_id = request.args.get("course_id")
-    section = request.args.get("section")
-    classname = request.args.get("class")
+    #course_id = request.args.get("course_id")
+    #section = request.args.get("section")
+    #classname = request.args.get("class")
 
     cur.execute(
         "SELECT * FROM sessions WHERE course_id = %s AND section = %s;", (course_id, section))

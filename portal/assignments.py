@@ -9,12 +9,12 @@ from portal.sessions import course
 bp = Blueprint('assignments', __name__)
 
 #-- Assignments --#
-@bp.route('/assignments')
+@bp.route('/assignments/<int:course_id>/<section>')
 @login_required
-def assignments():
+def assignments(course_id, section):
     """View for the assignments"""
-    course_id = request.args.get('course_id')
-    section = request.args.get('section')
+    #course_id = request.args.get('course_id')
+    #section = request.args.get('section')
 
     course_name = course(course_id)
     course_section = course_name + ' - ' + section
@@ -44,10 +44,10 @@ def assignments_create():
         duedate = request.form['duedate']
 
         # Gets all student ids in the given course_id and section
+        cur = get_db().cursor()
         sessions = student_sess_id(course_id, section)
         for students in sessions:
 
-            cur = get_db().cursor()
             # make a query that inserts into assignments table with this info
             cur.execute("""INSERT INTO assignments
                            (course_id, section, name, type, points, due_date, student_sessions_id)

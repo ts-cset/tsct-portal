@@ -22,7 +22,7 @@
 <ul>
 {% for class in sessions %}
 <li class="session-li">
-  <a class="session" href="{{ url_for('sessions.session_view', class=class, course_id=course_id, section=sections[loop.index0]) }}">{{ class }} - {{sections[loop.index0]}}</a>
+  <a class="session" href="{{ url_for('sessions.session_view', classname=class, course_id=course_id, section=sections[loop.index0]) }}">{{ class }} - {{sections[loop.index0]}}</a>
   <a class='fake-button'  href="{{ url_for('assignments.assignments', course_id=course_id, section=sections[loop.index0]) }}">Assignments</a>
 </li>
 {% endfor %}
@@ -30,7 +30,7 @@
 {% elif g.user['role'] == 'student' %}
 {% for class in sessions %}
 <li class="session-li">
-  <a class="session" href="{{ url_for('sessions.session_view', class=class, course_id=course_id[loop.index0], section=sections[loop.index0]) }}">{{ class }} - {{sections[loop.index0]}}</a>
+  <a class="session" href="{{ url_for('sessions.session_view', classname=class, course_id=course_id[loop.index0], section=sections[loop.index0]) }}">{{ class }} - {{sections[loop.index0]}}</a>
   <a  class='fake-button' href="{{ url_for('assignments.assignments', course_id=course_id[loop.index0], section=sections[loop.index0]) }}">Assignments</a>
 </li>
   {% endfor %}
