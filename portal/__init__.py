@@ -67,6 +67,11 @@ def create_app(test_config=None):
     from . import assignments
     app.register_blueprint(assignments.bp)
 
+    # Gradebook
+    #----------------
+    from . import gradebook
+    app.register_blueprint(gradebook.bp)
+
     # Home Page
     # ---------------
     @app.route('/')
