@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+<h1>Enter Grades</h1>
+<form method="post">
+
+{% for grade in grades %}
+<p>{{ assignment }}</p>
+
+  <label for="grade">
+    <input type="number" id="grade" name="grade" value='' required>
+  </label>
+
+{% endfor %}
+  <input type="submit" value="Submit">
+</form>
+
+
+{% endblock %}

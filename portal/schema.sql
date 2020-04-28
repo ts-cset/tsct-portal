@@ -71,7 +71,7 @@ CREATE TABLE assignments (
 -- Grades
 CREATE TABLE grades (
   id bigserial PRIMARY KEY,
-  student_session_id bigint REFERENCES student_sessions (id) NOT NULL,
-  assignment_id integer REFERENCES assignments (id) NOT NULL,
-  points_earned integer NOT NULL
+  student_sessions_id bigint REFERENCES student_sessions (id) ON DELETE CASCADE NOT NULL,
+  points_earned integer NOT NULL,
+  assignment_id integer REFERENCES assignments (id) ON DELETE CASCADE NOT NULL
 );

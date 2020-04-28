@@ -32,6 +32,6 @@ VALUES (1, 'A', 'homework', 'paper', 10, 'now', 1),
        (2,'A', 'homework', 'paper', 10, 'now', 3);
 
 -- Grades
-INSERT INTO grades (student_session_id, assignment_id, points_earned)
+INSERT INTO grades (student_sessions_id, assignment_id, points_earned)
 VALUES (1, 1, 10),
        (2, 2, 40);
