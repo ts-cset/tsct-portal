@@ -95,9 +95,9 @@ def add_student(course_id, session_id):
         student = request.form['student']
         error = None
         for added_student in added_students:
-            print(added_student[0])
+            print(added_student['users_id'])
             print(student)
-            if added_student[0] == student:
+            if added_student['users_id'] == int(student):
                 error = "That student is already in the session"
                 return render_template('error.html', error=error)
         try:
