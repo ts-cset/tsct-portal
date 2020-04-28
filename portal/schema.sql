@@ -6,6 +6,7 @@
 
 -- Drop existing tables
 DROP TABLE IF EXISTS submissions;
+DROP TABLE IF EXISTS grades;
 DROP TABLE IF EXISTS assignments;
 DROP TABLE IF EXISTS roster;
 DROP TABLE IF EXISTS session;
@@ -55,7 +56,13 @@ CREATE TABLE assignments (
   name text NOT NULL,
   description text NOT NULL,
   date DATE NOT NULL,
-  points bigint NOT NULL
+  points real NOT NULL
+);
+
+--grades
+CREATE TABLE grades (
+  id bigserial PRIMARY KEY,
+  letter varchar(2)
 );
 
 --submissions
@@ -63,8 +70,11 @@ CREATE TABLE submissions (
   id bigserial PRIMARY KEY,
   users_id bigint NOT NULL REFERENCES users (id),
   assignments_id bigint NOT NULL REFERENCES assignments (id),
-  answer text
+  answer text,
+  points real DEFAULT 0,
+  grades_id bigint DEFAULT 14 REFERENCES grades (id)
 );
+
 
 --assignments and session join table
 --CREATE TABLE assignment_sessions (

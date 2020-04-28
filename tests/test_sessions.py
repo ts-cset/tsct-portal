@@ -12,6 +12,20 @@ def test_create_session(client):
     assert b'tuesday' in response.data
     assert b'B' in response.data
 
+def test_create_session_error(client):
+    response = client.get('/auth/login')
+    response = client.post(
+        '/auth/login', data={'email': 'teacher@stevenscollege.edu', 'password':'qwerty'}
+    )
+    response = client.post(
+        '/portal/sessions/1/create-session', data={'name': 'BB', 'times':'tuesday', 'students':43784}
+    )
+    assert b'There was a problem creating that session' in response.data
+    response = client.post(
+        '/portal/sessions/1/create-session', data={'name': 'A', 'times':'monday', 'students':43784}
+    )
+    assert b'That session already exists' in response.data
+
 def test_view_session(client):
     response = client.get('/auth/login')
     response = client.post(

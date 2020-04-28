@@ -37,36 +37,10 @@ def view_session(course_id, session_id):
 @login_required
 @teacher_required
 def create_session(course_id):
-    text = request.args.get('text')
-    cur = db.get_db().cursor()
-    cur.execute("""SELECT * FROM users
-                WHERE role = 'student'""")
-    students = cur.fetchall()
-    cur.close()
-    try:
-        text = int(text)
-    except:
-        print("not a number")
-
-    if text != None and not isinstance(text, int):
-        cur = db.get_db().cursor()
-        text = '{}{}{}'.format('%',text,'%')
-        cur.execute("""SELECT * FROM users
-                    WHERE role = 'student' and name ILIKE %s""", (text,))
-        students = cur.fetchall()
-        cur.close()
-    elif isinstance(text, int):
-        cur = db.get_db().cursor()
-        cur.execute("""SELECT * FROM users
-                    WHERE role = 'student' and id = %s""", (text,))
-        students = cur.fetchall()
-        cur.close()
-
 
     if request.method == 'POST':
         name = request.form['name']
         times = request.form['times']
-        students = request.form.getlist('students')
         error = None
         cur = db.get_db().cursor()
         cur.execute("""
@@ -78,36 +52,70 @@ def create_session(course_id):
 
         if session != None:
             error = "That session already exists"
+            return render_template('error.html', error=error)
 
         if error is None:
-            cur.execute("""INSERT INTO session (courses_id, times, name)
-            VALUES (%s, %s, %s);
-             """,
-             (course_id, times, name))
-            db.get_db().commit()
-            cur.execute("""SELECT id FROM session
-                           WHERE courses_id = %s and name = %s and times = %s""",
-                           (course_id, name, times))
-            session = cur.fetchone()
-
-            for student in students:
-                cur.execute("""INSERT INTO roster (users_id, session_id)
-                VALUES (%s, %s);
+            try:
+                cur.execute("""INSERT INTO session (courses_id, times, name)
+                VALUES (%s, %s, %s);
                  """,
-                 (student, session[0]))
+                 (course_id, times, name))
                 db.get_db().commit()
-            cur.close()
-            return redirect(url_for('portal.userpage'))
+            except:
+                error = "There was a problem creating that session"
+                return render_template('error.html', error=error)
+            else:
+                cur.execute("""SELECT id FROM session
+                WHERE name = %s and courses_id = %s;
+                """,
+                (name, course_id))
+                sessions = cur.fetchone()
+                session_id = sessions[0]
+
+            return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
         else:
             return redirect(url_for('sessions.create_session', course_id=course_id))
-    return render_template('portal/courses/sessions/create-session.html', students=students)
+    return render_template('portal/courses/sessions/create-session.html')
 
-def students_search():
+@bp.route('/<course_id>/<session_id>/add-student', methods=('GET', 'POST'))
+@login_required
+@teacher_required
+def add_student(course_id, session_id):
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT users.*, roster.* FROM roster
+                JOIN users ON users.id = roster.users_id
+                WHERE session_id = %s""",
+                (session_id,))
+    added_students = cur.fetchall()
+    cur.execute("""SELECT * FROM users
+                WHERE role = 'student'""")
+    all_students = cur.fetchall()
+
     if request.method == 'POST':
-        text = request.form['text']
+        student = request.form['student']
         error = None
-        cur = db.get_db().cursor()
-        cur.execute("""SELECT * FROM users
-                       WHERE role = 'student' and name =%s""",(text,))
-        students = cur.fetchall()
-        cur.close()
+        for added_student in added_students:
+            print(added_student[0])
+            print(student)
+            if added_student[0] == student:
+                error = "That student is already in the session"
+                return render_template('error.html', error=error)
+        try:
+            cur.execute("""INSERT INTO roster (users_id, session_id)
+            VALUES (%s, %s);
+             """,
+             (student, session_id))
+            db.get_db().commit()
+            cur.close()
+        except:
+            error = "There was a problem adding that student"
+            return render_template('error.html', error=error)
+        else:
+            return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
+    return render_template('portal/courses/sessions/add-students.html', added_students=added_students, all_students=all_students)
+
+@bp.route('/<path:subpath>/')
+@login_required
+def session_error(subpath=None):
+    error = "404 Not found"
+    return render_template('error.html', error=error)

@@ -67,12 +67,23 @@ def create_app(test_config=None):
     from . import assignments
     app.register_blueprint(assignments.bp)
 
+    # Gradebook
+    #----------------
+    from . import gradebook
+    app.register_blueprint(gradebook.bp)
+
     # Home Page
     # ---------------
     @app.route('/')
     def index():
         return render_template('index.html')
 
+    # Error Page
+    # ---------------
+    @app.route('/<path:subpath>/')
+    def error(subpath=None):
+        error = "404 Not found"
+        return render_template('error.html', error=error)
+
     # Return application object to be used by a WSGI server, like gunicorn
     return app
-
