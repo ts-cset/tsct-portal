@@ -4,9 +4,9 @@
 {% block content %}
 
 <header>
-  <h2>Total Grades for Students in {{ session['name'] }}</h2>
+  <h2>Total Grades for Students in {{ session['session_name'] }}</h2>
 
-  <a class='Back' href="{{ url_for('sessions.session_manage', course_id=course['course_num'] )}}">Back</a>
+  <a class='back' href="{{ url_for('sessions.session_manage', course_id=course['course_num'] )}}">Back</a>
 </header>
 
 <h3>Grades</h3>
@@ -18,10 +18,12 @@
     <th>Student</th>
   </tr>
 
-  {% for student in session %}
+  {% for student in students %}
   <tr>
-    <td>total_grade['grade']</td>
+
+    <td>total_course_grade['grade']</td>
     <td>student['name']</td>
+
   </tr>
   {% endfor %}
 

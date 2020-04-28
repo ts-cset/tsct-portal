@@ -192,6 +192,7 @@ def letter_grade(points, total):
         (94, 'A'),
         (97, 'A+')
     ]
+    
     grade = 'F'
 
     for value in scale:
