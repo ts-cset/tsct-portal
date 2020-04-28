@@ -56,7 +56,8 @@ def teacher_assignment_grades(course_id, session_id, assignment_id):
     cur = con.cursor()
 
     cur.execute("""
-    SELECT *
+    SELECT (ROUND(grades.points_received/grades.total_points, 2 )*100) AS assignment_grade,
+    grades.total_points, grades.points_received, grades.grade_id, users.name
     FROM grades INNER JOIN users
     ON (grades.student_id = users.id)
     WHERE assignment_id = %s;
@@ -79,9 +80,12 @@ def input_grade(course_id, session_id, assignment_id, grade_id):
     cur = con.cursor()
 
     cur.execute("""
-    SELECT total_points FROM grades
-    WHERE grade_id = grade_id
-    """)
+    SELECT grades.total_points, grades.assignment_id AS assign,
+    users.name AS student
+    FROM grades JOIN users ON users.id = grades.student_id
+    WHERE grade_id = %s
+    """,
+                (grade_id,))
 
     max_points = cur.fetchone()
 
