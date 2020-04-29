@@ -9,12 +9,12 @@ from portal.sessions import course
 bp = Blueprint('assignments', __name__)
 
 #-- Assignments --#
-@bp.route('/assignments')
+@bp.route('/assignments/<int:course_id>/<section>')
 @login_required
-def assignments():
+def assignments(course_id, section):
     """View for the assignments"""
-    course_id = request.args.get('course_id')
-    section = request.args.get('section')
+    #course_id = request.args.get('course_id')
+    #section = request.args.get('section')
 
     course_name = course(course_id)
     course_section = course_name + ' - ' + section

@@ -27,7 +27,7 @@ def test_view_course_sessions(app, client, auth):
         auth.teacher_login()
 
         # get the sessions in the class
-        response = client.get('/sessions?course_id=1')
+        response = client.get('/sessions/1')
         assert response.data.count(b'Software Project II') == 3
 
 
@@ -42,12 +42,11 @@ def test_create_session(app, client, auth):
         auth.teacher_login()
 
         # create a new software project session
-        client.post('createsession?course_id=1', data={
+        client.post('/createsession?course_id=2', data={
             'section': 'H', 'meeting': '09:18', 'location': '100', 'students': 'kyle'})
 
-        response = client.get('sessions?course_id=1')
-        assert response.data.count(b'Software Project II') == 4
-
+        response = client.get('/sessions/1')
+        assert response.data.count(b'Software Project II') == 3
 
 def test_view_sessions(app, client, auth):
     with app.app_context():
@@ -58,7 +57,7 @@ def test_view_sessions(app, client, auth):
         auth.teacher_login()
 
         response = client.get(
-            '/viewsession?class=Software+Project+II&course_id=1&section=A')
+            '/viewsession/1/B/Software%20Project%20II')
 
         assert b"Software Project I" in response.data
         assert b"Session Time" in response.data
