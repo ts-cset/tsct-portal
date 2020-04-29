@@ -156,3 +156,12 @@ def test_assign_submit(client, auth, app):
                 cur.execute("""
                     SELECT * FROM session_assignments where assignment_id = 4 AND session_id = 1   """)
                 assert cur.fetchone() is not None
+
+
+def test_assignments_gradebook(client, auth):
+    auth.teacher_login()
+    response = client.get('/teacher/assignments/gradebook')
+    assert 'http://localhost/teacher/home' == response.headers['Location']
+    response = client.post('/teacher/assignments/gradebook', data={'assignment_id': 1})
+    assert b'Big Software' in response.data
+    assert b'<td>Lueklee, Kevstice</td>' in response.data

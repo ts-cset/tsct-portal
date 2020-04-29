@@ -200,3 +200,30 @@ def grade_submission():
                       res = cur.fetchall()
                       return redirect(url_for('teacher.sessions'))
     return redirect(url_for('teacher.courses'))
+
+
+@bp.route('/assignments/gradebook', methods=('GET', 'POST'))
+@login_required
+@admin
+def assignment_grades():
+    if request.method == 'POST':
+        assignment_id = request.form['assignment_id']
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    SELECT a.points, g.grades, u.first_name, u.last_name FROM assignments a JOIN assignment_grades g
+                    ON a.id = g.assigned_id
+                    JOIN users u
+                    ON u.id = g.owner_id
+                    WHERE a.id = %s
+                """, (assignment_id,))
+                assignment = cur.fetchall()
+
+                cur.execute("""
+                    SELECT name FROM assignments
+                    WHERE id = %s
+                """, (assignment_id,))
+                assignment_name = cur.fetchone()
+
+        return render_template('assignment-grades.html', assignment=assignment, assignment_name=assignment_name)
+    return redirect(url_for('teacher.home'))
