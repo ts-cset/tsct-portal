@@ -5,9 +5,7 @@
 {% block content %}
 <ul class='nav-builder'>
   <li><a class="nav-dynamic" href="{{ url_for('auth.home') }}">Home></a></li>
-  {% if g.user['role'] == 'teacher' %}
-    <li><a class="nav-dynamic" href="{{ url_for('courses.courses') }}">{{ course_name }}></a></li>
-  {% endif %}
+  <li><a class="nav-dynamic" href="{{ url_for('courses.courses') }}">{{ course_name }}></a></li>
   <li class="nav-static">Sessions</li>
 </ul>
 
@@ -15,26 +13,15 @@
 
 <p class='assign-title'>{{ course_section }}</p>
 
-{% if g.user['role'] == 'teacher' %}
-
 <a class='fake-button' href="{{ url_for('sessions.session_create', course_id=course_id) }}">Create New Session</a>
 
 <ul>
-{% for class in sessions %}
+{% for teacher_sessions in all_teacher_sessions %}
 <li class="session-li">
-  <a class="session" href="{{ url_for('sessions.session_view', classname=class, course_id=course_id, section=sections[loop.index0]) }}">{{ class }} - {{sections[loop.index0]}}</a>
-  <a class='fake-button'  href="{{ url_for('assignments.assignments', course_id=course_id, section=sections[loop.index0]) }}">Assignments</a>
+  <a class="session" href="{{ url_for('sessions.session_view', classname=teacher_sessions[1], course_id=teacher_sessions[0], section=teacher_sessions[2]) }}">{{ teacher_sessions[1] }} - {{ teacher_sessions[2] }}</a>
+  <a class='fake-button'  href="{{ url_for('assignments.assignments', course_id=teacher_sessions[0], section=teacher_sessions[2]) }}">Assignments</a>
 </li>
 {% endfor %}
-
-{% elif g.user['role'] == 'student' %}
-{% for class in sessions %}
-<li class="session-li">
-  <a class="session" href="{{ url_for('sessions.session_view', classname=class, course_id=course_id[loop.index0], section=sections[loop.index0]) }}">{{ class }} - {{sections[loop.index0]}}</a>
-  <a  class='fake-button' href="{{ url_for('assignments.assignments', course_id=course_id[loop.index0], section=sections[loop.index0]) }}">Assignments</a>
-</li>
-  {% endfor %}
-{% endif %}
 
 </ul>
   {% endblock %}

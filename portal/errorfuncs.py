@@ -34,7 +34,7 @@ def remove_prev_info(action): # action is checked for what its being used for.
             del session['meeting_time']
             del session['location']
         except KeyError: # If the key doesn't exist, take to a different page. Should never get this error.
-            redirect(url_for('sessions.sessions'))
+            redirect(url_for('courses.courses'))
 
 def validate_query(action, course_id, *query_args):
     """Used to check query arguments when creating or editting a course."""

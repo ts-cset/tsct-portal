@@ -12,7 +12,7 @@ def test_view_assignments(app, client, auth):
         auth.login()
 
         # get it
-        response = client.get('/assignments?course_id=1&section=A')
+        response = client.get('/assignments/1/A')
         assert b'homework' in response.data
         assert b'application' in response.data
 
@@ -27,7 +27,7 @@ def test_view_session_assignments(app, client, auth):
         auth.teacher_login()
 
         # get the assignments in the session
-        response = client.get('/assignments?course_id=1&section=A')
+        response = client.get('/assignments/1/A')
         assert b'application' in response.data
 
 
@@ -43,5 +43,5 @@ def test_create_assignment(app, client, auth):
         client.post('/createassignment?course_id=1&section=A', data={
             'name': 'top ten review', 'type': 'essay', 'points': '100', 'duedate': '01/10/2020'})
 
-        response = client.get('/assignments?course_id=1&section=A')
+        response = client.get('/assignments/1/A')
         assert b'top ten review' in response.data
