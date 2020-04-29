@@ -202,7 +202,7 @@ def grade_submission():
     return redirect(url_for('teacher.courses'))
 
 
-@bp.route('/assignment/grades', methods=('GET', 'POST'))
+@bp.route('/assignments/gradebook', methods=('GET', 'POST'))
 @login_required
 @admin
 def assignment_grades():

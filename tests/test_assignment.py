@@ -158,10 +158,10 @@ def test_assign_submit(client, auth, app):
                 assert cur.fetchone() is not None
 
 
-def test_assignment_grades(client, auth):
+def test_assignments_gradebook(client, auth):
     auth.teacher_login()
-    response = client.get('/teacher/assignment/grades')
+    response = client.get('/teacher/assignments/gradebook')
     assert 'http://localhost/teacher/home' == response.headers['Location']
-    response = client.post('/teacher/assignment/grades', data={'assignment_id': 1})
+    response = client.post('/teacher/assignments/gradebook', data={'assignment_id': 1})
     assert b'Big Software' in response.data
     assert b'<td>Lueklee, Kevstice</td>' in response.data
