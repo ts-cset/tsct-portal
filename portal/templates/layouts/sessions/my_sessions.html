@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}All Sessions{% endblock %}
+
+{% block content %}
+
+<h2>Current Sessions for {{ teacher_name['name'] }}</h2>
+
+<table>
+  <tbody>
+  <tr>
+    <th class="th2"> course </th>
+    <th class="th3"> session id </th>
+    <th class="th2"> days </th>
+    <th class="th3"> time </th>
+    <th class="th3"> location </th>
+    <th class="th1"></th>
+    <th class="th1"></th>
+    <th class="th1"></th>
+ </tr>
+ {% for session in sessions %}
+  <tr>
+    <td class="session-table">{{ session['class_name']}}</td>
+    <td class="session-table">{{ session['session_id'] }}</td>
+    <td class="session-table">{{ session['class_days']}}</td>
+    <td class="session-table">{{ session['class_time']}}</td>
+    <td class="session-table">{{ session['loca']}}</td>
+    <td class="td-assign-button"><a class="link" href="{{ url_for('assignment.view_assignments', id=session['session_id'], course_id=session['course_id']) }}">assignments</a></td>
+    <td class="td-assign-button"><a class="link" href="{{ url_for('roster.view', id=session['session_id'], course_id=session['course_id']) }}">roster</a></td>
+    <td class="td-assign-button"><a class="link" href="{{ url_for('session.session_edit', id=session['session_id'], course_id=session['course_id']) }}">edit</a></td>
+    <td class="delete-form" ><form class="delete-form" method="post" action="{{ url_for('session.delete_my_session', id=session['session_id']) }}">
+      <input class="edit-button" class="edit" type="submit" onclick="submit" name="delete" value="delete" ></form>
+ </tr>
+ {%endfor%}
+ </tbody>
+</table>
+
+{%endblock%}
