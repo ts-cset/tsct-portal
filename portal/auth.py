@@ -150,3 +150,19 @@ def validate_number(num, max, min=1):
             return False
     except ValueError:
         return False
+
+def validate_student():
+    """Return a list of valid session IDs for the logged in user"""
+    with get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("""
+                SELECT s.id FROM sessions s JOIN roster r
+                ON s.id = r.session_id
+                WHERE r.student_id = %s
+            """, (g.user['id'],))
+            result = cur.fetchall()
+            valid_sessions = []
+            for row in result:
+                valid_sessions.append(str(row['id']))
+
+    return valid_sessions

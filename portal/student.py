@@ -4,7 +4,7 @@ from flask import (
 
 from portal.db import get_db
 
-from portal.auth import login_required
+from portal.auth import login_required, validate_student
 
 bp = Blueprint('student', __name__, url_prefix='/student')
 
@@ -30,16 +30,18 @@ def home():
 def assignments():
     if request.method == 'POST':
         session_id = request.form['session_id']
-        with get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    SELECT a.name, a.description, a.points, s.due_date FROM assignments a JOIN session_assignments s
-                    ON a.id = s.assignment_id
-                    WHERE course_id IN (SELECT id FROM courses WHERE major = %s)
-                    AND session_id = %s
-                """, (g.user['major'], session_id,))
-                assignments = cur.fetchall()
-        return render_template('layouts/student/assignments/student-assignments.html', assignments=assignments)
+        if session_id in validate_student():
+            with get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("""
+                        SELECT a.name, a.description, a.points, s.due_date FROM assignments a JOIN session_assignments s
+                        ON a.id = s.assignment_id
+                        WHERE session_id = %s
+                    """, (session_id,))
+                    assignments = cur.fetchall()
+            return render_template('layouts/student/assignments/student-assignments.html', assignments=assignments)
+        else:
+            flash('Something went wrong.')
     return redirect(url_for('student.home'))
 
 @bp.route('/grades', methods=('GET', 'POST'))
