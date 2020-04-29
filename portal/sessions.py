@@ -10,63 +10,45 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 bp = Blueprint('sessions', __name__)
 
-
-@bp.route('/sessions', methods=('GET', 'POST'))
+@bp.route('/sessions')
 @login_required
-def sessions():
-    course_id = request.args.get('course_id')
-    all = request.args.get('all')
+def sessions_for_students():
+    if g.user['role'] == 'teacher': # if a teacher tries to get here, redirect them to courses
+        return redirect(url_for('courses.courses'))
 
     cur = get_db().cursor()
-    if course_id:
-        # grabs course id from the one clicked on
-        course_name = course(course_id)
 
-    # shows student sessions
-    if g.user['role'] == 'student':
-        cur.execute('SELECT * FROM sessions AS s JOIN student_sessions AS ss ON (s.course_id = ss.course_id and s.section = ss.section) WHERE ss.student_id = %s;',
-                    (g.user['id'],))
-
-    # shows teachers session according to which course they are looking at
-    if g.user['role'] == 'teacher':
-        if(course_id == None):
-            return redirect(url_for('courses.courses'))
-        cur.execute('SELECT * FROM sessions WHERE teacher_id = %s AND course_id = %s;',
-                    (g.user['id'], course_id))
-
-    sessions = cur.fetchall()
-    classes = []
-    sections = []
-    if g.user['role'] == 'student':
-        course_id = []
+    cur.execute("""SELECT c.name, ss.course_id, ss.section
+                   FROM student_sessions AS ss JOIN courses AS c
+                   ON (ss.course_id = c.id) WHERE student_id = %s;""",
+                   (g.user['id'],)) # getting course name, course id and section with a join
+    all_student_sessions = cur.fetchall() # all the values are displayed with jinja2 in student_schedule.html
     cur.close()
 
-    for sess in sessions:
+    return render_template('portal/student_schedule.html', all_student_sessions=all_student_sessions)
 
-        cur = get_db().cursor()
+@bp.route('/sessions/<int:course_id>')
+@teacher_required
+def sessions_for_teachers(course_id=None): # If no course_id is given, it is None
+    cur = get_db().cursor()
 
-        # grabbing name of the course by session's fk
-        cur.execute('SELECT name FROM courses WHERE id = %s;',
-                    (sess[0],))
-        classname = cur.fetchall()
-        if g.user['role'] == 'student':
-            course_id.append(sess[0])
-        # pulling string out of nested list
-        classes.append(classname[0][0])
-        sections.append(sess[2])
+    if(course_id == None): # if it is None, return them to courses
+        return redirect(url_for('courses.courses'))
 
-        # grabs course id from the one clicked on
-        course_name = course(sess[0])
+    cur.execute("""SELECT c.id, c.name, s.section
+                   FROM sessions AS s JOIN courses AS c
+                   ON (s.course_id = c.id)
+                   WHERE s.teacher_id = %s AND s.course_id = %s;""",
+                   (g.user['id'], course_id)) # gets course name, id, and section in a join
 
-    if g.user['role'] == 'teacher':
-        return render_template('portal/sessions.html',
-                               sessions=classes,
-                               sections=sections,
-                               course_id=course_id,
-                               course_name=course_name)
+    all_teacher_sessions = cur.fetchall() # all rendered with jinja2 in sessions.html
 
-    if g.user['role'] == 'student':
-        return render_template('portal/sessions.html', sessions=classes, sections=sections, course_id=course_id, course_name='None')
+    cur.close()
+
+    return render_template('portal/sessions.html',
+                            all_teacher_sessions=all_teacher_sessions,
+                            course_id=course_id,
+                            course_name=course(course_id))
 
 # -- Function for grabbing course and section -----------------------------------
 
@@ -120,7 +102,7 @@ def session_create():
                 get_db().commit()
                 cur.close()
 
-            return redirect(url_for('sessions.sessions', course_id=course_id))
+            return redirect(url_for('sessions.sessions_for_teachers', course_id=course_id))
         else:
             return check
 
@@ -161,15 +143,11 @@ def session_create():
 #
 #     return render_template("portal/editsession.html", course=course)
 
-
-@bp.route('/viewsession', methods=('GET', 'POST'))
+@bp.route('/viewsession/<int:course_id>/<section>/<classname>', methods=('GET', 'POST'))
 @login_required
-def session_view():
+def session_view(course_id, section, classname):
     """View for seeing more session details."""
     cur = get_db().cursor()
-    course_id = request.args.get("course_id")
-    section = request.args.get("section")
-    classname = request.args.get("class")
 
     cur.execute(
         "SELECT * FROM sessions WHERE course_id = %s AND section = %s;", (course_id, section))
@@ -190,7 +168,7 @@ def session_delete():
                 (course_id, section))
     session_information = cur.fetchone()
     if session_information['teacher_id'] != teacher:
-        return redirect(url_for('sessions.sessions'))
+        return redirect(url_for('sessions_for_teachers', course_id=course_id))
 
     if request.method == 'POST':
         cur.execute("SELECT * FROM assignments WHERE course_id= %s AND section = %s;",
@@ -208,5 +186,3 @@ def session_delete():
         get_db().commit()
 
         return redirect(url_for('courses.courses'))
-    else:  # if not a teacher, send to home
-        return render_template('portal/home.html')
