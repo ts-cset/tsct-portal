@@ -5,19 +5,45 @@
 {% block content %}
 <h1>Enter Grades</h1>
 <p>{{ name }}</p>
-{% for student in students %}
-<form method="post">
+
+<table class='table-whole'>
+
+  <thead class='table-head'>
+    <tr class='table-head'>
+      <th class='table-headers'>Name</th>
+      <th class='table-headers'>Points</th>
+      <th class='table-headers'>Total</th>
+      <th class='table-headers'>Submit</th>
+    </tr>
+  </thead>
+
+<tbody class=''>
+
+    {% for student in students %}
+    <tr class=''>
+      <form method="post">
 
 
-  <label for="grade">{{ student['name'] }}
-    <input type="number" id="grade" name="grade" value='' required>
-    <input type="hidden" name="student" value="{{ student['id'] }}">
-    {{ points }}
-  </label>
+        <label for="grade">
+        <td>{{ student['name'] }}</td>
+
+        <td>
+          <input class='grade-input' type="number" id="grade" name="grade" value='' required>
+        </td>
+
+        <input type="hidden" name="student" value="{{ student['id'] }}">
+
+        <td>/{{ points }}</td>
+        </label>
 
 
-  <input type="submit" value="Submit">
-</form>
-{% endfor %}
+        <td><input class='grade-submit' type="submit" value="Enter"></td>
+      </form>
+  </tr>
+    {% endfor %}
+
+
+  </tbody>
+</table>
 
 {% endblock %}

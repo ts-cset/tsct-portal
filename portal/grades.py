@@ -13,7 +13,7 @@ def grades():
     section = request.args.get('section')
     assign_id = request.args.get('assignment_id')
 
-    assignents = assignments_info(assign_id)
+    assignments = assignments_info(assign_id)
     points_earned = request.form.getlist('grade')
     student = request.form.getlist('student')
 
@@ -23,7 +23,9 @@ def grades():
     students = students_assigned(course_id, section)
 
     if request.method == "POST":
-        grade_for(student[0], points_earned[0], assign_id)
+
+        if student[0] != assign_id:
+            grade_for(student[0], points_earned[0], assign_id)
 
 
     return render_template("portal/entergrades.html",
@@ -66,6 +68,7 @@ def student_sess_id(course_id, section):
     sessions = cur.fetchall()
 
     return sessions
+
 
 def students_assigned(course_id, section):
     cur = get_db().cursor()
