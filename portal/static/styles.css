@@ -76,7 +76,7 @@ header h1{
   display: inline;
   padding-left: 1px;
   color: #a6093d;
-  
+
 
 }
 
@@ -107,4 +107,29 @@ header p{
 nav {
   float: right;
   padding-right: 20px;
+}
+
+/**
+*class of points to try and get grading stuff on one line
+*/
+.grades form {
+margin: auto;
+width: 350px;
+}
+.grades input {
+  width: 200px;
+}
+.grades p {
+  display: inline;
+}
+.grades {
+  margin: auto;
+  display: block;
+ margin-right: auto;
+ margin-left: auto;
+}
+.submit {
+  display: block;
+ margin-right: auto;
+ margin-left: auto;
 }

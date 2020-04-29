@@ -25,6 +25,7 @@
           {% if g.users %}
             <li><a href="{{ url_for('portal.userpage') }}">User Page</a>
             <li><a href="{{ url_for('courses.courses') }}">Courses</a>
+            <li><a href="{{ url_for('gradebook.gradebook') }}">Grade Book</a>
           {% else %}
             <li><a href="{{ url_for('auth.login') }}">Log In</a>
           {% endif %}

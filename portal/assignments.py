@@ -148,13 +148,13 @@ def create_assignment(session_id):
 
                 cur.execute("""SELECT session.courses_id FROM courses
                            JOIN session ON session.courses_id = courses_id
-                           Where session.id = %s;""", 
+                           Where session.id = %s;""",
                            (session_id,))
                 courses = cur.fetchone()
                 course_id = courses[0]
                 print('course id HI IM RIGHT HERE GOD DAMN IT', course_id)
-            
-            
+
+
                 cur.execute("""
                 SELECT id FROM assignments
                 WHERE name = %s and session_id = %s;
@@ -164,7 +164,7 @@ def create_assignment(session_id):
                 assignment_id = assignments[0]
 
                 cur.close()
-            
+
                 return redirect(url_for('assignments.view_assignment', course_id=course_id, session_id=session_id, assignment_id=assignment_id))
         else:
             return redirect(url_for('assignments.create_assignment', session_id=session_id))

@@ -67,6 +67,11 @@ def create_app(test_config=None):
     from . import assignments
     app.register_blueprint(assignments.bp)
 
+    # Gradebook
+    #----------------
+    from . import gradebook
+    app.register_blueprint(gradebook.bp)
+
     # Home Page
     # ---------------
     @app.route('/')
@@ -75,8 +80,8 @@ def create_app(test_config=None):
 
     # Error Page
     # ---------------
-    @app.route('/<route>')
-    def error(route=None):
+    @app.route('/<path:subpath>/')
+    def error(subpath=None):
         error = "404 Not found"
         return render_template('error.html', error=error)
 

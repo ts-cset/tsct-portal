@@ -90,10 +90,10 @@ def create_course():
              """,
              (course_number, g.users['major'], name, description, credits, g.users['id']))
             db.get_db().commit()
-           
 
 
-            #routing 
+
+            #routing
             cur.execute("""
             SELECT id FROM courses WHERE name = %s AND course_number = %s;
             """,
@@ -101,7 +101,7 @@ def create_course():
             courses_tuple = cur.fetchone()
             course_id = courses_tuple[0]
 
-           
+
 
 
 
@@ -152,10 +152,10 @@ def update_course(course_id):
              """,
              (course_number, g.users['major'], name, description, credits, g.users['id'], course_id))
             db.get_db().commit()
-            
 
-            #START OF NEW CODE 
-    
+
+            #START OF NEW CODE
+
             cur.execute("""
             SELECT id FROM courses WHERE name = %s AND course_number = %s;
             """,
@@ -180,8 +180,8 @@ def update_course(course_id):
                 return redirect(url_for('portal.userpage'))
     return render_template('portal/courses/update-course.html')
 
-@bp.route('/<route>/')
+@bp.route('/<path:subpath>/')
 @login_required
-def course_error(route=None):
+def course_error(subpath=None):
     error = "404 Not found"
     return render_template('error.html', error=error)
