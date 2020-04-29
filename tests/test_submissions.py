@@ -28,5 +28,5 @@ def test_view_submission_teacher(client):
     )
     response = client.get('/portal/assignments/1/1/view-assignment/1')
     assert b'Submissions' in response.data
-    assert b'Student: 43784' in response.data
+    assert b'Student: studant' in response.data
     assert b'Answer: None' in response.data

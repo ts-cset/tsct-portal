@@ -36,13 +36,18 @@
 <a href="{{ url_for('assignments.grade_assignment', course_id=course['id'], session_id=session['id'], assignment_id=assignment['id']) }}"><input type="button" value="Grade Assignment"></a>
 <ul>
   {% for submission in submissions %}
+  {% for student in students %}
+  {% if student['id'] == submission['users_id'] %}
   <li>
-    <!--where the user_id is for the students that needs to be changed-->
-    <p>Student: {{ submission['users_id'] }}</p>
+
+    <!--this is where the users_id to the name-->
+    <p>Student: {{ student['name'] }}</p>
     <p>Answer: {{ submission['answer'] }}</p>
     <p>Grade: {{ submission['letter'] }}</p>
     <p>Points: {{ submission['points'] }}</p>
   </li>
+  {% endif %}
+  {% endfor %}
   {% endfor %}
 </ul>
 {% elif g.users['role'] == 'student' %}
