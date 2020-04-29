@@ -97,7 +97,7 @@ def create_assignment(session_id):
 
         if assignment != None:
             error = "That assignment already exists"
-            flash(error)
+        flash(error)
 
         if error is None:
             try:
@@ -109,6 +109,7 @@ def create_assignment(session_id):
             except:
                 error = "There was a problem creating that assignment"
                 flash(error)
+
             else:
                 cur.execute("""
                 SELECT id FROM assignments
@@ -218,7 +219,7 @@ def grade_assignment(course_id, session_id, assignment_id):
 
             if points[count] > assignment_point or points[count] < 0:
                 error = "Invalid point amount"
-                flash(error)
+            flash(error)
 
             if error is None:
                 grade = (points[count]/assignment_point)

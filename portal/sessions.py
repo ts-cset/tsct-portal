@@ -79,7 +79,7 @@ def create_session(course_id):
                 sessions = cur.fetchone()
                 session_id = sessions[0]
 
-            return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
+                return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
         else:
             return redirect(url_for('sessions.create_session', course_id=course_id))
     return render_template('portal/courses/sessions/create-session.html')
