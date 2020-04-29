@@ -44,16 +44,10 @@ def view_session(course_id, session_id):
 @login_required
 @teacher_required
 def create_session(course_id):
-    cur = db.get_db().cursor()
-    cur.execute("""SELECT * FROM users
-                   WHERE role = 'student'""")
-    students = cur.fetchall()
-    cur.close()
 
     if request.method == 'POST':
         name = request.form['name']
         times = request.form['times']
-        students = request.form.getlist('students')
         error = None
         cur = db.get_db().cursor()
         cur.execute("""
@@ -79,48 +73,53 @@ def create_session(course_id):
                 return render_template('error.html', error=error)
             else:
                 cur.execute("""SELECT id FROM session
-                               WHERE courses_id = %s and name = %s and times = %s""",
-                               (course_id, name, times))
-                session = cur.fetchone()
+                WHERE name = %s and courses_id = %s;
+                """,
+                (name, course_id))
+                sessions = cur.fetchone()
+                session_id = sessions[0]
 
-            for student in students:
-                cur.execute("""INSERT INTO roster (users_id, session_id)
-                VALUES (%s, %s);
-                 """,
-                 (student, session[0]))
-                db.get_db().commit()
-
-#new code for the routes and trying to get back to the view-sessions page
-
-#for this i need the course_id the session_id, roster_id, and assignment_id to get it to work
-
-#assingment_id attmept
-            cur.execute("""SELECT id FROM session
-            WHERE name = %s and courses_id = %s;
-            """,
-            (name, course_id))
-            sessions = cur.fetchone()
-            session_id = sessions[0]
-            
-            cur.execute("""SELECT id FROM assignments WHERE name = %s 
-                    and session_id = %s;""",
-                    (name, session_id))
-            assignment_id = cur.fetchone()
-            
-
-            cur.execute("""SELECT id FROM roster
-                   WHERE session_id = %s;""",
-                   (session_id,))
-            rosters = cur.fetchone()
-            roster_id = rosters[0]
-        
-            #end of new code 
-        
-        
-            return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id, assignment_id=assignment_id, roster_id=roster_id))
+            return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
         else:
             return redirect(url_for('sessions.create_session', course_id=course_id))
-    return render_template('portal/courses/sessions/create-session.html', students=students)
+    return render_template('portal/courses/sessions/create-session.html')
+
+@bp.route('/<course_id>/<session_id>/add-student', methods=('GET', 'POST'))
+@login_required
+@teacher_required
+def add_student(course_id, session_id):
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT users.*, roster.* FROM roster
+                JOIN users ON users.id = roster.users_id
+                WHERE session_id = %s""",
+                (session_id,))
+    added_students = cur.fetchall()
+    cur.execute("""SELECT * FROM users
+                WHERE role = 'student'""")
+    all_students = cur.fetchall()
+
+    if request.method == 'POST':
+        student = request.form['student']
+        error = None
+        for added_student in added_students:
+            print(added_student['users_id'])
+            print(student)
+            if added_student['users_id'] == int(student):
+                error = "That student is already in the session"
+                return render_template('error.html', error=error)
+        try:
+            cur.execute("""INSERT INTO roster (users_id, session_id)
+            VALUES (%s, %s);
+             """,
+             (student, session_id))
+            db.get_db().commit()
+            cur.close()
+        except:
+            error = "There was a problem adding that student"
+            return render_template('error.html', error=error)
+        else:
+            return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
+    return render_template('portal/courses/sessions/add-students.html', added_students=added_students, all_students=all_students)
 
 @bp.route('/<path:subpath>/')
 @login_required
