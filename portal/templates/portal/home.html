@@ -6,16 +6,4 @@
 
 <p>welcome {{g.user['name']}} to portal you are a {{g.user['role']}}</p>
 
-
-{% if g.user['role'] == 'teacher' %}
-<a class="fake-button" href="{{ url_for('courses.courses') }}">Courses</a>
-{% endif %}
-
-<<<<<<< HEAD
-{% if g.user['role'] == 'student' %}
-<a href="{{ url_for('sessions.sessions') }}">Sessions</a>
-{% endif %}
-=======
-<p>welcome {{g.user['name']}} to portal you are a {{g.user['role']}}</p>
->>>>>>> f40e86b5a6a40dd77d9c6b8bd0c8c462b8b8bdf2
 {% endblock %}
