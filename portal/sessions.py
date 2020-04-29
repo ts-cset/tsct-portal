@@ -26,12 +26,19 @@ def view_session(course_id, session_id):
                    (session_id,))
     assignments = cur.fetchall()
 
-    cur.execute("""SELECT * FROM roster
-                   WHERE session_id = %s;""",
-                   (session_id,))
-    rosters = cur.fetchall()
+    #new code to make names appear rather than id
+    #need to make a join table that points the roster ids to the names to display the names
+
+    cur.execute("""SELECT users.id, users.email, users.name, roster.users_id FROM roster
+                        JOIN users ON users.id= roster.users_id
+                        WHERE roster.session_id = %s;""",
+                    (session_id,))
+    students = cur.fetchall()
+
+
+
     cur.close()
-    return render_template('portal/courses/sessions/view-session.html', courses=courses, sessions=sessions, rosters=rosters, assignments=assignments)
+    return render_template('portal/courses/sessions/view-session.html', courses=courses, sessions=sessions, assignments=assignments, students=students)
 
 @bp.route('/<course_id>/create-session', methods=('GET', 'POST'))
 @login_required

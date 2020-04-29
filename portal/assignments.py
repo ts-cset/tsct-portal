@@ -30,14 +30,23 @@ def view_assignment(course_id, session_id, assignment_id):
                        WHERE assignments_id = %s;""",
                        (assignment_id,))
         submissions = cur.fetchall()
+
+        cur.execute("""SELECT users.id, users.email, users.name, roster.users_id FROM roster
+                        JOIN users ON users.id= roster.users_id
+                        WHERE roster.session_id = %s;""",
+                    (session_id,))
+        students = cur.fetchall()
+        
+
     else:
         cur.execute("""SELECT grades.letter, submissions.* FROM submissions
                        JOIN grades ON submissions.grades_id = grades.id
                        WHERE assignments_id = %s and users_id = %s;""",
                        (assignment_id, g.users['id']))
         submissions = cur.fetchall()
-    cur.close()
-    return render_template('portal/courses/sessions/assignments/view-assignment.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions)
+        cur.close()
+        return render_template('portal/courses/sessions/assignments/view-assignment.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions)
+    return render_template('portal/courses/sessions/assignments/view-assignment.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions, students=students)
 
 @bp.route('<assignment_id>/submit-assignment', methods=('GET', 'POST'))
 @login_required
@@ -63,6 +72,7 @@ def submit_assignment(assignment_id):
             error = "There was a problem with this submission"
             return render_template('error.html', error=error)
         else:
+            #where i need go add going back to the view assignments
             return redirect(url_for('portal.userpage'))
     return render_template('portal/courses/sessions/assignments/submit-assignments.html', assignments=assignments)
 
@@ -170,6 +180,13 @@ def grade_assignment(course_id, session_id, assignment_id):
                    WHERE assignments_id = %s;""",
                    (assignment_id,))
     submissions = cur.fetchall()
+    
+    cur.execute("""SELECT users.id, users.email, users.name, roster.users_id FROM roster
+                        JOIN users ON users.id= roster.users_id
+                        WHERE roster.session_id = %s;""",
+                    (session_id,))
+    students = cur.fetchall()
+    
     cur.close()
 
     if request.method == 'POST':
@@ -239,9 +256,10 @@ def grade_assignment(course_id, session_id, assignment_id):
              (points[count], grade_id, user[0], assignment_id))
             db.get_db().commit()
             count += 1
+
         return redirect(url_for('portal.userpage'))
 
-    return render_template('portal/courses/sessions/assignments/grade-assignments.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions)
+    return render_template('portal/courses/sessions/assignments/grade-assignments.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions, students=students)
 
 @bp.route('/<route>')
 @login_required
