@@ -1,0 +1,34 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+{% for course in courses %}
+<h2>Course</h2>
+<ul>
+  <li>
+    <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
+  </li>
+</ul>
+{% for session in sessions %}
+{% if session['courses_id'] == course['id'] %}
+<h3>Session</h3>
+<ul>
+  <li>
+    <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
+  </li>
+</ul>
+<h4>Student Grades</h4>
+{% for grade in grades %}
+{% if grade['s_id'] == session['id'] %}
+<ul>
+  <li>
+    <p>{{ grade['u_id'] }} {{ grade['grade'] }}</p>
+  </li>
+</ul>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endblock %}
