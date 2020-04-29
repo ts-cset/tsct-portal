@@ -63,9 +63,7 @@ CREATE TABLE assignments (
   name varchar(50) NOT NULL,
   type varchar(50) NOT NULL,
   points integer NOT NULL,
-  due_date date NOT NULL,
-  student_sessions_id bigint REFERENCES student_sessions (id) -- One student session owns many Assignments
-  ON DELETE CASCADE
+  due_date date NOT NULL
 );
 
 -- Grades

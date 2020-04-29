@@ -28,7 +28,7 @@
 
 {% if g.user['role'] == 'teacher' %}
   <a class='fake-button' href="{{ url_for('assignments.assignments_create', course_id=course_id, section=section) }}">Create New Assignment</a>
-  <a class='fake-button' href="{{ url_for('grades.grades', course_id=course_id, section=section) }}">Grade</a>
+
 {% endif %}
 
 <ul class='assign-ul'>
@@ -36,6 +36,7 @@
 
   <li class='assign-li'>
     {{ assignments["name"] }} ({{ assignments["points"] }} Points)
+    <a class='fake-button' href="{{ url_for('grades.grades', course_id=course_id, section=section, assignment_id=assignments['id']) }}">Grade</a>
   </li>
 
 {% endfor %}

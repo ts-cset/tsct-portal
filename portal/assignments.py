@@ -43,17 +43,13 @@ def assignments_create():
         points = request.form['points']
         duedate = request.form['duedate']
 
-        # Gets all student ids in the given course_id and section
-        sessions = student_sess_id(course_id, section)
-        for students in sessions:
-
-            cur = get_db().cursor()
-            # make a query that inserts into assignments table with this info
-            cur.execute("""INSERT INTO assignments
-                           (course_id, section, name, type, points, due_date, student_sessions_id)
-                           VALUES (%s, %s, %s, %s, %s, %s, %s);""",
-                           (course_id, section, name, type, points, duedate, students[0]))
-            get_db().commit()
+        cur = get_db().cursor()
+        # make a query that inserts into assignments table with this info
+        cur.execute("""INSERT INTO assignments
+                       (course_id, section, name, type, points, due_date)
+                       VALUES (%s, %s, %s, %s, %s, %s);""",
+                       (course_id, section, name, type, points, duedate))
+        get_db().commit()
         cur.close()
 
         return redirect(url_for('assignments.assignments',
@@ -62,42 +58,16 @@ def assignments_create():
 
     return render_template('portal/createassignment.html')
 
-#-- Gets all student id's that match course_id and section ---------------------
-def student_sess_id(course_id, section):
-
-    cur = get_db().cursor()
-    cur.execute("""SELECT id
-                   FROM student_sessions
-                   WHERE course_id = %s AND section = %s;""",
-                   (course_id, section))
-    sessions = cur.fetchall()
-
-    return sessions
-
 
 #-- Assignments for student/s --------------------------------------------------
 def user_assignments(course_id, section):
-    # get the id of the student
-    user = g.user['id']
     cur = get_db().cursor()
 
-    #Shows students assingments
-    if g.user['role'] == 'student':
-        # pulls out all assignments for student id
-        cur.execute("""SELECT * FROM assignments AS a
-                       JOIN student_sessions AS ss
-                       ON student_sessions_id = ss.id
-                       WHERE ss.course_id = %s
-                       AND ss.section = %s
-                       AND ss.student_id = %s;""", (course_id, section, user))
-
-    #Show teachers assignments
-    if g.user['role'] == 'teacher':
     # Pulls out all assignments for the course
-        cur.execute("""SELECT * FROM assignments AS a
-                       JOIN sessions AS s
-                       ON a.course_id = s.course_id AND a.section = s.section
-                       WHERE a.course_id = %s AND a.section = %s;""", (course_id, section))
+    cur.execute("""SELECT * FROM assignments AS a
+                   WHERE a.course_id = %s
+                   AND a.section = %s;""",
+                   (course_id, section))
 
-    student_assignments = cur.fetchall()
-    return student_assignments
+    assignments = cur.fetchall()
+    return assignments

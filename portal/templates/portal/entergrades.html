@@ -4,18 +4,20 @@
 
 {% block content %}
 <h1>Enter Grades</h1>
+<p>{{ name }}</p>
+{% for student in students %}
 <form method="post">
 
-{% for grade in grades %}
-<p>{{ assignment }}</p>
 
-  <label for="grade">
+  <label for="grade">{{ student['name'] }}
     <input type="number" id="grade" name="grade" value='' required>
+    <input type="hidden" name="student" value="{{ student['id'] }}">
+    {{ points }}
   </label>
 
-{% endfor %}
+
   <input type="submit" value="Submit">
 </form>
-
+{% endfor %}
 
 {% endblock %}

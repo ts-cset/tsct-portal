@@ -11,32 +11,38 @@ bp = Blueprint('grades', __name__)
 def grades():
     course_id = request.args.get('course_id')
     section = request.args.get('section')
+    assign_id = request.args.get('assignment_id')
 
-    assignments = assignments_for_session(course_id, section)
-    points_earned = 10
+    assignents = assignments_info(assign_id)
+    points_earned = request.form.getlist('grade')
+    student = request.form.getlist('student')
 
-    for assignment in assignments:
-        grade_for(assignment['student_sessions_id'], points_earned, assignment['id'])
+    name = assignments[0][0]
+    points = assignments[0][1]
+
+    students = students_assigned(course_id, section)
+
+    if request.method == "POST":
+        grade_for(student[0], points_earned[0], assign_id)
+
 
     return render_template("portal/entergrades.html",
-                                assignment=assignment,
-                                course_id=course_id,
-                                section=section)
+                            name=name,
+                            points=points,
+                            course_id=course_id,
+                            students=students,
+                            section=section)
 
 
-
-def assignments_for_session(course_id, section):
+def assignments_info(assign_id):
     cur = get_db().cursor()
 
-    cur.execute("""SELECT * FROM assignments AS a
-                   JOIN sessions AS s
-                   ON a.course_id = s.course_id
-                   AND a.section = s.section
-                   WHERE a.course_id = %s
-                   AND a.section = %s;""",
-                   (course_id, section))
+    cur.execute("""SELECT name, points FROM assignments
+                   WHERE id = %s;""",
+                   (assign_id,))
 
     assignments = cur.fetchall()
+
     return assignments
 
 
@@ -47,3 +53,27 @@ def grade_for(student_sessions_id, points_earned, assignment_id):
                    (student_sessions_id, points_earned, assignment_id))
     get_db().commit()
     cur.close()
+
+
+    #-- Gets all student id's that match course_id and section ---------------------
+def student_sess_id(course_id, section):
+
+    cur = get_db().cursor()
+    cur.execute("""SELECT id
+                   FROM student_sessions
+                   WHERE course_id = %s AND section = %s;""",
+                   (course_id, section))
+    sessions = cur.fetchall()
+
+    return sessions
+
+def students_assigned(course_id, section):
+    cur = get_db().cursor()
+    cur.execute("""SELECT *
+                   FROM users
+                   JOIN student_sessions AS ss
+                   ON users.id = ss.student_id
+                   WHERE ss.course_id = %s AND ss.section = %s;""",
+                   (course_id, section))
+    student = cur.fetchall()
+    return student
