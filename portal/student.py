@@ -41,3 +41,30 @@ def assignments():
                 assignments = cur.fetchall()
         return render_template('student-assignments.html', assignments=assignments)
     return redirect(url_for('student.home'))
+
+@bp.route('/grades', methods=('GET', 'POST'))
+@login_required
+def grades():
+    if request.method == 'POST':
+        session_id = request.form['session_id']
+        with get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    SELECT a.name, a.points, g.grades, g.owner_id FROM assignments a JOIN assignment_grades g
+                    ON a.id = g.assigned_id
+                    JOIN session_assignments s
+                    ON s.assignment_id = a.id
+                    WHERE session_id = %s
+                    AND owner_id = %s
+                """, (session_id, g.user['id']))
+                assignments = cur.fetchall()
+
+                cur.execute("""
+                    SELECT s.session_name, c.course_name, c.course_code, c.major FROM sessions s JOIN courses c
+                    ON s.course_id = c.id
+                    WHERE s.id = %s
+                """, (session_id,))
+                session_info = cur.fetchone()
+
+        return render_template('student-grade.html', assignments=assignments, session_info=session_info)
+    return redirect(url_for('student.home'))
