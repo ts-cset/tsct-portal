@@ -67,5 +67,5 @@ def grades():
                 """, (session_id,))
                 session_info = cur.fetchone()
 
-        return render_template('student-grade.html', assignments=assignments, session_info=session_info)
+        return render_template('layouts/student/assignments/student-grade.html', assignments=assignments, session_info=session_info)
     return redirect(url_for('student.home'))

@@ -81,8 +81,8 @@ CREATE TABLE session_assignments (
 -- Create a many-to-many relationship between assigned work and students with associated grades
 CREATE TABLE assignment_grades(
   -- Create a one-to-many relationship between users and their assigned work
-  owner_id bigint REFERENCES users(id) NOT NULL,
+  owner_id bigint NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   -- Create a one-to-many relationship between assigned work and users
-  assigned_id bigint REFERENCES session_assignments(work_id) NOT NULL,
+  assigned_id bigint NOT NULL REFERENCES session_assignments(work_id) ON DELETE CASCADE,
   grades varchar(100)
 );

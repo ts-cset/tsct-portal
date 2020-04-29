@@ -13,20 +13,6 @@ def test_home(client, auth):
     # Logged-in teachers should not be redirected
     assert b'Manage Courses' in response.data
 
-<<<<<<< HEAD
-#def test_courses(client, auth):
- #auth.teacher_login()
- #response = client.get('/teacher/courses')
- # Check that mock course exists
- #assert b'Big Software Energy' in response.data
-  # Attempt to delete mock course
- #response = client.post(
-    #'/teacher/courses',
-    #data={1:1}
- #)
- # Check that mock course no longer exists
-#assert b'Big Software Energy' not in response.data
-=======
 def test_courses(client, auth):
     auth.teacher_login()
 
@@ -49,7 +35,6 @@ def test_courses(client, auth):
         data={'id': 4}
     )
     assert b'Something went wrong.' in response.data
->>>>>>> Add validation and testing for teacher.py
 
 def test_creation(client, auth):
     auth.teacher_login()

@@ -80,9 +80,9 @@ def test_grade_submission(client, auth,app):
     #Open up app-context
     with app.app_context():
         #Assert that posting to the client makes you get redirected
-        assert client.get('/teacher/assignments/grade/submission', data={'grade-submission' : 100, 'submission': "(2, 1)"}).status_code == 302
+        assert client.get('/teacher/assignments/grade/submission', data={'grade' : 100, 'submission': '2', 'assignment_id': '1'}).status_code == 302
         #Send data to the form with grade as 100, for a student with id '2' for the 1st assignment of this session.
-        client.post('/teacher/assignments/grade/submission', data={'grade-submission' : 100, 'submission': "(2, 1)"})
+        client.post('/teacher/assignments/grade/submission', data={'grade' : 100, 'submission': '2', 'assignment_id': '1'})
         # With database Select the first grade in the database, and check if the grade is 100
         with get_db() as con:
             with con.cursor() as cur:
@@ -92,7 +92,7 @@ def test_grade_submission(client, auth,app):
                 res = cur.fetchone()
                 assert res[2] == '100'
         #Post to the same student and assignment in the same session as before
-        client.post('/teacher/assignments/grade/submission', data={'grade-submission' : 200, 'submission': "(2, 1)"})
+        client.post('/teacher/assignments/grade/submission', data={'grade' : 200, 'submission': '2', 'assignment_id': '1'})
         with get_db() as con:
             #Grab the grade for that assignment to see if it has been updated, if successful the grade should now be 200 instead of 100
             with con.cursor() as cur:

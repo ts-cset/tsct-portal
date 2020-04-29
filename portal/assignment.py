@@ -200,7 +200,7 @@ def grade():
 
         else:
             flash('Something went wrong.')
-            
+
     return redirect(url_for('teacher.courses'))
 
 
@@ -234,22 +234,23 @@ def view_assignments():
 @admin
 def grade_submission():
     if request.method == 'POST':
-        grade = request.form['grade-submission']
-        user = list(request.form['submission'])
+        grade = request.form['grade']
+        student_id = request.form['submission']
+        assignment_id = request.form['assignment_id']
         with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("""
-                    SELECT * FROM assignment_grades
-                    WHERE owner_id = %s AND assigned_id = %s
-                    """, (user[1], user[4], ))
-                    search = cur.fetchall()
+            with con.cursor() as cur:
+                cur.execute("""
+                SELECT * FROM assignment_grades
+                WHERE owner_id = %s AND assigned_id = %s
+                """, (student_id, assignment_id))
+                search = cur.fetchall()
         if not search:
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
                     INSERT INTO assignment_grades(owner_id, assigned_id, grades) VALUES (%s, %s, %s);
                     SELECT * FROM assignment_grades
-                    """, (user[1], user[4], grade, ))
+                    """, (student_id, assignment_id, grade))
                     res = cur.fetchall()
                     return redirect(url_for('teacher.sessions'))
         else :
@@ -260,7 +261,7 @@ def grade_submission():
                           SET grades = %s
                           WHERE owner_id = %s AND assigned_id = %s;
                           SELECT * FROM assignment_grades
-                      """, (grade ,user[1], user[4],))
+                      """, (grade ,student_id, assignment_id))
                       res = cur.fetchall()
                       return redirect(url_for('teacher.sessions'))
     return redirect(url_for('teacher.courses'))
@@ -289,5 +290,5 @@ def assignment_grades():
                 """, (assignment_id,))
                 assignment_name = cur.fetchone()
 
-        return render_template('assignment-grades.html', assignment=assignment, assignment_name=assignment_name)
+        return render_template('layouts/teacher/assignments/assignment-grades.html', assignment=assignment, assignment_name=assignment_name)
     return redirect(url_for('teacher.home'))
