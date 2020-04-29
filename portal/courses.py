@@ -81,7 +81,7 @@ def create_course():
 
         if courses != None:
             error = "That course already exists"
-            return render_template('error.html', error=error)
+            flash(error)
 
         if error is None:
             cur.execute("""
@@ -117,7 +117,7 @@ def create_course():
                 cur.close()
             except:
                 error="There was a problem creating that course"
-                return render_template('error.html', error=error)
+                flash(error)
             else:
                 return redirect(url_for('courses.view_course', course_id=course_id))
 
@@ -143,7 +143,8 @@ def update_course(course_id):
 
         if courses != None:
             error = "That course already exists"
-            return render_template('error.html', error=error)
+            flash(error)
+
 
         if error is None:
             cur.execute("""
@@ -175,7 +176,7 @@ def update_course(course_id):
                 cur.close()
             except:
                 error="There was a problem updating that course"
-                return render_template('error.html', error=error)
+                flash(error)
             else:
                 return redirect(url_for('portal.userpage'))
     return render_template('portal/courses/update-course.html')

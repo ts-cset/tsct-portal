@@ -36,7 +36,7 @@ def view_assignment(course_id, session_id, assignment_id):
                         WHERE roster.session_id = %s;""",
                     (session_id,))
         students = cur.fetchall()
-        
+
 
     else:
         cur.execute("""SELECT grades.letter, submissions.* FROM submissions
@@ -97,7 +97,7 @@ def create_assignment(session_id):
 
         if assignment != None:
             error = "That assignment already exists"
-            return render_template('error.html', error=error)
+            flash(error)
 
         if error is None:
             try:
@@ -108,7 +108,7 @@ def create_assignment(session_id):
                 db.get_db().commit()
             except:
                 error = "There was a problem creating that assignment"
-                return render_template('error.html', error=error)
+                flash(error)
             else:
                 cur.execute("""
                 SELECT id FROM assignments
@@ -180,13 +180,13 @@ def grade_assignment(course_id, session_id, assignment_id):
                    WHERE assignments_id = %s;""",
                    (assignment_id,))
     submissions = cur.fetchall()
-    
+
     cur.execute("""SELECT users.id, users.email, users.name, roster.users_id FROM roster
                         JOIN users ON users.id= roster.users_id
                         WHERE roster.session_id = %s;""",
                     (session_id,))
     students = cur.fetchall()
-    
+
     cur.close()
 
     if request.method == 'POST':
@@ -218,46 +218,46 @@ def grade_assignment(course_id, session_id, assignment_id):
 
             if points[count] > assignment_point or points[count] < 0:
                 error = "Invalid point amount"
-                return render_template('error.html', error=error)
+                flash(error)
 
             if error is None:
                 grade = (points[count]/assignment_point)
 
-            if grade >= 0.98:
-                grade_id = 1
-            elif grade >= 0.93:
-                grade_id = 2
-            elif grade >= 0.90:
-                grade_id = 3
-            elif grade >= 0.87:
-                grade_id = 4
-            elif grade >= 0.83:
-                grade_id = 5
-            elif grade >= 0.80:
-                grade_id = 6
-            elif grade >= 0.77:
-                grade_id = 7
-            elif grade >= 0.73:
-                grade_id = 8
-            elif grade >= 0.70:
-                grade_id = 9
-            elif grade >= 0.67:
-                grade_id = 10
-            elif grade >= 0.63:
-                grade_id = 11
-            elif grade >= 0.60:
-                grade_id = 12
-            else:
-                grade_id = 13
+                if grade >= 0.98:
+                    grade_id = 1
+                elif grade >= 0.93:
+                    grade_id = 2
+                elif grade >= 0.90:
+                    grade_id = 3
+                elif grade >= 0.87:
+                    grade_id = 4
+                elif grade >= 0.83:
+                    grade_id = 5
+                elif grade >= 0.80:
+                    grade_id = 6
+                elif grade >= 0.77:
+                    grade_id = 7
+                elif grade >= 0.73:
+                    grade_id = 8
+                elif grade >= 0.70:
+                    grade_id = 9
+                elif grade >= 0.67:
+                    grade_id = 10
+                elif grade >= 0.63:
+                    grade_id = 11
+                elif grade >= 0.60:
+                    grade_id = 12
+                else:
+                    grade_id = 13
 
-            cur.execute("""UPDATE submissions SET points = %s, grades_id = %s
-            WHERE users_id = %s and assignments_id = %s;
-             """,
-             (points[count], grade_id, user[0], assignment_id))
-            db.get_db().commit()
-            count += 1
+                cur.execute("""UPDATE submissions SET points = %s, grades_id = %s
+                WHERE users_id = %s and assignments_id = %s;
+                 """,
+                 (points[count], grade_id, user[0], assignment_id))
+                db.get_db().commit()
+                count += 1
 
-        return redirect(url_for('portal.userpage'))
+                return redirect(url_for('portal.userpage'))
 
     return render_template('portal/courses/sessions/assignments/grade-assignments.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions, students=students)
 
