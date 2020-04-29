@@ -50,7 +50,9 @@ def sessions_for_teachers(course_id=None): # If no course_id is given, it is Non
                             course_id=course_id,
                             course_name=course(course_id))
 
-#-- Function for grabbing course and section -----------------------------------
+# -- Function for grabbing course and section -----------------------------------
+
+
 def course(course_id):
     cur = get_db().cursor()
     # Course name where it matches course id
@@ -80,7 +82,8 @@ def session_create():
         students = request.form.getlist('students')
 
         cur = get_db().cursor()
-        check = validate_session(course_id, section, meeting_time, location, all_students)
+        check = validate_session(
+            course_id, section, meeting_time, location, all_students)
         if check == True:
             cur.execute("""INSERT INTO sessions (course_id,section, meeting_time, location, teacher_id)
                             VALUES (%s, %s, %s, %s, %s);""", (course_id, section, meeting_time, location, teacher_id))

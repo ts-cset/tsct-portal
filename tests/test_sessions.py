@@ -48,7 +48,6 @@ def test_create_session(app, client, auth):
         response = client.get('/sessions/1')
         assert response.data.count(b'Software Project II') == 3
 
-
 def test_view_sessions(app, client, auth):
     with app.app_context():
         db = get_db()
@@ -64,15 +63,54 @@ def test_view_sessions(app, client, auth):
         assert b"Session Time" in response.data
 
 
-# def test_delete_sessions(app, client, auth):
-#     with app.app_context():
-#         db = get_db()
-#
-#         cur = db.cursor()
-#
-#         auth.teacher_login()
-#
-#         response = client.post('/deletesession', data={'course_to_delete': 4})
-#         cur.execute("SELECT * FROM courses WHERE name = 'Security and Ethics';")
-#         check = cur.fetchone()
-#         assert check is None
+def test_delete_sessions(app, client, auth):
+    with app.app_context():
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.teacher_login()
+
+        response = client.post(
+            '/deletesession', data={'course_id': 1, 'section': 'A'})
+        cur.execute(
+            "SELECT * FROM sessions WHERE section = 'A' and course_id = '1';")
+        check = cur.fetchone()
+        assert check is None
+
+
+@pytest.mark.parametrize(('url'), (
+    ('/createsession'),
+    ('/courses'),
+    ('/deletesession')
+))
+def test_teacher_check(app, client, auth, url):
+    with app.app_context():
+        db = get_db()
+
+        cur = db.cursor()
+
+        auth.login()
+        if url == '/deletesession':
+            response = client.post(url, data={'course_to_delete': 4})
+        else:
+            response = client.get(url)
+
+        assert b'Redirect' in response.data
+
+
+@pytest.mark.parametrize(('role'), (
+    ('teacher'),
+    ('student'),
+))
+def test_session_role(app, client, auth, role):
+    with app.app_context():
+        if role == 'teacher':
+            auth.teacher_login()
+            request = client.get('/sessions')
+            course = client.get('/courses')
+            assert b'tically to target URL: <a href="/courses">/courses</a>.' in request.data
+        else:
+            auth.login()
+            request = client.get('/sessions')
+            assert b'Software Project II' in request.data
