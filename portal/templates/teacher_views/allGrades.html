@@ -11,22 +11,34 @@
 
 <h3>Grades</h3>
 
-<table>
+<div id='style_tables'>
+<table id='student'>
 
   <tr>
-    <th>Grade</th>
     <th>Student</th>
   </tr>
 
   {% for student in students %}
   <tr>
-
-    <td>total_course_grade['grade']</td>
-    <td>student['name']</td>
-
+    <td>{{ student['name'] }}</td>
   </tr>
   {% endfor %}
 
 </table>
+
+<table id='grade'>
+
+  <tr>
+    <th>Grade</th>
+  </tr>
+
+  {% for value in letter_grade %}
+  <tr>
+    <td>{{ value }}</td>
+  </tr>
+  {% endfor %}
+
+</table>
+</div>
 
  {% endblock %}

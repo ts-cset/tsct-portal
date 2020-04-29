@@ -14,28 +14,67 @@ def all_grades(course_id, sessions_id):
     course = courses.get_course(course_id)
     session = sessions.get_session(sessions_id)
     students = get_students(sessions_id)
-    # total_grade = submissions.letter_grade()
-    with db.get_db() as con:
-        with con.cursor() as cur:
+    # Holds all total grades
+    total_student_grades = []
 
+    if g.user['id'] != course['teacher_id']:
+        abort(403)
+
+    if course['course_num'] != session['course_id']:
+        abort(403)
+
+    for student in students:
+        # default of zero
+        points = 0
+        grades = 0
+
+        with db.get_db() as con:
+            with con.cursor() as cur:
+
+            # Getting each assignment data
                 cur.execute(
-                """SELECT assignments.id, assignments.sessions_id, assignments.points,
-                submissions.id, submissions.grade, submissions.assignment_id,
-                users.id, users.name, sessions.id, sessions.course_id
-                FROM assignments INNER JOIN submissions ON assignments.id = submissions.assignment_id
-                INNER JOIN users ON users.id = submissions.student_id
-                INNER JOIN sessions ON sessions.id = assignments.sessions_id
-                WHERE sessions.id = %s
-                 """,
-                 (sessions_id, )
+                """SELECT assignments.assign_name, assignments.id, assignments.points, submissions.assignment_id, submissions.grade
+                FROM submissions JOIN assignments ON submissions.assignment_id = assignments.id
+                WHERE submissions.student_id = %s AND assignments.sessions_id = %s""",
+                (student['user_id'], student['id'], )
                 )
-                student_grade = cur.fetchall()
-                print(student_grade)
+                # all assignments per student
+                assignments = cur.fetchall()
+
+                for assignment in assignments:
+
+
+                    if assignment['points'] == None:
+                        # Displays message if grades don't exist for student
+                        total_student_grade = 'No grades Yet'
+
+                    elif assignment['points'] != None:
+                        points += assignment['points']
+
+                        if assignment['grade'] != None:
+                            grades += assignment['grade']
+
+                    print(grades)
+                    print(points)
+
+                    total_student_grade = submissions.letter_grade(grades, points)
+                            # adding each student total grade to the list
+                    total_student_grades.append(total_student_grade)
+                    print(total_student_grade)
 
 
 
 
-    return render_template("teacher_views/allGrades.html", course=course, session=session)
+
+
+
+
+
+
+
+
+
+    return render_template("teacher_views/allGrades.html", course=course, session=session, letter_grade=total_student_grades, students=students)
 
 
 def get_students(sessions_id):
@@ -44,6 +83,7 @@ def get_students(sessions_id):
         with con.cursor() as cur:
 
             cur.execute(
+            # Get all students in session
             """SELECT sessions.course_id,
                       sessions.id,
                       courses.course_num,
@@ -59,15 +99,7 @@ def get_students(sessions_id):
             )
 
             students = cur.fetchall()
-            print(students)
+
+
 
             return students
-
-# def get_total_grade(student, session)
-#     with db.get_db() as con:
-#         with con.cursor() as cur:
-#
-#             cur.execute(
-#             """SELECT * FROM roster INNER JOIN users ON roster.user_id = user.id
-#             INNER JOIN sessions on roster.session_id = sessions.id"""
-#             )
