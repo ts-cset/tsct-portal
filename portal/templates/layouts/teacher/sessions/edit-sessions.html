@@ -9,7 +9,7 @@
       {% for student in students %}
         <li>
           <label class="checkbox">
-            <input type="checkbox" name="{{ student['id'] }}" value="{{ student['id'] }}">
+            <input type="checkbox" name="id" value="{{ student['id'] }}">
             <!--Since checkboxes can't be styled, this span becomes the checkbox-->
             <span class="fakeCheckbox"></span>
           </label>
@@ -27,7 +27,7 @@
       {% for member in roster %}
         <li>
           <label class="checkbox">
-            <input type="checkbox" name="{{ member['id'] }}" value="{{ member['id'] }}">
+            <input type="checkbox" name="id" value="{{ member['id'] }}">
             <!--Since checkboxes can't be styled, this span becomes the checkbox-->
             <span class="fakeCheckbox"></span>
           </label>

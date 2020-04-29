@@ -2,7 +2,7 @@ from flask import Flask, render_template, Blueprint, request, redirect, url_for,
 
 from . import db
 
-from portal.auth import login_required, admin, validate
+from portal.auth import login_required, admin, validate, validate_text, validate_date, validate_number
 from portal.teacher import bp
 from portal.session import bp
 
@@ -74,7 +74,12 @@ def submit_assignments():
         desc = request.form['description']
         points = request.form['points']
         id = request.form['submit']
-        if validate(id, 'assignments'):
+        if (
+            validate(id, 'assignments') and
+            validate_text(name, 50) and
+            validate_text(desc, 300) and
+            validate_number(points, 100000)
+            ):
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
@@ -93,18 +98,26 @@ def submit_assignments():
 def create_assignments():
     if request.method == 'POST':
         name = request.form['name']
-        description = request.form['description']
+        desc = request.form['description']
         points = request.form['points']
         course = request.form['course']
 
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    INSERT INTO assignments (name, description, points, course_id)
-                    VALUES (%s, %s, %s, %s)
-                """, (name, description, points, course))
+        if (
+            validate_text(name, 50) and
+            validate_text(desc, 300) and
+            validate_number(points, 100000) and
+            validate(course, 'courses')
+            ):
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("""
+                        INSERT INTO assignments (name, description, points, course_id)
+                        VALUES (%s, %s, %s, %s)
+                    """, (name, desc, points, course))
 
-                return redirect(url_for('teacher.assignments'))
+                    return redirect(url_for('teacher.assignments'))
+        else:
+            flash("Something went wrong.")
 
     with db.get_db() as con:
         with con.cursor() as cur:
@@ -147,7 +160,11 @@ def assign_submit():
         assign_id = request.form['assign_id']
         session_id = request.form['session_id']
 
-        if validate(assign_id, 'assignments') and validate(session_id, 'sessions'):
+        if (
+            validate(assign_id, 'assignments') and
+            validate(session_id, 'sessions') and
+            validate_date(date)
+            ):
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
@@ -164,20 +181,26 @@ def assign_submit():
 def grade():
     if request.method == 'POST':
         code = request.form['grade']
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    SELECT r.name, r.description, r.points, u.first_name, u.last_name, u.id, a.work_id
-                    FROM session_assignments a JOIN assignments r
-                    ON a.assignment_id = r.id
-                    JOIN roster d
-                    ON a.session_id = d.session_id
-                    JOIN users u
-                    ON d.student_id = u.id
-                    WHERE a.assignment_id = %s
-                """, (code,))
-                informations = cur.fetchall()
-        return render_template('layouts/teacher/assignments/teacher-assignments.html', informations=informations)
+
+        if validate(code, 'assignments'):
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("""
+                        SELECT r.name, r.description, r.points, u.first_name, u.last_name, u.id, a.work_id
+                        FROM session_assignments a JOIN assignments r
+                        ON a.assignment_id = r.id
+                        JOIN roster d
+                        ON a.session_id = d.session_id
+                        JOIN users u
+                        ON d.student_id = u.id
+                        WHERE a.assignment_id = %s
+                    """, (code,))
+                    informations = cur.fetchall()
+            return render_template('layouts/teacher/assignments/teacher-assignments.html', informations=informations)
+
+        else:
+            flash('Something went wrong.')
+            
     return redirect(url_for('teacher.courses'))
 
 
@@ -187,20 +210,23 @@ def grade():
 def view_assignments():
     if request.method == 'POST':
         code = request.form['view-grade']
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    SELECT a.name, a.description, a.points, c.course_name, a.id, p.work_id
-                    FROM sessions s JOIN session_assignments p
-                    ON s.id = p.session_id
-                    JOIN assignments a
-                    ON p.assignment_id = a.id
-                    JOIN courses c
-                    ON c.id = s.course_id
-                    WHERE s.id = %s
-                """, (code,))
-                assignments = cur.fetchall()
-        return render_template('layouts/teacher/assignments/view-assignments.html', assignments=assignments)
+        if validate(code, 'sessions'):
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("""
+                        SELECT a.name, a.description, a.points, c.course_name, a.id, p.work_id
+                        FROM sessions s JOIN session_assignments p
+                        ON s.id = p.session_id
+                        JOIN assignments a
+                        ON p.assignment_id = a.id
+                        JOIN courses c
+                        ON c.id = s.course_id
+                        WHERE s.id = %s
+                    """, (code,))
+                    assignments = cur.fetchall()
+            return render_template('layouts/teacher/assignments/view-assignments.html', assignments=assignments)
+        else:
+            flash("Something went wrong.")
     return redirect(url_for('teacher.courses'))
 
 @bp.route('assignments/grade/submission', methods=('GET', 'POST'))

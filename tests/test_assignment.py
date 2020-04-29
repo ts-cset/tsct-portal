@@ -113,6 +113,15 @@ def test_view_assignments(client,auth):
     #Make sure that you're redirected
     assert response.status_code == 302
 
+    # Teachers should not be able to view a list of assignments for a session that
+    # they do not own
+    client.post(
+        '/teacher/assignments/view',
+        data={'view-grade': 3}
+    )
+    response = client.get('/teacher/courses')
+    assert b'Something went wrong.' in response.data
+
 def test_grade(client,auth,app):
     auth.teacher_login()
     #Open up app-context
@@ -125,6 +134,14 @@ def test_grade(client,auth,app):
         response = client.get('/teacher/assignments/grade')
         #Make sure you're redirected else where
         assert response.status_code == 302
+
+        # Teachers should not be able to grade assignments that they don't own
+        client.post(
+            '/teacher/assignments/grade',
+            data={'grade': 5}
+        )
+        response = client.get('/teacher/courses')
+        assert b'Something went wrong.' in response.data
 
 def test_create_assignments(client, auth, app):
     auth.teacher_login()
@@ -143,6 +160,14 @@ def test_create_assignments(client, auth, app):
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM assignments WHERE name ILIKE 'Wumbo%'")
                 assert cur.fetchone()['name'] == 'Wumbo Software'
+
+    # POST request data is validated and should not allow invalid data
+    response = client.post(
+        '/teacher/assignments/create',
+        data={'name': 'Wumbo Software', 'description': 'I wumbo, you wumbo, he, she, it... wumbo.',
+              'points': 900, 'course': 4}
+    )
+    assert b'Something went wrong.' in response.data
 
 def test_assign_work(client, auth):
     auth.teacher_login()

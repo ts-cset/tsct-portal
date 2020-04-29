@@ -1,4 +1,5 @@
 import functools
+import re
 
 from flask import (
     Flask, Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -106,6 +107,15 @@ def validate(id, table):
                     WHERE id = %s AND teacher_id = %s
                 """, (id, g.user['id']))
                 result = cur.fetchone()
+    elif table == 'users':
+        # This is used to confirm that users being added to the roster are students
+        with get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                    SELECT * FROM users
+                    WHERE id = %s AND role = 'student'
+                """, (id,))
+                result = cur.fetchone()
     else:
         result = None
 
@@ -114,9 +124,29 @@ def validate(id, table):
     else:
         return True
 
-def validate_text(input, max_length):
-    """Check that text entry is within reasonable limits"""
-    if len(input) <= max_length:
+def validate_text(input, max, min=1):
+    """Check that text input is within reasonable length limits"""
+    length = len(input)
+    if length <= max and length >= min:
         return True
     else:
+        return False
+
+def validate_date(date):
+    """Check that date input is in the expected format"""
+    pattern = re.compile('([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))')
+    if pattern.match(date):
+        return True
+    else:
+        return False
+
+def validate_number(num, max, min=1):
+    """Check that numbers are within reasonable ranges"""
+    try:
+        num = int(num)
+        if num <= max and num >= min:
+            return True
+        else:
+            return False
+    except ValueError:
         return False

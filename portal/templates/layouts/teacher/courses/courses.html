@@ -9,7 +9,7 @@
           {% for course in courses %}
             <li class="course">
               <label class="checkbox">
-                <input type="checkbox" value="{{ course['id'] }}" name="{{ course['id'] }}"/>
+                <input type="checkbox" name="id" value="{{ course['id'] }}"/>
                 <!--Since checkboxes can't be styled, this span becomes the checkbox-->
                 <span class="fakeCheckbox"></span>
               </label>

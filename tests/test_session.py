@@ -64,7 +64,7 @@ def test_session_add(client, auth):
     # otherwise the user will simply be redirected away
     response = client.post(
         '/teacher/sessions/add',
-        data={1:1}
+        data={'id':2}
     )
     assert 'http://localhost/teacher/sessions/create' == response.headers['Location']
 
@@ -73,10 +73,19 @@ def test_session_add(client, auth):
         '/teacher/sessions/create',
         data={'course_id':1}
     )
+
+    # Teachers should not be able to add teachers to the roster
+    client.post(
+        '/teacher/sessions/add',
+        data={'id': 3}
+    )
+    response = client.get('teacher/sessions/create')
+    assert b'Something went wrong.' in response.data
+
     # Students may then be added with checkbox interface
     response = client.post(
         '/teacher/sessions/add',
-        data={1:1}
+        data={'id':2}
     )
     # Confirm that session_add redirects to session page after running
     assert 'http://localhost/teacher/sessions/create' == response.headers['Location']
@@ -95,7 +104,7 @@ def test_session_remove(client, auth):
     # otherwise the user will simply be redirected away
     response = client.post(
         '/teacher/sessions/remove',
-        data={1:1}
+        data={'id':2}
     )
     assert 'http://localhost/teacher/sessions/create' == response.headers['Location']
 
@@ -104,15 +113,24 @@ def test_session_remove(client, auth):
         '/teacher/sessions/create',
         data={'course_id':1}
     )
+
+    # Teachers shouldn't be able to attempt to remove invalid users from the table
+    client.post(
+        'teacher/sessions/remove',
+        data={'id':3}
+    )
+    response = client.get('/teacher/sessions/create')
+    assert b'Something went wrong.' in response.data
+
     # Students need to be added before they can be removed
     client.post(
         '/teacher/sessions/add',
-        data={1:1}
+        data={'id':2}
     )
     # The added student can be removed
     client.post(
         'teacher/sessions/remove',
-        data={1:1}
+        data={'id':2}
     )
 
     response = client.get('/teacher/sessions/create')

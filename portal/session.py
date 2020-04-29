@@ -102,13 +102,28 @@ def make_session():
 def session_add():
     if request.method == 'POST':
         if session.get('class_session'):
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    for id in request.form:
-                        cur.execute("""
-                            INSERT INTO roster (student_id, session_id)
-                            VALUES (%s, %s)
-                        """, (id, session['class_session']))
+
+            ids = []
+            error = None
+
+            for id in request.form.getlist('id'):
+                if validate(id, 'users'):
+                    ids.append(int(id))
+                else:
+                    error = "Something went wrong."
+                    break
+
+            if not error:
+                with db.get_db() as con:
+                    with con.cursor() as cur:
+                        for id in ids:
+                            cur.execute("""
+                                INSERT INTO roster (student_id, session_id)
+                                VALUES (%s, %s)
+                            """, (id, session['class_session']))
+            else:
+                flash(error)
+
     if not session.get('edit'):
         return redirect(url_for('teacher.make_session'))
     else:
@@ -120,13 +135,26 @@ def session_add():
 def session_remove():
     if request.method == 'POST':
         if session.get('class_session'):
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    for item in request.form:
+
+            ids = []
+            error = None
+
+            for id in request.form.getlist('id'):
+                if validate(id, 'users'):
+                    ids.append(int(id))
+                else:
+                    error = "Something went wrong."
+
+            if not error:
+                with db.get_db() as con:
+                    with con.cursor() as cur:
                         cur.execute("""
                             DELETE FROM roster
-                            WHERE student_id = %s and session_id = %s
-                        """, (request.form[item], session['class_session']))
+                            WHERE student_id = ANY(%s) AND session_id = %s
+                        """, (ids, session['class_session']))
+            else:
+                flash(error)
+
     if not session.get('edit'):
         return redirect(url_for('teacher.make_session'))
     else:
