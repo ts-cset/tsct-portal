@@ -16,6 +16,7 @@ html {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Crimson Text', serif;
   font-weight: 400;
+  text-align: center;
 }
 
 
@@ -38,6 +39,8 @@ body {
   footer {
     display: flex;
     justify-content: space-between;
+    border-top: 1px solid black;
+    padding-left: 20px;
   }
   footer h2,
   footer address {
@@ -56,6 +59,10 @@ form {
   width: 35vw;
 }
 
+.login_form {
+  margin-bottom: 7.5%;
+}
+
 label {
   display: block;
   padding-bottom: 1rem;
@@ -71,31 +78,31 @@ header {
   background: #ffffff;
   position: sticky;
   top: 0;
+  border-radius: 4px;
+  padding: 10px;
 }
 header h1{
   display: inline;
-  padding-left: 1px;
+  padding-left: 30px;
   color: #a6093d;
-
-
 }
 
 header nav ul {
-margin: 0;
-list-style: none;
+  margin: 0;
+  list-style: none;
 }
 
 header nav li {
   display: inline-block;
   margin-left: 70px;
-  padding-top: 10px
+  padding-top: 10px;
   position: relative;
 }
 
 header nav a {
-color: #a6093d;
-text-decoration: none;
-text-transform: uppercase;
+  color: #a6093d;
+  text-decoration: none;
+  text-transform: uppercase;
 
 }
 
@@ -106,15 +113,29 @@ header p{
 
 nav {
   float: right;
-  padding-right: 20px;
+  padding-right: 30px;
+}
+
+.home {
+  color: black;
+  display: flex;
+  padding-bottom: 30px;
+  padding-top: 35px;
+}
+
+.home p {
+  text-align: center;
+  padding: 40px;
+  color: white;
+  line-height: 2;
 }
 
 /**
 *class of points to try and get grading stuff on one line
 */
 .grades form {
-margin: auto;
-width: 350px;
+  margin: auto;
+  width: 350px;
 }
 .grades input {
   width: 200px;
@@ -125,11 +146,17 @@ width: 350px;
 .grades {
   margin: auto;
   display: block;
- margin-right: auto;
- margin-left: auto;
+  margin-right: auto;
+  margin-left: auto;
 }
 .submit {
   display: block;
  margin-right: auto;
  margin-left: auto;
+}
+/**
+*flash styling
+*/
+.base_flash { margin: 0 auto;
+  margin-top: 7.5%;
 }
