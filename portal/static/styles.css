@@ -318,6 +318,18 @@ aside {
   background-color: #660000;
 }
 
+.course-options-item2 {
+  background-color: #fac0c0;
+  font-variant: small-caps;
+  border: 1px solid darkgrey;
+  padding: 0px 5px 0px 5px;
+}
+
+.course-options-item2:hover{
+  color: white;
+  background-color: #660000;
+}
+
 .course-button {
   color: black;
   background-color: lightgrey;
