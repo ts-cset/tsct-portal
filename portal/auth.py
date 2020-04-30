@@ -57,11 +57,6 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-@bp.route('/<route>')
-def error(route=None):
-    error = "404 Not found"
-    return render_template('error.html', error=error)
-
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
