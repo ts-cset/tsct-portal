@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% include 'layouts/teacher-nav.html' %}
 
 {% block title %}Select Assignments{% endblock %}
 
@@ -8,7 +9,9 @@
       <li>
         <form action="{{ url_for('teacher.assign_submit') }}" method="post">
           {{ assignment['name'] }}
-          <input type="date" name="date" required>
+          <label> Due Date
+            <input type="date" name="date" required>
+          </label>
           <input type="hidden" name="session_id" value="{{ session_id }}">
           <button type="submit" name="assign_id" value="{{ assignment['id']}}">Assign</button>
         </form>
