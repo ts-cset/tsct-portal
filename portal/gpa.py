@@ -5,11 +5,9 @@ from portal.auth import login_required, teacher_required
 
 bp = Blueprint("gpa", __name__)
 
-@teacher_required
-@login_required
 @bp.route("/course/<int:course_id>/session/<int:id>/gpa", methods=('GET', 'POST'))
-@teacher_required
 @login_required
+@teacher_required
 def view(id, course_id):
     con = db.get_db()
     cur = con.cursor()
