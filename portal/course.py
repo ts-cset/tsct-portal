@@ -27,8 +27,8 @@ def get_course(id, check_teacher=True):
 
 # route to edit the course description
 @bp.route('/course/<int:id>/edit', methods=('GET', 'POST'))
-@teacher_required
 @login_required
+@teacher_required
 def edit(id):
     """Edits the description of the courses"""
     course = get_course(id)
@@ -70,8 +70,8 @@ def view(id):
 # Route to delete a course
 
 @bp.route("/course/<int:id>/delete", methods=["POST", ])
-@teacher_required
 @login_required
+@teacher_required
 def delete(id):
     """Delete unwanted courses"""
     course = get_course(id)
@@ -87,8 +87,8 @@ def delete(id):
 
 # Route to create a course
 @bp.route("/course/create", methods=['GET', 'POST'])
-@teacher_required
 @login_required
+@teacher_required
 def create():
     cur = db.get_db().cursor()
     cur.execute("""
