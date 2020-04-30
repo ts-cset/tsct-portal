@@ -9,7 +9,7 @@ bp = Blueprint("gpa", __name__)
 @login_required
 @teacher_required
 def view(id, course_id):
-  """SIngle page view of all students in a session and their GPA"""
+  """Single page view of all students in a session and their GPA"""
     con = db.get_db()
     cur = con.cursor()
     cur.execute(
