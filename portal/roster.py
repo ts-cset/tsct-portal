@@ -37,13 +37,13 @@ def view(id, course_id):
     if request.method == 'POST':
         studentname = request.form['sname']
         removename = request.form['rname']
-        print(studentname)
+
         if studentname != "":
             cur = con.cursor()
             cur.execute(
                 'SELECT name, id FROM users WHERE name = %s', (studentname,))
             bname = cur.fetchone()
-            print(bname)
+
             if bname is not None:
                 bid = bname['id']
                 cur.execute('SELECT student_id, session_id FROM roster WHERE student_id = %s AND session_id = %s',
@@ -54,7 +54,7 @@ def view(id, course_id):
                         studentname)
                     cur = con.cursor()
                     newid = bname['id']
-                    print(newid)
+
                     cur.execute(
                         """INSERT INTO roster (student_id , session_id)
                     VALUES (%s, %s)""",
@@ -78,13 +78,13 @@ def view(id, course_id):
             cur.execute(
                 'SELECT name, id FROM users WHERE name = %s', (removename,))
             bname = cur.fetchone()
-            print(bname)
+
             if bname is not None:
                 bid = bname['id']
                 cur.execute('SELECT student_id, session_id FROM roster WHERE student_id = %s AND session_id = %s',
                             (bid, id))
                 matching = cur.fetchall()
-                print(matching)
+                
                 if matching != []:
                     message = "student <<{}>> has been deleted".format(
                         removename)

@@ -106,10 +106,10 @@ a {
   padding: 4px;
 }
 
-.namebar-logout:hover{
+/* .namebar-logout:hover{
   background-color: darkgrey;
   color: white;
-}
+} */
 .return {
   background-color: lightgrey;
   border: 1px solid darkgrey;
@@ -118,11 +118,18 @@ a {
   padding-top: 2px;
   margin-right: 20px;
 }
-
-.return:hover{
+.return:hover,.home-button:hover, .submit:hover,
+.course-button:hover, .namebar-logout:hover
+{
   background-color: darkgrey;
   color: white;
 }
+.view-assignment-link:hover, .edit-button:hover, .course-options-item:hover,
+.edit-button2:hover,.td-assign-button:hover, .course-options-item2:hover
+  {
+  background-color: #660000;
+  color: white;
+  }
 
 .home-buttons {
   display: inline-block;
@@ -136,11 +143,6 @@ a {
   font-size: 18px;
   font-variant: small-caps;
   text-decoration: none;
-}
-
-.home-button:hover{
-  color: white;
-  background-color: darkgrey;
 }
 
 .teacher_forms {
@@ -168,11 +170,6 @@ a {
   font-variant: small-caps;
   margin: 30px 0 10px 0;
   width: 20%;
-}
-
-.submit:hover{
-  background-color: darkgrey;
-  color: white;
 }
 
 .form-label {
@@ -313,11 +310,6 @@ aside {
   margin: 5px 10px 5px 0px;
 }
 
-.course-options-item:hover{
-  color: white;
-  background-color: #660000;
-}
-
 .course-button {
   color: black;
   background-color: lightgrey;
@@ -325,11 +317,6 @@ aside {
   font-variant: small-caps;
   width: 100px;
   margin: 5px 0 5px 0;
-}
-
-.course-button:hover {
-  color:white;
-  background-color: darkgrey;
 }
 
 .link {
@@ -462,10 +449,6 @@ aside {
   color: black;
   padding: 5px 2px 7px 2px;
 }
-.view-assignment-link:hover{
-  background: #660000;
-  color: white;
-}
 
 .assignment-link {
   background-color: #fac0c0;
@@ -513,7 +496,6 @@ aside {
   margin-block-end: 0;
 }
 
-
 table {
   display: block;
   width: 100%;
@@ -547,11 +529,6 @@ th {
   padding: 0;
 }
 
-.edit-button:hover{
-  background-color: #660000;
-  color: white;
-}
-
  .edit-button {
    font-variant: small-caps;
    background-color: #fac0c0;
@@ -568,11 +545,6 @@ th {
    padding: 4px 20px 4px 20px;
  }
 
- .edit-button2:hover {
-   background-color: #660000;
-   color: white;
- }
-
 .edit {
   font-variant: small-caps;
   background-color: #fac0c0;
@@ -581,39 +553,29 @@ th {
   margin: 0;
 }
 
-.th2 {
+.th2, .th3, .th4, .th5 {
   font-variant: small-caps;
   background-color: white;
-  width: 25%;
 }
 
+.th2 {
+  width: 25%;
+}
 .th3 {
-  font-variant: small-caps;
-  background-color: white;
   width: 20%;
 }
 
 .th4 {
-  font-variant: small-caps;
-  background-color: white;
   width: 30%;
   margin: 5px;
 }
 
 .th5 {
-  font-variant: small-caps;
-  background-color: white;
   width: 45%;
 }
 
-
-
 .assignment-table {
   width: 80%;
-  background-color: white;
-}
-
-.assignment-table{
   background-color: white;
 }
 
@@ -632,16 +594,6 @@ td  {
   width:120px;
 }
 
-.td-assign-button:hover{
-  color: white;
-  border: 1px solid maroon;
-  background-color: #660000;
-  font-variant: small-caps;
-  text-align: center;
-  width:120px;
-}
-
-
 .student-list{
   display: flex;
   flex-direction: column;
@@ -649,7 +601,6 @@ td  {
   font-size: 20px;
   background-color: white;
 }
-
 
 .student-name{
   background-color: white;
