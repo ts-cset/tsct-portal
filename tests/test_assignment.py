@@ -244,9 +244,12 @@ def test_grade_book(auth, client,app):
     response = client.post('/teacher/grades/grade-book', data={'gradebook': 1})
     assert response.status_code == 200
     assert b'Kevstice, Lueklee' in response.data
-
+    get = client.get('/teacher/grades/grade-book')
+    assert get.status_code == 302
 def test_personal_view(auth, client,app):
     auth.teacher_login()
     with app.app_context():
-        client.post('/teacher/grades/all-grades', data={'personal_grades' : '(2, 1)'})
-        assert b'Kevstice, Lueklee' in client.post('/teacher/grades/all-grades', data={'personal_grades' : '(2, 1)'}).data
+        response = client.post('/teacher/grades/all-grades', data={'student_id' : 2, 'session_id': 1})
+        assert b'Kevstice, Lueklee' in response.data
+        get = client.get('/teacher/grades/all-grades')
+        assert get.status_code == 302

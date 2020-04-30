@@ -12,6 +12,7 @@
           <button type="submit" formaction="{{ url_for('teacher.session_edit') }}" name="edit" value="{{ item['id'] }}">Edit</button>
           <button type="submit" formaction="{{ url_for('teacher.view_assignments') }}" name="view-grade" value="{{ item['id'] }}">Grade</button>
           <button type="submit" formaction="{{ url_for('teacher.assign_work') }}" name="session_id" value="{{ item['id'] }}">Assign Work</button>
+          <button type="submit" formaction="{{ url_for('teacher.grade_view') }}" name="gradebook" value="{{ item['id'] }}">Gradebook</button>
         </li>
       {% endfor %}
     </ul>

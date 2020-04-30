@@ -3,72 +3,8 @@ from flask import Flask, render_template, Blueprint, request, redirect, url_for,
 from . import db
 
 from portal.auth import login_required, admin, validate, validate_text, validate_date, validate_number
-from portal.teacher import bp
-<<<<<<< HEAD
 from portal.session import bp
-=======
-@bp.route('/assignments/create', methods=('GET', 'POST'))
-def create_assignments():
-    if request.method == 'POST':
-        name = request.form['name']
-        description = request.form['description']
-        points = request.form['points']
-        course = request.form['course']
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    INSERT INTO assignments (name, description, points, course_id)
-                    VALUES (%s, %s, %s, %s)
-                """, (name, description, points, course))
-                print(g.user['id'])
-                return redirect(url_for('teacher.assignments'))
-    with db.get_db() as con:
-        with con.cursor() as cur:
-            cur.execute("""
-                SELECT * FROM courses
-                WHERE teacher_id = %s
-            """, (g.user['id'],))
-            courses = cur.fetchall()
-    return render_template('create-assignments.html', courses=courses)
 
-@bp.route('/assignments/assign/submit', methods=('GET', 'POST'))
-def assign_submit():
-     if request.method == 'POST':
-        date = request.form['date']
-        assign_id = request.form['assign_id']
-        session_id = request.form['session_id']
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    INSERT INTO session_assignments (session_id, assignment_id, due_date)
-                    VALUES (%s, %s, %s)
-                    """, (session_id, assign_id, date, ))
-                cur.execute("""
-                    INSERT INTO assignment_grades(owner_id, assigned_id, grades)
-                    VALUES((SELECT DISTINCT student_id FROM roster WHERE session_id = %s),
-                    (SELECT DISTINCT work_id FROM session_assignments WHERE session_id = %s AND assignment_id = %s),
-                    %s);
-                    SELECT * FROM assignment_grades
-                    """, ( session_id, session_id, assign_id ,0))
-                all = cur.fetchall()
-                print(all)
-     return redirect(url_for('teacher.sessions'))
-@bp.route('/assignments/assign', methods=('GET', 'POST'))
-def assign_work():
-    if request.method == 'POST':
-        session_id = request.form['session_id']
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                    SELECT * FROM assignments
-                    WHERE course_id IN (SELECT course_id FROM sessions WHERE id = %s)
-                    AND id NOT IN (SELECT assignment_id FROM session_assignments
-                                   WHERE session_id = %s)
-                """, (session_id, session_id))
-                assigns = cur.fetchall()
-        return render_template('assign-work.html', assigns=assigns, session_id=session_id)
-    return redirect(url_for('teacher.sessions'))
->>>>>>> Merged with main branch
 
 @bp.route('/assignments', methods=('GET', 'POST'))
 @login_required
@@ -235,6 +171,13 @@ def assign_submit():
                         INSERT INTO session_assignments (session_id, assignment_id, due_date)
                         VALUES (%s, %s, %s)
                     """, (session_id, assign_id, date))
+                    cur.execute("""
+                        INSERT INTO assignment_grades(owner_id, assigned_id, grades)
+                        VALUES((SELECT DISTINCT student_id FROM roster WHERE session_id = %s),
+                        (SELECT DISTINCT work_id FROM session_assignments WHERE session_id = %s AND assignment_id = %s),
+                        %s);
+                        SELECT * FROM assignment_grades
+                        """, ( session_id, session_id, assign_id ,0))
         else:
             flash('Something went wrong.')
     return redirect(url_for('teacher.sessions'))
@@ -264,27 +207,6 @@ def grade():
 
         else:
             flash('Something went wrong.')
-
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("""
-                SELECT r.name, r.description, r.points, u.first_name, u.last_name, u.id, a.work_id
-                FROM session_assignments a JOIN assignments r
-                ON a.assignment_id = r.id
-                JOIN roster d
-                ON a.session_id = d.session_id
-                JOIN users u
-                ON d.student_id = u.id
-                WHERE a.assignment_id = %s
-                """, (code, ))
-                informations = cur.fetchall()
-                cur.execute("""
-                SELECT * FROM assignment_grades
-                """)
-                grades = cur.fetchall()
-                print(grades)
-                print(informations)
-        return render_template('assignments/teacher-assignments.html', informations=informations, grades=grades)
     return redirect(url_for('teacher.courses'))
 
 
@@ -324,32 +246,13 @@ def grade_submission():
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
-                SELECT * FROM assignment_grades
-                WHERE owner_id = %s AND assigned_id = %s
-                """, (student_id, assignment_id))
-                search = cur.fetchall()
-        if not search:
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("""
-                    INSERT INTO assignment_grades(owner_id, assigned_id, grades) VALUES (%s, %s, %s);
+                    UPDATE assignment_grades
+                    SET grades = %s
+                    WHERE owner_id = %s AND assigned_id = %s;
                     SELECT * FROM assignment_grades
-                    """, (student_id, assignment_id, grade))
-                    res = cur.fetchall()
-                    print(res)
-                    return redirect(url_for('teacher.sessions'))
-        else :
-              with db.get_db() as con:
-                  with con.cursor() as cur:
-                      cur.execute("""
-                          UPDATE assignment_grades
-                          SET grades = %s
-                          WHERE owner_id = %s AND assigned_id = %s;
-                          SELECT * FROM assignment_grades
-                      """, (grade ,student_id, assignment_id))
-                      res = cur.fetchall()
-                      print(res)
-                      return redirect(url_for('teacher.sessions'))
+                """, (grade ,student_id, assignment_id))
+                res = cur.fetchall()
+                return redirect(url_for('teacher.sessions'))
     return redirect(url_for('teacher.courses'))
 
 
@@ -395,17 +298,15 @@ def grade_view():
                 WHERE s.id = %s
                 """, (session))
                 students = cur.fetchall()
-                print(session)
-                print(students)
         return render_template('grade/gradebook.html', students=students)
+    return redirect(url_for('teacher.sessions'))
 @bp.route('grades/all-grades', methods=('GET', 'POST'))
 @login_required
 @admin
 def personal_grades():
     if request.method == 'POST':
-        student = list(request.form['personal_grades'])[1]
-        session = list(request.form['personal_grades'])[4]
-        print(student)
+        student = request.form['student_id']
+        session = request.form['session_id']
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
@@ -429,10 +330,14 @@ def personal_grades():
                 """, (session))
                 points = cur.fetchall()
                 cur.execute("""
-                SELECT grades FROM  assignment_grades WHERE assigned_id = %s AND owner_id = %s
-                """, (session, student))
+                SELECT g.grades
+                FROM sessions s JOIN session_assignments a
+                ON s.id = a.session_id
+                JOIN assignment_grades g
+                ON g.assigned_id = a.work_id
+                WHERE g.owner_id = %s AND s.id = %s
+                """, (student, session))
                 personal_total = cur.fetchall()
-                print(all)
                 cur.execute("""
                 SELECT first_name, last_name from users WHERE id = %s
                 """, (student))
@@ -442,6 +347,6 @@ def personal_grades():
                 for point in points:
                     total_grades += point['points']
                 for total in personal_total:
-                    personal_points += total['points']
+                    personal_points += int(total['grades'])
         return render_template('grade/personal-grades.html', grades=grades, total_grades=total_grades, personal_points=personal_points, name=f"{name[0][0]}, {name[0][1]}" )
     return redirect(url_for('teacher.sessions'))
