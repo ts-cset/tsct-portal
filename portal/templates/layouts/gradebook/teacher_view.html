@@ -3,7 +3,8 @@
 {% block title %}Teacher Gradebook{% endblock %}
 
 {% block content %}
-
+<a class="view-assignment-link" href="{{ url_for('session.view_sessions', course_id=course_id)}}">back to sessions</a>
+<a class="view-assignment-link" href="{{ url_for('assignment.view_assignments', id=session_id, course_id=course_id)}}">back to assignments</a>
 <section class="teacher-gradebook">
 
 <h2>Grades for Session: {{ session_id }}</h2>
