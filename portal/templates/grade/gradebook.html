@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Gradebook{% endblock %}
+
+{% block content %}
+<form method="post">
+  {% for student in students %}
+  <h2>Student : {{ student['first_name'] }}, {{ student['last_name']}}</h2>
+  <button type="submit" formaction="{{ url_for('teacher.personal_grades') }}" name="personal_grades" value="{{ student['user_id'], student['id']}}">View-Gradebook</button>
+  {% endfor %}
+
+</form>
+
+{% endblock %}

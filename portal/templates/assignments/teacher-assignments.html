@@ -14,6 +14,11 @@
       <input type='text' name='grade-submission'>/{{ information['points'] }}</input>
     </label>
     <button type="submit" formaction="{{ url_for('teacher.grade_submission') }}" value="{{ information['id'], information['work_id'] }}" name="submission">Submit grades</button>
+    {% for grade in grades %}
+    {% if grade['owner_id'] == information['id'] and grade['assigned_id'] == information['work_id'] %}
+    <label>Grade : {{ grade['grades'] }}</label>
+    {% endif %}
+    {% endfor %}
 {% endfor %}
 </form>
 

@@ -230,6 +230,7 @@ def test_assign_submit(client, auth, app):
     response = client.get('/teacher/sessions')
     assert b'Something went wrong' in response.data
 
+
 def test_assignments_gradebook(client, auth):
     auth.teacher_login()
     response = client.get('/teacher/assignments/gradebook')
@@ -237,3 +238,15 @@ def test_assignments_gradebook(client, auth):
     response = client.post('/teacher/assignments/gradebook', data={'assignment_id': 1})
     assert b'Big Software' in response.data
     assert b'<td>Lueklee, Kevstice</td>' in response.data
+
+def test_grade_book(auth, client,app):
+    auth.teacher_login()
+    response = client.post('/teacher/grades/grade-book', data={'gradebook': 1})
+    assert response.status_code == 200
+    assert b'Kevstice, Lueklee' in response.data
+
+def test_personal_view(auth, client,app):
+    auth.teacher_login()
+    with app.app_context():
+        client.post('/teacher/grades/all-grades', data={'personal_grades' : '(2, 1)'})
+        assert b'Kevstice, Lueklee' in client.post('/teacher/grades/all-grades', data={'personal_grades' : '(2, 1)'}).data
