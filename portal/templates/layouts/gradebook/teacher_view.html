@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Gradebook{% endblock %}
+
+{% block content %}
+
+<section class="teacher-gradebook">
+
+<h2>Grades for Session: {{ session_id }}</h2>
+  <h2>Assignment: {{ assignment_id }}</h2>
+<table>Graded Assignments
+  <tbody>
+    <tr>
+      <th class="th2">student</th>
+      <th class="th1">points</th>
+      <th class="th1">possible</th>
+      <th class="th1">grade</th>
+    </tr>
+    {% for grade in grades %}
+    <tr>
+      <td>{{grade['name']}}</td>
+      <td>{{grade['points_received']}}</td>
+      <td>{{grade['total_points']}}</td>
+      <td class="grade">%{{grade['assignment_grade']}}</td>
+      <td><a class="course-options-item2" href="{{ url_for('main.input_grade', grade_id=grade['grade_id'],
+  assignment_id=assignment_id, session_id=session_id, course_id=course_id) }}">input grade</a></td>
+{% endfor %}
+    </tr>
+    </tbody>
+  </table>
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Input Grades{% endblock %}
+
+{% block content %}
+<h3>Assignment: {{max_points['assign']}}</h3>
+<h3>{{max_points['student']}}</h3>
+
+<form class="teacher_home_form" method="post">
+  <label class="form-label" for="feedback">ASSIGNMENT FEEDBACK:
+  <input type="text" name="feedback" placeholder="Insert feedback here">
+  <label class="form-label" for="grade_input">POINTS EARNED out of {{max_points['total_points']}}
+  <input type="number" id="grade_input" name="grade_input" min="0">
+  <input class="submit" type="submit" name="submit" value="submit">
+</form>
+
+
+{% endblock %}
