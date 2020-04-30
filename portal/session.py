@@ -88,6 +88,7 @@ def session_edit(id, course_id):
 
         g.db.commit()
         cur.close()
+        con.close()
 
         return redirect(url_for('session.view_sessions', course_id=session['course_id']))
 
@@ -95,8 +96,8 @@ def session_edit(id, course_id):
 
 
 @bp.route("/course/<int:course_id>/session_create", methods=['GET', 'POST'])
-@teacher_required
 @login_required
+@teacher_required
 def create(course_id):
 
     user_id = session.get('user_id')
@@ -138,8 +139,8 @@ def create(course_id):
 
 
 @bp.route("/course/<int:course_id>/sessions/<int:id>/delete", methods=['POST'])
-@teacher_required
 @login_required
+@teacher_required
 def delete_session(id, course_id):
     """Delete unwanted session"""
     session = get_session(id)

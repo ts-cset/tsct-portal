@@ -8,12 +8,13 @@ bp = Blueprint("student", __name__)
 
 
 @bp.route("/student", methods=['GET'])
-@student_required
 @login_required
+@student_required
 def student_view():
     sessions = []
     user_id = session.get('user_id')
-    cur = db.get_db().cursor()
+    con = db.get_db()
+    cur = con.cursor()
     cur.execute("""SELECT sessions.course_id, sessions.location, sessions.days, sessions.class_time,
     courses.name AS class_name, roster.session_id
     FROM sessions JOIN courses on sessions.course_id = courses.course_id
@@ -22,9 +23,15 @@ def student_view():
     WHERE users.id = %s""",
                 (user_id,))
     student_classes = cur.fetchall()
-    cur.close()
 
-    return render_template("layouts/student-home.html", student_classes=student_classes)
+    cur.execute("""SELECT major FROM users
+                WHERE id = %s""",
+                (user_id,))
+    student_major = cur.fetchone()
+    cur.close()
+    con.close()
+
+    return render_template("layouts/student-home.html", student_classes=student_classes, student_major=student_major)
 
 
 @bp.route('/student/course/<int:course_id>/session/<int:session_id>/assignment/<int:id>/grade')
@@ -35,7 +42,8 @@ def assignment_grade(id, session_id, course_id):
 
     user_id = session.get('user_id')
 
-    cur = db.get_db().cursor()
+    con = db.get_db()
+    cur = con.cursor()
     cur.execute("""SELECT (ROUND(grades.points_received/grades.total_points, 2 )*100) as assignment_grade,
                 grades.total_points as total, grades.points_received as earned,
                 grades.submission as submission, grades.feedback as feedback,
@@ -52,19 +60,21 @@ def assignment_grade(id, session_id, course_id):
 
     grade = cur.fetchone()
     cur.close()
+    con.close()
 
     return render_template("/layouts/gradebook/assignment_grade.html", course_id=course_id, session_id=session_id,  id=id, grade=grade)
 
 
 @bp.route("/student/gradebook", methods=['GET', 'POST'])
-@student_required
 @login_required
+@student_required
 def view_student_gradebook():
 
     user_id = session.get('user_id')
     courses = []
     grades = []
-    cur = db.get_db().cursor()
+    con = db.get_db()
+    cur = con.cursor()
     cur.execute("""SELECT courses.course_id, courses.name AS class_name,
             users.name AS teacher, sessions.id AS session_id
             FROM roster JOIN sessions on roster.session_id = sessions.id
@@ -74,18 +84,20 @@ def view_student_gradebook():
                 (user_id,))
     courses = cur.fetchall()
     cur.close()
+    con.close()
 
     return render_template("/layouts/gradebook/student_view.html", grades=grades, courses=courses)
 
 
 @bp.route("/student/gradebook/course/<int:course_id>", methods=['GET', 'POST'])
-@student_required
 @login_required
+@student_required
 def view_grades_by_course(course_id):
 
     user_id = session.get('user_id')
 
-    cur = db.get_db().cursor()
+    con = db.get_db()
+    cur = con.cursor()
     cur.execute("""SELECT (ROUND(sum(grades.points_received)/sum(grades.total_points), 2 )*100)
                  as total_grade,
                  (sum(grades.total_points)) as total, (sum(grades.points_received)) as earned,
@@ -114,5 +126,6 @@ def view_grades_by_course(course_id):
                 (user_id, course_id))
     assignment_grades = cur.fetchall()
     cur.close()
+    con.close()
 
     return render_template("/layouts/gradebook/course_grades.html", course_grade=course_grade, course_id=course_id, assignment_grades=assignment_grades)
