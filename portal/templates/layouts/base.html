@@ -31,7 +31,7 @@
 
       {% if g.user.role == 'student' %}
 
-      <a class="buttons" href="{{ url_for('sessions.sessions') }}">Schedule</a>
+      <a class="buttons" href="{{ url_for('sessions.sessions_for_students') }}">Schedule</a>
       {% endif %}
 
       {% endif %}
