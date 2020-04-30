@@ -26,7 +26,7 @@ def courses():
         cur.close()
     return render_template('portal/courses/index.html', courses=courses)
 
-@bp.route('/view-course/<course_id>', methods=('GET', 'POST'))
+@bp.route('/view-course/<int:course_id>', methods=('GET', 'POST'))
 @login_required
 def view_course(course_id):
     cur = db.get_db().cursor()
@@ -57,8 +57,10 @@ def view_course(course_id):
             WHERE users.id = %s and courses_id = %s;""",
             (g.users['id'], course_id))
         sessions = cur.fetchall()
-        print(sessions)
         cur.close()
+    if courses == []:
+        error = "404 Not found"
+        return render_template('error.html', error=error)
     return render_template('portal/courses/view-course.html', courses=courses, sessions=sessions)
 
 @bp.route('/create-course', methods=('GET', 'POST'))
@@ -123,17 +125,24 @@ def create_course():
 
     return render_template('portal/courses/create-course.html')
 
-@bp.route('/update-course/<course_id>', methods=('GET', 'POST'))
+@bp.route('/update-course/<int:course_id>', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 def update_course(course_id):
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT * FROM courses
+                   WHERE id = %s;""",
+                   (course_id,))
+    courses = cur.fetchall()
+    if courses == []:
+        error = "404 Not found"
+        return render_template('error.html', error=error)
     if request.method == 'POST':
         course_number = request.form['course_number']
         name = request.form['name']
         description = request.form['description']
         credits = request.form['credits']
         error = None
-        cur = db.get_db().cursor()
         cur.execute("""
         SELECT * FROM courses
         WHERE course_number = %s;
@@ -180,9 +189,3 @@ def update_course(course_id):
             else:
                 return redirect(url_for('portal.userpage'))
     return render_template('portal/courses/update-course.html')
-
-@bp.route('/<path:subpath>/')
-@login_required
-def course_error(subpath=None):
-    error = "404 Not found"
-    return render_template('error.html', error=error)

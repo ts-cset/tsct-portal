@@ -6,7 +6,7 @@ from . import db
 
 bp = Blueprint('sessions', __name__, url_prefix='/portal/sessions')
 
-@bp.route('/<course_id>/view-session/<session_id>', methods=('GET', 'POST'))
+@bp.route('/<int:course_id>/view-session/<int:session_id>', methods=('GET', 'POST'))
 @login_required
 def view_session(course_id, session_id):
     cur = db.get_db().cursor()
@@ -14,13 +14,10 @@ def view_session(course_id, session_id):
                    WHERE id = %s;""",
                    (course_id,))
     courses = cur.fetchall()
-    cur = db.get_db().cursor()
     cur.execute("""SELECT * FROM session
                    WHERE id = %s;""",
                    (session_id,))
     sessions = cur.fetchall()
-
-    cur = db.get_db().cursor()
     cur.execute("""SELECT * FROM assignments
                    WHERE session_id = %s;""",
                    (session_id,))
@@ -34,10 +31,10 @@ def view_session(course_id, session_id):
                         WHERE roster.session_id = %s;""",
                     (session_id,))
     students = cur.fetchall()
-
-
-
     cur.close()
+    if courses == [] or sessions == []:
+        error = "404 Not found"
+        return render_template('error.html', error=error)
     return render_template('portal/courses/sessions/view-session.html', courses=courses, sessions=sessions, assignments=assignments, students=students)
 
 @bp.route('/<course_id>/create-session', methods=('GET', 'POST'))
@@ -84,7 +81,7 @@ def create_session(course_id):
             return redirect(url_for('sessions.create_session', course_id=course_id))
     return render_template('portal/courses/sessions/create-session.html')
 
-@bp.route('/<course_id>/<session_id>/add-student', methods=('GET', 'POST'))
+@bp.route('/<int:course_id>/<int:session_id>/add-student', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 def add_student(course_id, session_id):
@@ -97,6 +94,20 @@ def add_student(course_id, session_id):
     cur.execute("""SELECT * FROM users
                 WHERE role = 'student'""")
     all_students = cur.fetchall()
+
+    cur.execute("""SELECT * FROM courses
+                   WHERE id = %s;""",
+                   (course_id,))
+    courses = cur.fetchall()
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT * FROM session
+                   WHERE id = %s;""",
+                   (session_id,))
+    sessions = cur.fetchall()
+
+    if courses == [] or sessions == []:
+        error = "404 Not found"
+        return render_template('error.html', error=error)
 
     if request.method == 'POST':
         student = request.form['student']
@@ -123,9 +134,3 @@ def add_student(course_id, session_id):
                 return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
 
     return render_template('portal/courses/sessions/add-students.html', added_students=added_students, all_students=all_students)
-
-@bp.route('/<path:subpath>/')
-@login_required
-def session_error(subpath=None):
-    error = "404 Not found"
-    return render_template('error.html', error=error)

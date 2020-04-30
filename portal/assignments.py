@@ -6,7 +6,7 @@ from . import db
 
 bp = Blueprint('assignments', __name__, url_prefix='/portal/assignments')
 
-@bp.route('/<course_id>/<session_id>/view-assignment/<assignment_id>', methods=('GET', 'POST'))
+@bp.route('/<int:course_id>/<int:session_id>/view-assignment/<int:assignment_id>', methods=('GET', 'POST'))
 @login_required
 def view_assignment(course_id, session_id, assignment_id):
     cur = db.get_db().cursor()
@@ -14,16 +14,19 @@ def view_assignment(course_id, session_id, assignment_id):
                    WHERE id = %s;""",
                    (course_id,))
     courses = cur.fetchall()
-    cur = db.get_db().cursor()
     cur.execute("""SELECT * FROM session
                    WHERE id = %s;""",
                    (session_id,))
     sessions = cur.fetchall()
-    cur = db.get_db().cursor()
     cur.execute("""SELECT * FROM assignments
                    WHERE id = %s;""",
                    (assignment_id,))
     assignments = cur.fetchall()
+
+    if courses == [] or sessions == [] or assignments == []:
+        error = "404 Not found"
+        return render_template('error.html', error=error)
+
     if g.users['role'] == 'teacher':
         cur.execute("""SELECT grades.letter, submissions.* FROM submissions
                        JOIN grades ON submissions.grades_id = grades.id
@@ -48,7 +51,7 @@ def view_assignment(course_id, session_id, assignment_id):
         return render_template('portal/courses/sessions/assignments/view-assignment.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions)
     return render_template('portal/courses/sessions/assignments/view-assignment.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions, students=students)
 
-@bp.route('<assignment_id>/submit-assignment', methods=('GET', 'POST'))
+@bp.route('<int:assignment_id>/submit-assignment', methods=('GET', 'POST'))
 @login_required
 def submit_assignment(assignment_id):
     cur = db.get_db().cursor()
@@ -57,6 +60,10 @@ def submit_assignment(assignment_id):
                    (assignment_id,))
     assignments = cur.fetchall()
     cur.close()
+
+    if assignments == []:
+        error = "404 Not found"
+        return render_template('error.html', error=error)
 
     if request.method == 'POST':
         answer = request.form['answer']
@@ -76,10 +83,20 @@ def submit_assignment(assignment_id):
             return redirect(url_for('portal.userpage'))
     return render_template('portal/courses/sessions/assignments/submit-assignments.html', assignments=assignments)
 
-@bp.route('/<session_id>/create-assignment', methods=('GET', 'POST'))
+@bp.route('/<int:session_id>/create-assignment', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 def create_assignment(session_id):
+
+    cur = db.get_db().cursor()
+    cur.execute("""SELECT * FROM session
+                   WHERE id = %s;""",
+                   (session_id,))
+    sessions = cur.fetchall()
+
+    if sessions == []:
+        error = "404 Not found"
+        return render_template('error.html', error=error)
 
     if request.method == 'POST':
         name = request.form['name']
@@ -87,7 +104,6 @@ def create_assignment(session_id):
         points = request.form['points']
         description = request.form['description']
         error = None
-        cur = db.get_db().cursor()
         cur.execute("""
         SELECT * FROM assignments
         WHERE name = %s and session_id = %s;
@@ -158,7 +174,7 @@ def create_assignment(session_id):
             return redirect(url_for('assignments.create_assignment', session_id=session_id))
     return render_template('portal/courses/sessions/assignments/create-assignments.html')
 
-@bp.route('<course_id>/<session_id>/grade-assignment/<assignment_id>', methods=('GET', 'POST'))
+@bp.route('<int:course_id>/<int:session_id>/grade-assignment/<int:assignment_id>', methods=('GET', 'POST'))
 @login_required
 @teacher_required
 def grade_assignment(course_id, session_id, assignment_id):
@@ -167,12 +183,10 @@ def grade_assignment(course_id, session_id, assignment_id):
                    WHERE id = %s;""",
                    (course_id,))
     courses = cur.fetchall()
-    cur = db.get_db().cursor()
     cur.execute("""SELECT * FROM session
                    WHERE id = %s;""",
                    (session_id,))
     sessions = cur.fetchall()
-    cur = db.get_db().cursor()
     cur.execute("""SELECT * FROM assignments
                    WHERE id = %s;""",
                    (assignment_id,))
@@ -181,14 +195,15 @@ def grade_assignment(course_id, session_id, assignment_id):
                    WHERE assignments_id = %s;""",
                    (assignment_id,))
     submissions = cur.fetchall()
-
     cur.execute("""SELECT users.id, users.email, users.name, roster.users_id FROM roster
                         JOIN users ON users.id= roster.users_id
                         WHERE roster.session_id = %s;""",
                     (session_id,))
     students = cur.fetchall()
 
-    cur.close()
+    if courses == [] or sessions == [] or assignments == []:
+        error = "404 Not found"
+        return render_template('error.html', error=error)
 
     if request.method == 'POST':
         points = request.form.getlist('points')
@@ -261,9 +276,3 @@ def grade_assignment(course_id, session_id, assignment_id):
                 return redirect(url_for('portal.userpage'))
 
     return render_template('portal/courses/sessions/assignments/grade-assignments.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions, students=students)
-
-@bp.route('/<route>')
-@login_required
-def error(route=None):
-    error = "404 Not found"
-    return render_template('error.html', error=error)
