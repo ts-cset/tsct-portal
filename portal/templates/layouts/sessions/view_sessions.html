@@ -38,6 +38,7 @@
          <td class="td-assign-button"><a class="link" href="{{ url_for('assignment.view_assignments', id=session['id'], course_id=session['course_id']) }}">assignments</a></td>
          <td class="td-assign-button"><a class="link" href="{{ url_for('roster.view', id=session['id'], course_id=session['course_id']) }}">roster</a></td>
          {% if g.user['id'] == session['teacher_id'] %}
+        <td class="td-assign-button"><a class="link" href="{{ url_for('gpa.view', id=session['id'], course_id=session['course_id']) }}">grades</a></td>
          <td class="td-assign-button"><a class="link" href="{{ url_for('session.session_edit', id=session['id'], course_id=session['course_id']) }}">edit</a></td>
          <td class="delete-form" ><form class="delete-form" method="post" action="{{ url_for('session.delete_session', id=session['id'], course_id=course['course_id']) }}">
            <input class="edit-button" class="edit" type="submit" onclick="submit" name="delete" value="delete" ></form>

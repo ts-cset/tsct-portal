@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Student GPAs{% endblock %}
+
+{% block content %}
+<table>
+  <tbody>
+    <th class="th2"> student </th>
+    <th class="th2"> points earned </th>
+    <th class="th2"> possible points </th>
+    <th class="th3"> grade </th>
+
+  {% for grade in grades %}
+  <tr>
+      <td class="session-table">{{ grade['student_name']}}</td>
+      <td class="session-table">{{ grade['earned']}}</td>
+      <td class="session-table">{{ grade['total']}}</td>
+      <td class="session-table">{{ grade['total_grade']}}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
