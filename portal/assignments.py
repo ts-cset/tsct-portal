@@ -20,6 +20,7 @@ def assignments(course_id, section):
         # Grabs all the assignments user and session specific
         student_assignments = user_assignments(course_id, section)
 
+
         return render_template("portal/assignments.html",
                                     student_assignments=student_assignments,
                                     course_id=course_id,
@@ -30,20 +31,24 @@ def assignments(course_id, section):
         course_name = course(course_id)
         course_section = course_name + ' - ' + section
 
-        student_assignments = user_assignments(course_id, section)
+        cur = get_db().cursor()
+        total_earned = 0
+        total_possible = 0
+        student_assignments = get_student_assignments(course_id, section)
+        for assignment in student_assignments:
+            total_possible = total_possible + assignment[5]
 
-        # cur = get_db().cursor()
-        # cur.execute("""SELECT g.points_earned, a.points
-        #                FROM grades g JOIN assignments a
-        #                ON (g.assignment_id = a.id)
-        #                WHERE assignment_id = %s AND student_session_id = %s;""", ())
+            if assignment[9] != None:
+                total_earned = total_earned + assignment[9]
 
         return render_template("portal/student_assignments.html",
                                 student_assignments=student_assignments,
                                 course_id=course_id,
                                 section=section,
                                 course_section=course_section,
-                                course_name=course_name)
+                                course_name=course_name,
+                                total_earned=total_earned,
+                                total_possible=total_possible)
 
 #-- Create Assignments --#
 @bp.route('/createassignment', methods=("GET", "POST"))
@@ -79,7 +84,20 @@ def user_assignments(course_id, section):
     cur = get_db().cursor()
 
     # Pulls out all assignments for the course
-    cur.execute("""SELECT * FROM assignments AS a
+    cur.execute("""SELECT * FROM assignments
+                   WHERE course_id = %s
+                   AND section = %s;""",
+                   (course_id, section))
+
+    assignments = cur.fetchall()
+    return assignments
+
+def get_student_assignments(course_id, section):
+    cur = get_db().cursor()
+
+    # Pulls out all assignments for the course
+    cur.execute("""SELECT * FROM assignments a JOIN grades g
+                   ON (a.id = g.assignment_id)
                    WHERE a.course_id = %s
                    AND a.section = %s;""",
                    (course_id, section))
