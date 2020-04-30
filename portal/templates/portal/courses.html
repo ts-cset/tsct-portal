@@ -16,7 +16,7 @@
     <a class="session" href="{{ url_for('courses.courses_view', cour_id=course.id) }}">{{ course['name'] }}</a>
     <div class="button-group">
       <a class="fake-button" href="{{ url_for('courses.courses_edit', cour_id=course.id) }}">Edit</a>
-      <a class="fake-button" href="{{ url_for('sessions.sessions', course_id=course.id) }}">sessions</a>
+      <a class="fake-button" href="{{ url_for('sessions.sessions_for_teachers', course_id=course.id) }}">sessions</a>
     </div>
   </li>
   {% endfor %}
