@@ -41,8 +41,13 @@
     {% endif %}
     {% if g.user['role'] == 'student' %}
       <td class="td-assign-button"><a class="link" href="{{ url_for('student.assignment_grade',
-        id =assignment['assignment_id'], session_id=assignment['session_id'],
-        course_id=course['course_id']) }}">see grade </a></td>
+        id=assignment['assignment_id'], session_id=assignment['session_id'],
+        course_id=course['course_id']) }}">see grade</a></td>
+    {% endif %}
+    {% if g.user['role'] == 'teacher' %}
+      <td class="td-assign-button"><a class="link" href="{{ url_for('main.teacher_assignment_grades',
+        assignment_id=assignment['assignment_id'], session_id=assignment['session_id'],
+        course_id=course['course_id']) }}">see grades</a></td>
     {% endif %}
     </tr>
     {% endfor %}
