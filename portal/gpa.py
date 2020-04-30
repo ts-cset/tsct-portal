@@ -9,6 +9,7 @@ bp = Blueprint("gpa", __name__)
 @login_required
 @teacher_required
 def view(id, course_id):
+  """SIngle page view of all students in a session and their GPA"""
     con = db.get_db()
     cur = con.cursor()
     cur.execute(
@@ -21,7 +22,7 @@ def view(id, course_id):
              JOIN assignments on assignments.session_id = sessions.id
              JOIN grades on grades.assignment_id = assignments.assignment_id
              JOIN roster on roster.session_id = sessions.id
-			 JOIN users on grades.student_id = users.id
+	     JOIN users on grades.student_id = users.id
              WHERE courses.course_id=%s AND sessions.id=%s
 	            GROUP BY grades.student_id, roster.session_id, courses.course_id, users.id;""",
              (course_id , id))
