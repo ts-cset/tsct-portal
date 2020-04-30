@@ -13,22 +13,21 @@ bp = Blueprint('assignments', __name__)
 @login_required
 def assignments(course_id, section):
     """View for the assignments"""
-    #course_id = request.args.get('course_id')
-    #section = request.args.get('section')
+    if g.user['role'] == 'teacher':
+        course_name = course(course_id)
+        course_section = course_name + ' - ' + section
 
-    course_name = course(course_id)
-    course_section = course_name + ' - ' + section
+        # Grabs all the assignments user and session specific
+        student_assignments = user_assignments(course_id, section)
 
-    # Grabs all the assignments user and session specific
-    student_assignments = user_assignments(course_id, section)
-
-    return render_template("portal/assignments.html",
-                                student_assignments=student_assignments,
-                                course_id=course_id,
-                                section=section,
-                                course_section=course_section,
-                                course_name=course_name)
-
+        return render_template("portal/assignments.html",
+                                    student_assignments=student_assignments,
+                                    course_id=course_id,
+                                    section=section,
+                                    course_section=course_section,
+                                    course_name=course_name)
+    if g.user['role'] == 'student':
+        pass
 
 #-- Create Assignments --#
 @bp.route('/createassignment', methods=("GET", "POST"))
