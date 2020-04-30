@@ -16,10 +16,10 @@
         <th class="th3">current grade</th>
       </tr>
       <tr>
-        <td class="">{{course_grade['class_session']}}</td>
-        <td class="">{{course_grade['earned']}}</td>
-        <td class="">{{course_grade['total']}}</td>
-        <td class="grade">{{course_grade['total_grade']}}</td>
+        <td class="">{{assignment_grades[0]['id']}}</td>
+        <td class="">{{ points_received }}</td>
+        <td class="">{{ total_points }}</td>
+        <td class="grade">%{{ current_grade }}</td>
       </tr>
     </tbody>
   </table>
@@ -37,7 +37,7 @@
       {% for assignment_grade in assignment_grades %}
       <tr>
         <td class="td-assign-button"><a class="link" href="{{ url_for('student.assignment_grade',
-          id =assignment_grade['assign_id'], session_id=course_grade['class_session'],
+          id =assignment_grade['assign_id'], session_id=assignment_grade['id'],
           course_id=course_id) }}">{{assignment_grade['assign_name']}}</a></td>
         <td>{{assignment_grade['earned']}}</td>
         <td>{{assignment_grade['total']}}</td>

@@ -27,7 +27,7 @@ def test_view_grades_by_course(client , auth):
     # login required
     auth.student_login()
     # click the button to see the  grade
-    response = client.get('/student/gradebook/course/3')
+    response = client.get('/student/gradebook/course/3/session/1')
     # check the following data in page
     assert b'Course Grades' in response.data
-    assert b'CSET 180' in response.data
+    assert b'Exam_1' in response.data
