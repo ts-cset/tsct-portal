@@ -46,10 +46,65 @@ def test_submit_assignments(client, auth):
     # Data for the second assignment should now be updated
     response = client.get('/teacher/assignments')
     assert b'Biggerest' in response.data
+#Test the grading of the Assignments
+def test_grade_submission(client, auth,app):
+    #Log in as teacher
+    auth.teacher_login()
+    #Response posts to this URL
+    response = client.get('/teacher/grade/submission')
+    # Assert the quest is redirected
+    assert response.status_code == 302
+    #Open up app-context
+    with app.app_context():
+        #Assert that posting to the client makes you get redirected
+        assert client.get('/teacher/grade/submission', data={'grade-submission' : 100, 'submission': "(2, 1)"}).status_code == 302
+        #Send data to the form with grade as 100, for a student with id '2' for the 1st assignment of this session.
+        client.post('/teacher/grade/submission', data={'grade-submission' : 100, 'submission': "(2, 1)"})
+        # With database Select the first grade in the database, and check if the grade is 100
+        with get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("""
+                SELECT * FROM assignment_grades
+                """)
+                res = cur.fetchone()
+                assert res[2] == '100'
+        #Post to the same student and assignment in the same session as before
+        client.post('/teacher/grade/submission', data={'grade-submission' : 200, 'submission': "(2, 1)"})
+        with get_db() as con:
+            #Grab the grade for that assignment to see if it has been updated, if successful the grade should now be 200 instead of 100
+            with con.cursor() as cur:
+                cur.execute("""
+                SELECT * FROM assignment_grades
+                """)
+                res = cur.fetchone()
+                assert res[2] == '200'
+
+def test_view_assignments(client,auth):
+    auth.teacher_login()
+    #Post to assignment views with the session id of 1, make sure the post request is successful
+    assert client.post('/teacher/assignments/view', data={'view-grade': 1}).status_code == 200
+    #Make sure that you're redirected to 'view-assignments.html'
+    assert b'List of assignments' in client.post('/teacher/assignments/view', data={'view-grade': 1}).data
+    #Send get request to page
+    response = client.get('/teacher/assignments/view')
+    #Make sure that you're redirected
+    assert response.status_code == 302
+
+def test_grade(client,auth,app):
+    auth.teacher_login()
+    #Open up app-context
+    with app.app_context():
+        #Send post request, requesting to see the assignment with id 1 assert the request is successful
+        assert client.post('/teacher/assignments/grade', data={'grade': 1}).status_code == 200
+        #Assert that you're redirected to 'teacher-assignments.html'
+        assert b'Kevstice--Lueklee' in client.post('/teacher/assignments/grade', data={'grade': 1}).data
+        #Send a get request to the page
+        response = client.get('/teacher/assignments/grade')
+        #Make sure you're redirected else where
+        assert response.status_code == 302
 
 def test_create_assignments(client, auth, app):
     auth.teacher_login()
-
     # On a GET request, user should see a form for creating new assignments
     response = client.get('/teacher/assignments/create')
     assert b'Assignment Creation' in response.data
@@ -62,9 +117,9 @@ def test_create_assignments(client, auth, app):
     )
     with app.app_context():
         with get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("SELECT * FROM assignments WHERE id = 5")
-                assert cur.fetchone()['name'] == 'Wumbo Software'
+                with con.cursor() as cur:
+                    cur.execute("SELECT * FROM assignments WHERE id = 6")
+                    assert cur.fetchone()['name'] == 'Wumbo Software'
 
 def test_assign_work(client, auth):
     auth.teacher_login()
@@ -96,9 +151,17 @@ def test_assign_submit(client, auth, app):
         data={'date': '2020-05-08', 'session_id': 1, 'assign_id': 4}
     )
     with app.app_context():
-        with get_db() as con:
+         with get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
-                    SELECT * FROM session_assignments where assignment_id = 4 AND session_id = 1
-                """)
+                    SELECT * FROM session_assignments where assignment_id = 4 AND session_id = 1   """)
                 assert cur.fetchone() is not None
+
+
+def test_assignments_gradebook(client, auth):
+    auth.teacher_login()
+    response = client.get('/teacher/assignments/gradebook')
+    assert 'http://localhost/teacher/home' == response.headers['Location']
+    response = client.post('/teacher/assignments/gradebook', data={'assignment_id': 1})
+    assert b'Big Software' in response.data
+    assert b'<td>Lueklee, Kevstice</td>' in response.data

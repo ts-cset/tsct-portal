@@ -124,7 +124,7 @@ def sessions():
                 WHERE c.teacher_id = %s
             """, (g.user['id'],))
             sessions = cur.fetchall()
-    return render_template('sessions.html', sessions=sessions)
+    return render_template('assignments/sessions.html', sessions=sessions)
 
 
 @bp.route('/sessions/create', methods=('GET', 'POST'))
@@ -220,13 +220,16 @@ def session_submit():
         if session.get('class_session'):
             session_name = request.form['session_name']
             meeting_days = request.form['meeting_days']
+            meeting_time = request.form['meeting_time']
+            meeting_place = request.form['meeting_place']
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
                         UPDATE sessions
-                        SET session_name = %s, meeting_days = %s
+                        SET session_name = %s, meeting_days = %s,
+                        meeting_time = %s, meeting_place = %s
                         WHERE id = %s
-                    """, (session_name, meeting_days, session['class_session']))
+                    """, (session_name, meeting_days, meeting_time, meeting_place, session['class_session']))
             session.pop('class_session', None)
             session.pop('course_id', None)
             session.pop('edit', None)

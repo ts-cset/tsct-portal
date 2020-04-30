@@ -46,10 +46,16 @@
     <label for="meeting_days">Meeting Days:</label>
     <input type="text" name="meeting_days" maxlength="6" size="8">
     <!-- Set a name for the session -->
-    <label for="session_name">Session Code</label>
+    <label for="session_name">Session Code:</label>
     <input type="text" name="session_name" maxlength="1" size="2">
+    <!-- Sets a meeting place for the session -->
+    <label for="session_name">Location:</label>
+    <input type="text" name="meeting_place" maxlength="10">
+    <!-- Sets time for the session -->
+    <label for="session_name">Time:</label>
+    <input type="text" name="meeting_time" maxlength="11">
     <!-- Create the session -->
-    <button type="submit">Create Session</button>
+    <button type="submit">Create Session:</button>
     <button formaction="{{ url_for('teacher.session_cancel') }}" type="submit" formmethod="get" name="button">Cancel Session</button>
   </form>
 {% endblock %}
