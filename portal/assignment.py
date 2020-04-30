@@ -281,7 +281,7 @@ def assignment_grades():
 
         return render_template('layouts/teacher/assignments/assignment-grades.html', assignment=assignment, assignment_name=assignment_name)
     return redirect(url_for('teacher.home'))
-@bp.route('grades/grade-book', methods=('GET', 'POST'))
+@bp.route('assignments/grades/view-grades', methods=('GET', 'POST'))
 @login_required
 @admin
 def grade_view():
@@ -298,9 +298,9 @@ def grade_view():
                 WHERE s.id = %s
                 """, (session))
                 students = cur.fetchall()
-        return render_template('grade/gradebook.html', students=students)
+        return render_template('layouts/teacher/grade/gradebook.html', students=students)
     return redirect(url_for('teacher.sessions'))
-@bp.route('grades/all-grades', methods=('GET', 'POST'))
+@bp.route('assignments/grades/all-grades', methods=('GET', 'POST'))
 @login_required
 @admin
 def personal_grades():
@@ -323,30 +323,14 @@ def personal_grades():
                 """, (session, student))
                 grades = cur.fetchall()
                 cur.execute("""
-                SELECT a.points
-                FROM session_assignments s JOIN assignments a
-                ON s.assignment_id = a.id
-                WHERE s.session_id = %s
-                """, (session))
-                points = cur.fetchall()
-                cur.execute("""
-                SELECT g.grades
-                FROM sessions s JOIN session_assignments a
-                ON s.id = a.session_id
-                JOIN assignment_grades g
-                ON g.assigned_id = a.work_id
-                WHERE g.owner_id = %s AND s.id = %s
-                """, (student, session))
-                personal_total = cur.fetchall()
-                cur.execute("""
                 SELECT first_name, last_name from users WHERE id = %s
                 """, (student))
                 name = cur.fetchall()
                 total_grades = 0
                 personal_points = 0
-                for point in points:
+                for point in grades:
                     total_grades += point['points']
-                for total in personal_total:
+                for total in grades:
                     personal_points += int(total['grades'])
-        return render_template('grade/personal-grades.html', grades=grades, total_grades=total_grades, personal_points=personal_points, name=f"{name[0][0]}, {name[0][1]}" )
+        return render_template('layouts/teacher/grade/personal-grades.html', grades=grades, total_grades=total_grades, personal_points=personal_points, name=f"{name[0][0]}, {name[0][1]}" )
     return redirect(url_for('teacher.sessions'))
