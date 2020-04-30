@@ -1,6 +1,9 @@
 import os
+import csv
 import psycopg2
 import psycopg2.extras
+
+from werkzeug.security import check_password_hash, generate_password_hash
 
 import click
 from flask import current_app, g
@@ -51,7 +54,7 @@ def init_db():
             with con.cursor() as cur:
                 # use the file's text to execute the SQL queries within
                 cur.execute(f.read())
-
+    real_csv()
 
 @click.command("init-db")
 @with_appcontext
@@ -70,7 +73,7 @@ def mock_db():
         with get_db() as con:
             with con.cursor() as cur:
                 cur.execute(f.read())
-
+    
 
 @click.command("mock-db")
 @with_appcontext
@@ -86,3 +89,29 @@ def init_app(app):
     app.cli.add_command(init_db_command)
     app.cli.add_command(mock_db_command)
 
+
+def real_csv():
+    data_filepath = os.path.join(os.path.dirname(__file__), os.pardir, "tests", "portal_users.csv")
+
+    with open(data_filepath, "rb") as f:
+        with get_db() as con:
+
+            with con.cursor() as cur:
+                next(f)
+                
+                cur.copy_from(f, 'users', sep=',', columns=('id', 'email', 'password', 'name', 'role', 'major'))
+                cur.execute("""
+                SELECT password, id FROM users
+                """)
+                records = cur.fetchall()
+                
+                for record in records:
+                
+                    cur.execute(
+                        'UPDATE users SET password = %s WHERE id = %s',
+                        (generate_password_hash(record['password']), record['id'])
+                        )
+
+                    con.commit()
+
+    

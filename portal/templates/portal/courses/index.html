@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+<h2>Courses</h2>
+{% if g.users['role'] == 'teacher' %}
+<a href="{{ url_for('courses.create_course') }}"><input type="button" value="Create a course"></a>
+{% endif %}
+<ul>
+  {% for course in courses %}
+  <li>
+  <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
+  <a href="{{ url_for('courses.view_course', course_id=course['id']) }}"><input type="button" value="View Course"></a>
+  {% if g.users['id'] == course['teacher'] %}
+  <a href="{{ url_for('courses.update_course', course_id=course['id']) }}"><input type="button" value="Update course"></a>
+  {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

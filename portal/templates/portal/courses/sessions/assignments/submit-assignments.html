@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+{% for assignment in assignments %}
+<h2>Submit Assignment</h2>
+<p>Name: {{ assignment['name'] }}</p>
+<p>Due Date: {{ assignment['date'] }}</p>
+<p>Description: {{ assignment['description'] }}</p>
+<p>Points: {{ assignment['points'] }}</p>
+{% endfor %}
+<form method="post">
+  <label for="answer">Answer
+    <input name="answer" required/>
+  </label>
+  <input type="submit" value="Submit Assignment" />
+</form>
+{% endblock %}

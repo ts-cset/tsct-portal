@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+<h2>Add Student</h2>
+
+<form method="post">
+  <label for="student">Student ID
+    <input type="number" name="student" placeholder="ID" required />
+  </label>
+  <input type="submit" value="Add" />
+</form>
+<h3>Students in the session</h3>
+<ul>
+  {% for added_student in added_students %}
+  <li>{{ added_student['users_id'] }}, {{ added_student['name'] }}, {{ added_student['email'] }}</li>
+  {% endfor %}
+</ul>
+<h3>All Students</h3>
+<ul>
+  {% for student in all_students %}
+  <li>{{ student['id'] }}, {{ student['name'] }}, {{ student['email'] }}</li>
+  {% endfor %}
+</ul>
+
+
+{% endblock %}
