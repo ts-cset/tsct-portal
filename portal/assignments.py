@@ -27,7 +27,23 @@ def assignments(course_id, section):
                                     course_section=course_section,
                                     course_name=course_name)
     if g.user['role'] == 'student':
-        pass
+        course_name = course(course_id)
+        course_section = course_name + ' - ' + section
+
+        student_assignments = user_assignments(course_id, section)
+
+        # cur = get_db().cursor()
+        # cur.execute("""SELECT g.points_earned, a.points
+        #                FROM grades g JOIN assignments a
+        #                ON (g.assignment_id = a.id)
+        #                WHERE assignment_id = %s AND student_session_id = %s;""", ())
+
+        return render_template("portal/student_assignments.html",
+                                student_assignments=student_assignments,
+                                course_id=course_id,
+                                section=section,
+                                course_section=course_section,
+                                course_name=course_name)
 
 #-- Create Assignments --#
 @bp.route('/createassignment', methods=("GET", "POST"))
