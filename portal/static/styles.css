@@ -4,16 +4,10 @@
  *,
  *:before,
  *:after {
-   box-sizing: border-box;
-   margin: 1vw 0;
-   width: auto;
-   border-style: double;
-   border: #929292;
  }
  
  html {
-   font-family: 'Lato', Helvetica, Arial, sans-serif;
-   font-size: 18px;
+   font-size: 1vw;
  }
  
  h1, h2, h3, h4, h5, h6 {
@@ -21,7 +15,6 @@
    font-family: 'Crimson Text', serif;
    font-weight: 400;
  }
- 
  
  /**
   * Layout
@@ -35,8 +28,13 @@
  }
  
  main {
+   box-sizing: border-box;
+   margin: 1vw 0;
+   width: auto;
+   border-style: double;
+   border: #929292;
    display: flex;
-   flex-direction: column;
+   flex-direction: row;
    align-items: center;
  }
  
@@ -142,14 +140,13 @@
  }
  
  main a, .deleteCourse {
-    background-color: #a6083d;
-    color: white;
-    border: 5px inset #ebebeb;
-    outline: #ccc double 5px;
-    padding: 1rem 1.5rem;
-    margin: 1rem;
-    text-decoration: none;
-    text-transform: uppercase;
+   background-color: #a6083d;
+   color: white;
+   border: 1px solid #a6083d;
+   padding: 1rem 1.5rem;
+   margin: 1rem;
+   text-decoration: none;
+   text-transform: uppercase;
  }
  
  main a:hover, .deleteCourse:hover {
@@ -195,12 +192,12 @@
  
  /***Styling checkboxes***/
  
- .checkbox { 
+ .checkbox {
    width: 15%;
-   margin: 0;
+   margin: 1vw;
    display: flex;
    cursor: pointer;
-   font-size: 20px;
+   font-size: 1vw;
  } 
    
  /* Hide the default checkbox in class.html */ 
@@ -260,12 +257,11 @@
  
  .course button, .createSession button, .editSession button, .submitCourse {
    display: block;
-   margin: 1rem auto;
+   margin: 1vw 1vw;
    background-color: white;
    color: #a6083d;
-   border: 1px solid white;
+   border: 1vw double #736b6b;
    padding: .5rem 1rem;
-   text-decoration: none;
    text-transform: uppercase;
  }
  
@@ -300,14 +296,13 @@
  /***Create a Session***/
  
  .createSession, .editSession {
-   align-self: start;
+   box-sizing: border-box;
+   width: 50%;
+   border: 10px double #ccc;
    color: white;
    background-color: #a6083d;
-   width: 50%;
-   margin: 1rem;
-   padding: 2rem 2rem 0 2rem;
-   border: 1px solid black;
-   border-radius: 10px;
+   margin: 2vw 2vw;
+   padding: 2vw 2vw;
  }
  
  .createSession ul, .editSession ul {
@@ -325,8 +320,11 @@
  }
  
  .createSession input, .editSession input {
-   color: black;
-   margin-right: 1rem;
+   color: #ebebeb;
+   margin: 1vw;
+   border: 2px solid #a6093d;
+   outline-style: outset;
+   outline-color: #ccc;
  }
  
  /***Roster Checkboxes***/
