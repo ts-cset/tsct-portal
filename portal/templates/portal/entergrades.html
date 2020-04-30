@@ -3,8 +3,8 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-<h1>Enter Grades</h1>
-<p>{{ name }}</p>
+<h1 class='grade-title'>Enter Grades</h1>
+<p class='grade'>{{ name }}</p>
 
 <table class='table-whole'>
 
@@ -17,33 +17,46 @@
     </tr>
   </thead>
 
-<tbody class=''>
-
+  <tbody class=''>
     {% for student in students %}
     <tr class=''>
       <form method="post">
 
+        <label class='grade' for="grade">
 
-        <label for="grade">
-        <td>{{ student['name'] }}</td>
+          <td class='grade-row'>{{ student['name'] }}</td>
 
-        <td>
-          <input class='grade-input' type="number" id="grade" name="grade" value='' required>
-        </td>
+          <td class='grade-row'>
+            {% if grades_dict[student['id']] %}
+            {{ grades_dict[student['id']] }}
+            {% else %}
+            <input
+              class='grade-input' type="number"
+              id="grade" name="grade"
+              value=''
+            required>
+            {% endif %}
+          </td>
 
-        <input type="hidden" name="student" value="{{ student['id'] }}">
+          <input type="hidden" name="student" value="{{ student['id'] }}">
 
-        <td>/{{ points }}</td>
+          <td class='grade-row'>/{{ points }}</td>
+
         </label>
 
 
-        <td><input class='grade-submit' type="submit" value="Enter"></td>
+        <td>
+          <input
+            class='grade-submit'
+            type="submit"
+            value="Enter">
+        </td>
       </form>
-  </tr>
+    </tr>
     {% endfor %}
-
-
   </tbody>
+
 </table>
+
 
 {% endblock %}
