@@ -39,6 +39,7 @@
   {% for student in students %}
   {% if student['id'] == submission['users_id'] %}
   <li>
+
     <!--this is where the users_id to the name-->
     <p>Student: {{ student['name'] }}</p>
     <p>Answer: {{ submission['answer'] }}</p>
