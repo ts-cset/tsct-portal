@@ -12,8 +12,8 @@ def index():
 
 # route for showing the home for teachers
 @bp.route("/home", methods=['GET'])
-@teacher_required
 @login_required
+@teacher_required
 def home():
     # user_id = session['user_id']
     cur = db.get_db().cursor()
@@ -26,8 +26,8 @@ def home():
 
 
 @bp.route("/home/mycourses", methods=['GET'])
-@teacher_required
 @login_required
+@teacher_required
 def my_courses():
 
     user_id = session.get('user_id')
@@ -47,8 +47,8 @@ def my_courses():
 
 
 @bp.route("/course/<int:course_id>/session/<int:session_id>/assignments/<int:assignment_id>/grades")
-@teacher_required
 @login_required
+@teacher_required
 def teacher_assignment_grades(course_id, session_id, assignment_id):
     """View for the teacher to view assignments in a course."""
 
@@ -71,8 +71,8 @@ def teacher_assignment_grades(course_id, session_id, assignment_id):
 
 
 @bp.route("/course/<int:course_id>/session/<int:session_id>/assignments/<int:assignment_id>/input-grade/<int:grade_id>", methods=('GET', 'POST'))
-@teacher_required
 @login_required
+@teacher_required
 def input_grade(course_id, session_id, assignment_id, grade_id):
     """View for teacher to update assignment grade."""
 

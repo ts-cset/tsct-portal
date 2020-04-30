@@ -12,7 +12,7 @@
   <h4>{{course['teacher']}} / Session {{course['session_id']}}</h4>
 
 <a class="course-options-item" href="{{url_for('student.view_grades_by_course',
- course_id=course['course_id'])}}">see grades</a>
+ course_id=course['course_id'], session_id=course['session_id'])}}">see grades</a>
 {% endfor %}
 </section>
 

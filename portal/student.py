@@ -36,7 +36,7 @@ def assignment_grade(id, session_id, course_id):
     user_id = session.get('user_id')
 
     cur = db.get_db().cursor()
-    cur.execute("""SELECT (ROUND(grades.points_received/grades.total_points, 2 )*100) as assignment_grade,
+    cur.execute("""SELECT DISTINCT(ROUND(grades.points_received/grades.total_points, 2 )*100) as assignment_grade,
                 grades.total_points as total, grades.points_received as earned,
                 grades.submission as submission, grades.feedback as feedback,
                grades.student_id, grades.assignment_id as assign_id, assignments.name as assign_name,
@@ -65,7 +65,7 @@ def view_student_gradebook():
     courses = []
     grades = []
     cur = db.get_db().cursor()
-    cur.execute("""SELECT courses.course_id, courses.name AS class_name,
+    cur.execute("""SELECT DISTINCT courses.course_id, courses.name AS class_name,
             users.name AS teacher, sessions.id AS session_id
             FROM roster JOIN sessions on roster.session_id = sessions.id
             JOIN courses on sessions.course_id = courses.course_id
@@ -78,30 +78,41 @@ def view_student_gradebook():
     return render_template("/layouts/gradebook/student_view.html", grades=grades, courses=courses)
 
 
-@bp.route("/student/gradebook/course/<int:course_id>", methods=['GET', 'POST'])
+@bp.route("/student/gradebook/course/<int:course_id>/session/<int:session_id>", methods=['GET', 'POST'])
 @student_required
 @login_required
-def view_grades_by_course(course_id):
+def view_grades_by_course(course_id, session_id):
 
     user_id = session.get('user_id')
 
     cur = db.get_db().cursor()
-    cur.execute("""SELECT (ROUND(sum(grades.points_received)/sum(grades.total_points), 2 )*100)
-                 as total_grade,
-                 (sum(grades.total_points)) as total, (sum(grades.points_received)) as earned,
-                 grades.student_id, roster.session_id as class_session, courses.course_id,
-                 courses.name as class_name
-                 FROM courses JOIN sessions on courses.course_id = sessions.course_id
-                 JOIN assignments on assignments.session_id = sessions.id
-                 JOIN grades on grades.assignment_id = assignments.assignment_id
-                 JOIN roster on roster.session_id = sessions.id
-                 WHERE grades.student_id = %s AND courses.course_id = %s
-	             GROUP BY grades.student_id, roster.session_id, courses.course_id""",
-                (user_id, course_id))
 
-    course_grade = cur.fetchone()
+    #Get all of the grades in the course for a student
+    cur.execute("""
+    SELECT * FROM grades
+    JOIN assignments ON assignments.assignment_id = grades.assignment_id
+    WHERE student_id = %s AND points_received IS NOT NULL
+    AND session_id = %s
+    """,(user_id, session_id))
 
-    cur.execute("""SELECT DISTINCT grades.grade_id,
+    course_grade = cur.fetchall()
+
+    points_received = 0
+    total_points = 0
+
+    #calculate the points for the grade
+    for grade in course_grade:
+
+        total_points = total_points + grade['total_points']
+        points_received = points_received + grade['points_received']
+
+    #if there's no assignments, students still have %100 grade
+    if total_points == 0:
+        current_grade = 100
+    else:
+        current_grade = (points_received / total_points) * 100
+
+    cur.execute("""SELECT DISTINCT grades.grade_id, sessions.id,
             (ROUND(grades.points_received/grades.total_points, 2 )*100) as assignment_grade,
             grades.total_points as total, grades.points_received as earned,
             grades.assignment_id as assign_id, assignments.name as assign_name
@@ -113,6 +124,9 @@ def view_grades_by_course(course_id):
             AND courses.course_id = %s""",
                 (user_id, course_id))
     assignment_grades = cur.fetchall()
+
     cur.close()
 
-    return render_template("/layouts/gradebook/course_grades.html", course_grade=course_grade, course_id=course_id, assignment_grades=assignment_grades)
+    return render_template("/layouts/gradebook/course_grades.html", course_id=course_id,
+    assignment_grades=assignment_grades, points_received=points_received, total_points=total_points,
+    current_grade=current_grade, course_grade=course_grade)
