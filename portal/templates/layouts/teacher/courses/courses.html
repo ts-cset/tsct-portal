@@ -8,15 +8,15 @@
         <ul class="courseList">
           {% for course in courses %}
             <li class="course">
-              <label class="checkbox"> 
-                <input type="checkbox" value="{{ course['id'] }}" name="{{ course['id'] }}"/>
+              <label class="checkbox">
+                <input type="checkbox" name="id" value="{{ course['id'] }}"/>
                 <!--Since checkboxes can't be styled, this span becomes the checkbox-->
-                <span class="fakeCheckbox"></span> 
-              </label> 
+                <span class="fakeCheckbox"></span>
+              </label>
               <h2>{{ course['major'] }}</h2>
               <p>{{ course['course_name'] }}</p>
               <p>{{ course['description'] }}</p>
-              <button formaction="{{ url_for('teacher.make_session') }}" type="submit" name="session" value="{{ course['id'] }}">Create Session</button>
+              <button formaction="{{ url_for('teacher.make_session') }}" type="submit" name="course_id" value="{{ course['id'] }}">Create Session</button>
               <a href="{{ url_for('teacher.course_edit', id=course['id']) }}">Edit</a>
             </li>
           {% endfor %}
