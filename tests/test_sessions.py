@@ -40,6 +40,9 @@ def test_create_session_error(client):
     response = client.post(
         '/portal/sessions/1/create-session', data={'name': 'A', 'times':'monday', 'students':43784}
     )
+    response = client.get(
+    '/portal/sessions/1/create-session'
+    )
     assert b'That session already exists' in response.data
 
 def test_view_session(client):

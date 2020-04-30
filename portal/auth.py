@@ -27,13 +27,14 @@ def login():
 
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect email or password'
+            flash(error)
 
 
         if error is None:
             session.clear()
             session['users_id'] = user['id']
             return redirect(url_for('portal.userpage'))
-        flash(error)
+
 
 
     return render_template('account/login.html')

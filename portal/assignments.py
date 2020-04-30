@@ -74,14 +74,14 @@ def submit_assignment(assignment_id):
         #only have the assignment_id to take and join tables from to make sure the ids are the same
 
         #code for reference
-        
+
         cur.execute("""SELECT session_id FROM assignments
                    WHERE id = %s;""",
                    (assignment_id,))
         sessions = cur.fetchone()
         session_id = sessions[0]
 
-        
+
         cur.execute("""SELECT courses_id FROM session
                    WHERE id = %s;""",
                    (session_id,))
@@ -100,7 +100,7 @@ def submit_assignment(assignment_id):
             error = "There was a problem with this submission"
             return render_template('error.html', error=error)
 
-    
+
         else:
             return redirect(url_for('assignments.view_assignment', course_id=course_id, session_id=session_id, assignment_id=assignment_id))
 
@@ -136,7 +136,7 @@ def create_assignment(session_id):
 
         if assignment != None:
             error = "That assignment already exists"
-            return render_template('error.html', error=error)
+            flash(error)
 
         if error is None:
             try:
@@ -147,7 +147,8 @@ def create_assignment(session_id):
                 db.get_db().commit()
             except:
                 error = "There was a problem creating that assignment"
-                return render_template('error.html', error=error)
+                flash(error)
+
             else:
                 cur.execute("""
                 SELECT id FROM assignments
@@ -256,47 +257,46 @@ def grade_assignment(course_id, session_id, assignment_id):
 
             if points[count] > assignment_point or points[count] < 0:
                 error = "Invalid point amount"
-                return render_template('error.html', error=error)
+                flash(error)
 
             if error is None:
                 grade = (points[count]/assignment_point)
 
-            if grade >= 0.98:
-                grade_id = 1
-            elif grade >= 0.93:
-                grade_id = 2
-            elif grade >= 0.90:
-                grade_id = 3
-            elif grade >= 0.87:
-                grade_id = 4
-            elif grade >= 0.83:
-                grade_id = 5
-            elif grade >= 0.80:
-                grade_id = 6
-            elif grade >= 0.77:
-                grade_id = 7
-            elif grade >= 0.73:
-                grade_id = 8
-            elif grade >= 0.70:
-                grade_id = 9
-            elif grade >= 0.67:
-                grade_id = 10
-            elif grade >= 0.63:
-                grade_id = 11
-            elif grade >= 0.60:
-                grade_id = 12
-            else:
-                grade_id = 13
+                if grade >= 0.98:
+                    grade_id = 1
+                elif grade >= 0.93:
+                    grade_id = 2
+                elif grade >= 0.90:
+                    grade_id = 3
+                elif grade >= 0.87:
+                    grade_id = 4
+                elif grade >= 0.83:
+                    grade_id = 5
+                elif grade >= 0.80:
+                    grade_id = 6
+                elif grade >= 0.77:
+                    grade_id = 7
+                elif grade >= 0.73:
+                    grade_id = 8
+                elif grade >= 0.70:
+                    grade_id = 9
+                elif grade >= 0.67:
+                    grade_id = 10
+                elif grade >= 0.63:
+                    grade_id = 11
+                elif grade >= 0.60:
+                    grade_id = 12
+                else:
+                    grade_id = 13
 
-            cur.execute("""UPDATE submissions SET points = %s, grades_id = %s
-            WHERE users_id = %s and assignments_id = %s;
-             """,
-             (points[count], grade_id, user[0], assignment_id))
-            db.get_db().commit()
-            count += 1
+                cur.execute("""UPDATE submissions SET points = %s, grades_id = %s
+                WHERE users_id = %s and assignments_id = %s;
+                 """,
+                 (points[count], grade_id, user[0], assignment_id))
+                db.get_db().commit()
+                count += 1
 
-
-            #need the course_id session_id and assignment_id and submission_id to make sure that 
+            #need the course_id session_id and assignment_id and submission_id to make sure that
             # but because in this fucntion we alreadu have the course, session, and submission we need to just grabt he assignment id
 
 

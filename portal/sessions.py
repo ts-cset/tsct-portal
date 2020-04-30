@@ -56,7 +56,7 @@ def create_session(course_id):
 
         if session != None:
             error = "That session already exists"
-            return render_template('error.html', error=error)
+            flash(error)
 
         if error is None:
             try:
@@ -67,7 +67,7 @@ def create_session(course_id):
                 db.get_db().commit()
             except:
                 error = "There was a problem creating that session"
-                return render_template('error.html', error=error)
+                flash(error)
             else:
                 cur.execute("""SELECT id FROM session
                 WHERE name = %s and courses_id = %s;
@@ -76,7 +76,7 @@ def create_session(course_id):
                 sessions = cur.fetchone()
                 session_id = sessions[0]
 
-            return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
+                return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
         else:
             return redirect(url_for('sessions.create_session', course_id=course_id))
     return render_template('portal/courses/sessions/create-session.html')
@@ -117,17 +117,20 @@ def add_student(course_id, session_id):
             print(student)
             if added_student['users_id'] == int(student):
                 error = "That student is already in the session"
-                return render_template('error.html', error=error)
-        try:
-            cur.execute("""INSERT INTO roster (users_id, session_id)
-            VALUES (%s, %s);
-             """,
-             (student, session_id))
-            db.get_db().commit()
-            cur.close()
-        except:
-            error = "There was a problem adding that student"
-            return render_template('error.html', error=error)
-        else:
-            return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
+                flash(error)
+        if error == None:
+
+            try:
+                cur.execute("""INSERT INTO roster (users_id, session_id)
+                VALUES (%s, %s);
+                 """,
+                 (student, session_id))
+                db.get_db().commit()
+                cur.close()
+            except:
+                error = "There was a problem adding that student"
+                flash(error)
+            else:
+                return redirect(url_for('sessions.view_session', session_id=session_id, course_id=course_id))
+
     return render_template('portal/courses/sessions/add-students.html', added_students=added_students, all_students=all_students)

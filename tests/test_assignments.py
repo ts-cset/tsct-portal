@@ -22,7 +22,10 @@ def test_create_assignment_error(client):
     )
     assert b'There was a problem creating that assignment' in response.data
     response = client.post(
-        '/portal/assignments/1/create-assignment', data={'name': 'Homework', 'date':'2000-12-31', 'description':'homework','points':'5'}
+        '/portal/assignments/1/create-assignment', data={'name': 'Homework', 'date':'12-31-2000', 'description':'homework','points':'5'}
+    )
+    response = client.get(
+    '/portal/assignments/1/create-assignment'
     )
     assert b'That assignment already exists' in response.data
 
