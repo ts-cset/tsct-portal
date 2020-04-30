@@ -4,7 +4,7 @@ from flask import (
 from portal.auth import (login_required, teacher_required)
 from . import db
 
-bp = Blueprint('gradebook', __name__, url_prefix='/gradebook')
+bp = Blueprint('gradebook', __name__, url_prefix='/portal/gradebook')
 
 @bp.route('/')
 @login_required
@@ -85,9 +85,3 @@ def gradebook():
 
     cur.close()
     return render_template('portal/gradebook/view-gradebook.html', courses=courses, sessions=sessions, grades=grades)
-
-@bp.route('/<path:subpath>/')
-@login_required
-def gradebook_error(subpath=None):
-    error = "404 Not found"
-    return render_template('error.html', error=error)
