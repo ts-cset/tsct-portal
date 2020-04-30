@@ -31,8 +31,6 @@ def test_view_grades_as_teacher(app, client, auth):
 
 
 # update/add a grade as a teacher
-
-
 def test_add_grade(app, client, auth):
     with app.app_context():
         db = get_db()
@@ -45,12 +43,10 @@ def test_add_grade(app, client, auth):
         # login as teacher
         auth.teacher_login()
 
-        # get the sessions in the class
+        # add a grade
         response = client.post('/grades?course_id=2&section=A&assignment_id=4', data={
             'grade': 11, 'student': 2})
-
+        # check if it's changed
         cur.execute("SELECT * FROM Grades ")
         check = cur.fetchall()
         assert len(check) == 3
-
-# check if it's changed
