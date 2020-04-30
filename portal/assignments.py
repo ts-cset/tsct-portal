@@ -74,14 +74,14 @@ def submit_assignment(assignment_id):
         #only have the assignment_id to take and join tables from to make sure the ids are the same
 
         #code for reference
-        
+
         cur.execute("""SELECT session_id FROM assignments
                    WHERE id = %s;""",
                    (assignment_id,))
         sessions = cur.fetchone()
         session_id = sessions[0]
 
-        
+
         cur.execute("""SELECT courses_id FROM session
                    WHERE id = %s;""",
                    (session_id,))
@@ -100,7 +100,7 @@ def submit_assignment(assignment_id):
             error = "There was a problem with this submission"
             return render_template('error.html', error=error)
 
-    
+
         else:
             return redirect(url_for('assignments.view_assignment', course_id=course_id, session_id=session_id, assignment_id=assignment_id))
 
@@ -136,7 +136,7 @@ def create_assignment(session_id):
 
         if assignment != None:
             error = "That assignment already exists"
-        flash(error)
+            flash(error)
 
         if error is None:
             try:
@@ -257,7 +257,7 @@ def grade_assignment(course_id, session_id, assignment_id):
 
             if points[count] > assignment_point or points[count] < 0:
                 error = "Invalid point amount"
-            flash(error)
+                flash(error)
 
             if error is None:
                 grade = (points[count]/assignment_point)
@@ -296,7 +296,7 @@ def grade_assignment(course_id, session_id, assignment_id):
                 db.get_db().commit()
                 count += 1
 
-            #need the course_id session_id and assignment_id and submission_id to make sure that 
+            #need the course_id session_id and assignment_id and submission_id to make sure that
             # but because in this fucntion we alreadu have the course, session, and submission we need to just grabt he assignment id
 
 
