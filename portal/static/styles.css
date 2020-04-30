@@ -142,13 +142,14 @@
  }
  
  main a, .deleteCourse {
-   background-color: #a6083d;
-   color: white;
-   border: 1px solid #a6083d;
-   padding: 1rem 1.5rem;
-   margin: 1rem;
-   text-decoration: none;
-   text-transform: uppercase;
+    background-color: #a6083d;
+    color: white;
+    border: 5px inset #ebebeb;
+    outline: #ccc double 5px;
+    padding: 1rem 1.5rem;
+    margin: 1rem;
+    text-decoration: none;
+    text-transform: uppercase;
  }
  
  main a:hover, .deleteCourse:hover {
