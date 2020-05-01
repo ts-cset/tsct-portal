@@ -130,6 +130,10 @@ nav {
   line-height: 2;
 }
 
+img {
+  width: 700px;
+}
+
 /**
 *class of points to try and get grading stuff on one line
 */
@@ -159,4 +163,24 @@ nav {
 */
 .base_flash { margin: 0 auto;
   margin-top: 7.5%;
+}
+
+
+@media (max-width: 1000px) {
+  .home {
+    display: flex;
+    color: black;
+    padding-bottom: 30px;
+    padding-top: 35px;
+  }
+
+  .home p {
+    color: white;
+    padding: 15px;
+    line-height: 1.2;
+  }
+
+  img {
+    width: 500px;
+  }
 }
