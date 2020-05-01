@@ -1,0 +1,27 @@
+{% extends 'layouts/base.html' %}
+
+
+{% block title%}Grades for : {{ name }}{% endblock %}
+
+{% block content %}
+<form method="post">
+  <table>
+    <tr>
+      <th>Assignment-name</th>
+      <th>Points</th>
+      <th>Description</th>
+      <th>Grades</th>
+      </tr>
+      {% for grade in grades %}
+    <tr>
+  <td>{{ grade['name'] }}</td>
+  <td>{{ grade['points']}}</td>
+  <td>{{ grade['description'] }}</td>
+  <td>{{grade['grades'] or 0}}</td>
+</tr>
+{% endfor %}
+</table>
+<h3>Total-Grades</h3>
+<p>{{ personal_points }}/{{ total_grades }}</p>
+</form>
+{% endblock %}
