@@ -30,16 +30,18 @@
   <a href="{{ url_for('assignments.view_assignment', course_id=course['id'], session_id=session['id'], assignment_id=assignment['id']) }}"><input type="button" value="View Assignment"></a>
   {% endfor %}
 </ul>
-{% endfor %}
 {% if g.users['role'] == 'teacher' %}
 <h4>Roster</h4>
+<a href="{{ url_for('sessions.add_student', course_id=course['id'], session_id=session['id']) }}"><input type="button" value="Add student"></a>
 <ul>
-  {% for roster in rosters %}
+  
+  {%for student in students %}
   <li>
-  <p>{{ roster['users_id'] }}</p>
+  <p>{{ student['users_id'] }}, {{ student['name'] }}, {{ student['email'] }}</p>
   </li>
   {% endfor %}
 </ul>
 {% endif %}
+{% endfor %}
 {% endfor %}
 {% endblock %}

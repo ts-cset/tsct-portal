@@ -71,6 +71,7 @@ CREATE TABLE submissions (
   users_id bigint NOT NULL REFERENCES users (id),
   assignments_id bigint NOT NULL REFERENCES assignments (id),
   answer text,
+  feedback text,
   points real DEFAULT 0,
   grades_id bigint DEFAULT 14 REFERENCES grades (id)
 );

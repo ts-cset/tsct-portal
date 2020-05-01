@@ -10,13 +10,20 @@
 <div class="grades">
   <form method="post">
   {% for submission in submissions %}
+  {% for student in students %}
+  {% if student['id'] == submission['users_id'] %}
   <li>
-    <p>Student: {{ submission['users_id'] }} Answer: {{ submission['answer'] }}</p>
+    <p>Student: {{ student['name'] }} Answer: {{ submission['answer'] }}</p>
     <label for="points">Points
       <input name="points" type="number" required/>
     </label>
     <p>/{{ assignment['points'] }}</p>
+    <label for="feedback">Feedback
+      <textarea name="feedback" ></textarea>
+    </label>
   </li>
+  {% endif %}
+  {% endfor %}
   {% endfor %}
   <input class="submit" type="submit" value="Submit Grade" />
   </form>

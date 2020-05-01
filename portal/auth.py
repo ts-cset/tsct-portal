@@ -23,16 +23,19 @@ def login():
         cur.close()
 
         if user is None:
-            error = 'Incorrect email or password.'
-            return render_template('error.html', error=error)
+            error = 'Incorrect email or password'
+
         elif not check_password_hash(user['password'], password):
-            error = 'Incorrect email or password.'
-            return render_template('error.html', error=error)
+            error = 'Incorrect email or password'
+            flash(error)
+
 
         if error is None:
             session.clear()
             session['users_id'] = user['id']
             return redirect(url_for('portal.userpage'))
+
+
 
     return render_template('account/login.html')
 
@@ -54,11 +57,6 @@ def load_logged_in_users():
 def logout():
     session.clear()
     return redirect(url_for('index'))
-
-@bp.route('/<route>')
-def error(route=None):
-    error = "404 Not found"
-    return render_template('error.html', error=error)
 
 def login_required(view):
     @functools.wraps(view)
