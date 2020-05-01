@@ -9,17 +9,22 @@ from portal.teacher import bp
 @login_required
 @admin
 def sessions():
+    """Display a list of sessions that the logged-in user owns and can delete"""
     if request.method == 'POST':
 
         items = []
         error = None
 
+        # Collect all the checked form items and validate ownership
         for item in request.form.getlist('id'):
             if validate(item, 'sessions'):
                 items.append(int(item))
             else:
+                # If validation fails, set an error and stop the loop
                 error = 'Something went wrong.'
                 break
+
+        # If all validation succeeds, delete selected sessions from the DB
         if not error:
             with db.get_db() as con:
                 with con.cursor() as cur:
@@ -28,8 +33,11 @@ def sessions():
                         WHERE id = ANY(%s)
                     """, (items,))
         else:
+            # If validation fails, prepare an error to be shown to the user
             flash(error)
 
+    # Grab all sessions that the teacher owns from the DB along with associated
+    # course information
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute("""
@@ -47,11 +55,17 @@ def sessions():
 @login_required
 @admin
 def make_session():
+    """Begin creation of a course session"""
     if request.method == "POST":
+        # Obtain id of parent course for session
         course_id = request.form['course_id']
 
+        # Validate that the teacher owns the parent course
         if validate(course_id, 'courses'):
+            # Add the course ID to the global HTTP session variable
             session['course_id'] = course_id
+            # Add an incomplete session entry to the database to enable roster creation;
+            # then, select that new session.
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
@@ -62,27 +76,44 @@ def make_session():
                         ORDER BY id DESC
                     """, (course_id, course_id))
 
+                    # Get the new session ID and add it to the global session
+                    # variable to create a session-creation state
                     session_id = cur.fetchone().get('id')
                     session['class_session'] = session_id
         else:
+            # If validation fails, prepare an error to be shown to the user
             flash('Something went wrong.')
 
+    # Check that session creation is currently underway
     if session.get('class_session'):
+        # Get course information, valid student users, and students currently on
+        # the session roster from the database
         with db.get_db() as con:
             with con.cursor() as cur:
+                # Grab the parent course information from the database
                 cur.execute("""
                     SELECT * FROM courses
                     WHERE id = %s
                 """, (session['course_id'],))
                 course = cur.fetchone()
 
-                cur.execute("""
-                    SELECT * FROM users
-                    WHERE major = %s AND role = 'student' AND id NOT IN (SELECT student_id FROM roster WHERE session_id = %s)
-                """, (course['major'], session['class_session']))
+                # If the parent course major is general education, select all students
+                # not already on the roster; otherwise, select all students with the
+                # same major as the parent course who are not already on the roster
+                if course['major'] == 'GEN':
+                    cur.execute("""
+                        SELECT * FROM users
+                        WHERE role = 'student' and id NOT IN (SELECT student_id from ROSTER WHERE session_id = %s)
+                    """, (session['class_session'],))
+                else:
+                    cur.execute("""
+                        SELECT * FROM users
+                        WHERE major = %s AND role = 'student' AND id NOT IN (SELECT student_id FROM roster WHERE session_id = %s)
+                    """, (course['major'], session['class_session']))
 
                 students = cur.fetchall()
 
+                # Grab the current roster for the session
                 cur.execute("""
                     SELECT u.last_name, u.first_name, u.id FROM roster r JOIN users u
                     ON r.student_id = u.id
@@ -100,19 +131,24 @@ def make_session():
 @login_required
 @admin
 def session_add():
+    """Add students to a session roster during creation or editing"""
     if request.method == 'POST':
         if session.get('class_session'):
 
             ids = []
             error = None
 
+            # Confirm that every checked box id is for a valid student
             for id in request.form.getlist('id'):
                 if validate(id, 'users'):
                     ids.append(int(id))
                 else:
+                    # If any id is not valid, set an error and stop the loop
                     error = "Something went wrong."
                     break
 
+            # If validation completes successfully, add all of the students to
+            # to the roster
             if not error:
                 with db.get_db() as con:
                     with con.cursor() as cur:
@@ -122,6 +158,7 @@ def session_add():
                                 VALUES (%s, %s)
                             """, (id, session['class_session']))
             else:
+                # If validation fails, prepare an error to be shown to the user
                 flash(error)
 
     if not session.get('edit'):
@@ -133,18 +170,23 @@ def session_add():
 @login_required
 @admin
 def session_remove():
+    """Remove students from a session roster during creation or editing"""
     if request.method == 'POST':
         if session.get('class_session'):
 
             ids = []
             error = None
 
+            # Confirm that each checked box is a valid student user
             for id in request.form.getlist('id'):
                 if validate(id, 'users'):
                     ids.append(int(id))
                 else:
+                    # If any id fails validation, prepare an error and stop looping
                     error = "Something went wrong."
+                    break
 
+            # If validation passes, delete students from the roster in the DB
             if not error:
                 with db.get_db() as con:
                     with con.cursor() as cur:
@@ -153,6 +195,7 @@ def session_remove():
                             WHERE student_id = ANY(%s) AND session_id = %s
                         """, (ids, session['class_session']))
             else:
+                # If validation fails, prepare an error to be shown to the user
                 flash(error)
 
     if not session.get('edit'):
@@ -164,6 +207,7 @@ def session_remove():
 @login_required
 @admin
 def session_submit():
+    """Finalize session creation with extra data and end session creation state"""
     if request.method == 'POST':
         if session.get('class_session'):
             session_name = request.form['session_name']
@@ -194,6 +238,7 @@ def session_submit():
             else:
                 flash('Something went wrong. Editing canceled.')
 
+            # Remove keys related to session creation state from the global session
             session.pop('class_session', None)
             session.pop('course_id', None)
             session.pop('edit', None)
@@ -207,7 +252,10 @@ def session_submit():
 @login_required
 @admin
 def session_cancel():
+    """Cancel session creation and end session creation state"""
     if session.get('class_session'):
+        # If an edit is not in progress, canceling means deleting the temporary
+        # session from the database
         if not session.get('edit'):
             with db.get_db() as con:
                 with con.cursor() as cur:
@@ -215,6 +263,8 @@ def session_cancel():
                         DELETE FROM sessions
                         WHERE id = %s
                     """, (session['class_session'],))
+            # In either case, session creation keys need to be removed from the
+            # global session variable
             session.pop('class_session', None)
             session.pop('course_id', None)
             error = "Session creation canceled"
@@ -226,6 +276,7 @@ def session_cancel():
     else:
         error = "Not able to cancel session"
 
+    # Store a message to be shown to the user to indicate the result of the cancellation
     flash(error)
 
     return redirect(url_for('teacher.home'))
@@ -234,14 +285,21 @@ def session_cancel():
 @login_required
 @admin
 def session_edit():
+    """Set global session edit state and show the session edit form"""
     if request.method == "POST":
+        # Get target session id from form
         session_id = request.form['edit']
+        # Confirm that the logged-in teacher owns the session
         if validate(session_id, 'sessions'):
+            # Set global session values to create session editing state
             session['class_session'] = session_id
             session['edit'] = True
         else:
+            # If validation fails, prepare an error to be shown to the user
             flash('Something went wrong.')
 
+    # If the session is in the edit state, fetch info from the DB to be shown
+    # on the editing form
     if session.get('edit'):
         with db.get_db() as con:
             with con.cursor() as cur:
