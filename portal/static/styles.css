@@ -10,11 +10,13 @@
 html {
   font-family: 'Lato', Helvetica, Arial, sans-serif;
   font-size: 18px;
+
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Crimson Text', serif;
   font-weight: 400;
+  text-align: center;
 }
 
 
@@ -27,12 +29,18 @@ body {
   flex-direction: column;
   min-height: 100vh;
   padding: 1rem;
+  background-color: #a6093d;
+  color: #ffffff;
+
+
 }
 
 @media (min-width: 760px) {
   footer {
     display: flex;
     justify-content: space-between;
+    border-top: 1px solid black;
+    padding-left: 20px;
   }
   footer h2,
   footer address {
@@ -51,7 +59,11 @@ form {
   width: 35vw;
 }
 
-label {
+.login_form {
+  margin-bottom: 7.5%;
+}
+
+.login_label label {
   display: block;
   padding-bottom: 1rem;
 }
@@ -59,5 +71,123 @@ label {
 label input {
   width: 100%;
 }
+/**
+*header
+*/
+header {
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  border-radius: 4px;
+  padding: 10px;
+}
+header h1{
+  display: inline;
+  padding-left: 30px;
+  color: #a6093d;
+}
+
+header nav ul {
+  margin: 0;
+  list-style: none;
+}
+
+header nav li {
+  display: inline-block;
+  margin-left: 70px;
+  padding-top: 10px;
+  position: relative;
+}
+
+header nav a {
+  color: #a6093d;
+  text-decoration: none;
+  text-transform: uppercase;
+
+}
+
+header p{
+  color: #a6093d;
+  display: inline-block;
+}
+
+nav {
+  float: right;
+  padding-right: 30px;
+}
+
+.home {
+  color: black;
+  display: flex;
+  padding-bottom: 30px;
+  padding-top: 35px;
+}
+
+.home p {
+  text-align: center;
+  padding: 40px;
+  color: white;
+  line-height: 2;
+}
+
+img {
+  width: 700px;
+}
+
+/**
+*class of points to try and get grading stuff on one line
+*/
+.grades form {
+  margin: auto;
+  width: 350px;
+  
+}
+.grades input {
+  width: 210px;
 
 
+}
+.grades p {
+  display: inline;
+  font-size: 18px;
+  line-height: 2em;
+  margin-bottom: 32px;
+
+}
+.grades {
+  margin: auto;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+.submit_grade {
+  display: block;
+ margin: auto;
+ padding: 0;
+}
+/**
+*flash styling
+*/
+.base_flash { margin: 0 auto;
+  margin-top: 7.5%;
+}
+
+
+@media (max-width: 1000px) {
+  .home {
+    display: flex;
+    color: black;
+    padding-bottom: 30px;
+    padding-top: 35px;
+  }
+
+  .home p {
+    color: white;
+    padding: 15px;
+    line-height: 1.2;
+  }
+
+  img {
+    width: 500px;
+  }
+}

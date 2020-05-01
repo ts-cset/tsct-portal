@@ -1,0 +1,70 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+<h2>Course</h2>
+<ul>
+  {% for course in courses %}
+  <li>
+    <p>{{course['major'] }} {{ course['course_number'] }}-{{ course['name'] }}</p>
+    <p>Description: {{ course['description'] }}</p>
+  </li>
+</ul>
+<h3>Session</h3>
+<ul>
+  {% for session in sessions %}
+  <li>
+    <p>Name: {{ session['name'] }}, Times: {{ session['times'] }}</p>
+  </li>
+</ul>
+<h4>Assignment</h4>
+<ul>
+  {% for assignment in assignments %}
+  <li>
+    <p>Name: {{ assignment['name'] }}</p>
+    <p>Due Date: {{ assignment['date'] }}</p>
+    <p>Description: {{ assignment['description'] }}</p>
+    <p>Points: {{ assignment['points'] }}</p>
+    {% if g.users['role'] == 'student' %}
+    <a href="{{ url_for('assignments.submit_assignment', assignment_id=assignment['id']) }}"><input type="button" value="Submit Assignment"></a>
+    {% endif %}
+  </li>
+</ul>
+{% if g.users['role'] == 'teacher' %}
+<h5>Submissions</h5>
+<a href="{{ url_for('assignments.grade_assignment', course_id=course['id'], session_id=session['id'], assignment_id=assignment['id']) }}"><input type="button" value="Grade Assignment"></a>
+<ul>
+  {% for submission in submissions %}
+  {% for student in students %}
+  {% if student['id'] == submission['users_id'] %}
+  <li>
+
+    <!--this is where the users_id to the name-->
+    <p>Student: {{ student['name'] }}</p>
+    <p>Answer: {{ submission['answer'] }}</p>
+    <p>Grade: {{ submission['letter'] }}</p>
+    <p>Points: {{ submission['points'] }}</p>
+    <p>Feedback: {{ submission['feedback'] }}</p>
+  </li>
+  {% endif %}
+  {% endfor %}
+  {% endfor %}
+</ul>
+{% elif g.users['role'] == 'student' %}
+<h5>Your submission</h5>
+<ul>
+  {% for submission in submissions %}
+  <li>
+    <p>Answer: {{ submission['answer'] }}</p>
+    <p>Grade: {{ submission['letter'] }}</p>
+    <p>Points: {{ submission['points'] }}</p>
+    <p>Feedback: {{ submission['feedback'] }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+{% block title %}TSCT Portal{% endblock %}
+{% block content %}
+{% for assignment in assignments %}
+<h2>Grade Assignment</h2>
+<p>Name: {{ assignment['name'] }}</p>
+<p>Due Date: {{ assignment['date'] }}</p>
+<p>Description: {{ assignment['description'] }}</p>
+<p>Points: {{ assignment['points'] }}</p>
+<div class="grades">
+  <form method="post">
+  {% for submission in submissions %}
+  {% for student in students %}
+  {% if student['id'] == submission['users_id'] %}
+  <li>
+    <p>Student: {{ student['name'] }} Answer: {{ submission['answer'] }}</p>
+    <label for="points">Points
+      <input name="points" type="number" required/>
+    </label>
+    <p>/{{ assignment['points'] }}</p>
+    <label for="feedback">Feedback
+      <textarea name="feedback" ></textarea>
+    </label>
+  </li>
+  {% endif %}
+  {% endfor %}
+  {% endfor %}
+  <input class="submit_grade" type="submit" value="Submit Grade" />
+  </form>
+</div>
+{% endfor %}
+{% endblock %}
