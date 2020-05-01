@@ -1,17 +1,13 @@
 /**
  * Global Defaults and Typography
  */
- *,
- *:before,
- *:after {
- }
  
  html {
+   font-family: 'Lato', Helvetica, Arial, sans-serif;
    font-size: 1vw;
  }
  
  h1, h2, h3, h4, h5, h6 {
-   color: #a6093d;
    font-family: 'Crimson Text', serif;
    font-weight: 400;
  }
