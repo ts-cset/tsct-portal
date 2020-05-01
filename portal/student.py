@@ -78,46 +78,23 @@ def view_student_gradebook():
     con = db.get_db()
     cur = con.cursor()
 
-    cur.execute("""SELECT DISTINCT courses.course_id, courses.name AS class_name,
-            users.name AS teacher, sessions.id AS session_id
-            FROM roster JOIN sessions on roster.session_id = sessions.id
-            JOIN courses on sessions.course_id = courses.course_id
-            JOIN users on users.id = courses.teacherid
-            WHERE roster.student_id =  %s """,
+    cur.execute("""SELECT DISTINCT courses.course_id, (ROUND(sum(grades.points_received)/sum(grades.total_points), 2 )*100)
+                 as total_grade, roster.session_id as class_session,
+                 courses.name as class_name, users.name AS teacher_name, grades.student_id
+                 FROM courses JOIN sessions on courses.course_id = sessions.course_id
+				 JOIN users on courses.teacherid= users.id
+                 JOIN assignments on assignments.session_id = sessions.id
+                 JOIN grades on grades.assignment_id = assignments.assignment_id
+                 JOIN roster on roster.session_id = sessions.id
+                 WHERE grades.student_id = %s
+	             GROUP BY grades.student_id, roster.session_id, courses.course_id, users.id""",
                 (user_id,))
     courses = cur.fetchall()
-
-    for course in courses:
-
-        cur.execute("""
-            SELECT * FROM grades
-            JOIN assignments ON assignments.assignment_id = grades.assignment_id
-            WHERE student_id = %s AND points_received IS NOT NULL
-            AND session_id = %s
-            """, (user_id, course['session_id']))
-
-        course_grade = cur.fetchall()
-
-        points_received = 0
-        total_points = 0
-
-        # calculate the points for the grade
-        for grade in course_grade:
-
-            total_points = total_points + grade['total_points']
-            points_received = points_received + grade['points_received']
-
-        # if there's no assignments, students still have %100 grade
-        if total_points == 0:
-            current_grade = 100
-        else:
-            current_grade = round((points_received / total_points), 2) * 100
 
     cur.close()
     con.close()
 
-    return render_template("/layouts/gradebook/student_view.html",
-                           current_grade=current_grade, courses=courses)
+    return render_template("/layouts/gradebook/student_view.html", courses=courses)
 
 
 @bp.route("/student/gradebook/course/<int:course_id>/session/<int:session_id>", methods=['GET', 'POST'])
