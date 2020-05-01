@@ -3,6 +3,7 @@
 {% block title %}Assignments{% endblock %}
 
 {% block content %}
+<a class="view-assignment-link" href="{{ url_for('session.view_sessions', course_id=course['course_id'])}}">back to sessions</a>
 {% if g.user['id'] == course['teacherid'] %}
 <a href="{{ url_for('assignment.create_assignment', id=id, course_id=course['course_id'])}}" class="view-assignment-link">
   create new assignment
