@@ -304,17 +304,27 @@ def session_edit():
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
-                    SELECT * FROM sessions
-                    WHERE id = %s
+                    SELECT * FROM sessions s JOIN courses c
+                    ON s.course_id = c.id
+                    WHERE s.id = %s
                 """, (session['class_session'],))
                 session_info = cur.fetchone()
 
-                cur.execute("""
-                    SELECT last_name, first_name, id FROM users
-                    WHERE role = 'student' AND major IN (SELECT major from courses
-                        WHERE id IN (SELECT course_id FROM sessions where id = %s))
-                    AND id NOT IN (SELECT student_id FROM roster WHERE session_id = %s)
-                """, (session['class_session'], session['class_session']))
+                # As with creation, all students should be available to be added to
+                # the roster for Gen. Ed. classes
+                if session_info['course_id'] == 'GEN':
+                    cur.execute("""
+                        SELECT last_name, first_name, id FROM users
+                        WHERE role = 'student'
+                        AND id NOT IN (SELECT student_id FROM roster WHERE session_id = %s)
+                    """, (session['class_session'],))
+                else:
+                    cur.execute("""
+                        SELECT last_name, first_name, id FROM users
+                        WHERE role = 'student' AND major = %s
+                        AND id NOT IN (SELECT student_id FROM roster WHERE session_id = %s)
+                    """, (session_info['major'], session['class_session']))
+
                 students = cur.fetchall()
 
                 cur.execute("""
