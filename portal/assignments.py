@@ -230,6 +230,7 @@ def grade_assignment(course_id, session_id, assignment_id):
 
     if request.method == 'POST':
         points = request.form.getlist('points')
+        feedback = request.form.getlist('feedback')
         count = 0
         error = None
         cur = db.get_db().cursor()
@@ -252,12 +253,12 @@ def grade_assignment(course_id, session_id, assignment_id):
         users = cur.fetchall()
 
         for user in users:
-            print(points[count])
             points[count] = float(points[count])
 
             if points[count] > assignment_point or points[count] < 0:
                 error = "Invalid point amount"
                 flash(error)
+                return render_template('portal/courses/sessions/assignments/grade-assignments.html', courses=courses, sessions=sessions, assignments=assignments, submissions=submissions, students=students)
 
             if error is None:
                 grade = (points[count]/assignment_point)
@@ -289,10 +290,10 @@ def grade_assignment(course_id, session_id, assignment_id):
                 else:
                     grade_id = 13
 
-                cur.execute("""UPDATE submissions SET points = %s, grades_id = %s
+                cur.execute("""UPDATE submissions SET points = %s, grades_id = %s, feedback = %s
                 WHERE users_id = %s and assignments_id = %s;
                  """,
-                 (points[count], grade_id, user[0], assignment_id))
+                 (points[count], grade_id, feedback[count], user[0], assignment_id))
                 db.get_db().commit()
                 count += 1
 
