@@ -7,13 +7,27 @@
 <section class="student-gradebook">
 
 <h2>All Student Courses</h2>
-{% for course in courses %}
-<h3 class="assignment-grade">{{course['class_name']}}<h3>
-  <h4>{{course['teacher']}} / Session {{course['session_id']}}</h4>
-
-<a class="course-options-item" href="{{url_for('student.view_grades_by_course',
- course_id=course['course_id'])}}">see grades</a>
-{% endfor %}
+<table>
+  <tbody>
+    <tr>
+      <th class="th3">course</th>
+      <th class="th3">session</th>
+      <th class="th2">professor</th>
+      <th class="th3">gpa</th>
+      <th class="th3"></th>
+    </tr>
+    {% for course in courses %}
+    <tr>
+      <td>{{course['class_name']}}</td>
+      <td>{{ course['class_session'] }}</td>
+      <td>{{ course['teacher_name']}}</td>
+      <td class="grade">%{{ course['total_grade'] }}</td>
+      <td class="td-assign-button"><a class="link" href="{{url_for('student.view_grades_by_course',
+       course_id=course['course_id'], session_id=course['class_session'])}}">see grades</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 </section>
 
 

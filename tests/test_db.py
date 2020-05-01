@@ -41,4 +41,3 @@ def test_cli_commands(runner, monkeypatch, function, command, output):
     # Check CLI output and verify the stub was called
     assert output in result.output
     assert Recorder.called
-

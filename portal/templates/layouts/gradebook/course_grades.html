@@ -1,25 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}Course Grades{% endblock %}
+{% block title %}Course Grade for: {{course_info['class_name']}}{% endblock %}
 
 {% block content %}
 
 <section class="course_grade">
-<h2 class="grades-heading">{{course_grade['class_name']}}</h2>
-
   <table>
     <tbody>
       <tr>
-        <th class="th3">session</th>
+        <th class="th1">session</th>
+        <th class="th3">professor</th>
         <th class="th3">points earned</th>
         <th class="th3">total points</th>
         <th class="th3">current grade</th>
       </tr>
       <tr>
-        <td class="">{{course_grade['class_session']}}</td>
-        <td class="">{{course_grade['earned']}}</td>
-        <td class="">{{course_grade['total']}}</td>
-        <td class="grade">{{course_grade['total_grade']}}</td>
+        <td class="">{{session_id}}</td>
+        <td>{{course_info['teacher']}}</td>
+        <td class="">{{ points_received }}</td>
+        <td class="">{{ total_points }}</td>
+        <td class="grade">%{{ current_grade }}</td>
       </tr>
     </tbody>
   </table>
@@ -37,7 +37,7 @@
       {% for assignment_grade in assignment_grades %}
       <tr>
         <td class="td-assign-button"><a class="link" href="{{ url_for('student.assignment_grade',
-          id =assignment_grade['assign_id'], session_id=course_grade['class_session'],
+          id=assignment_grade['assign_id'], session_id=session_id,
           course_id=course_id) }}">{{assignment_grade['assign_name']}}</a></td>
         <td>{{assignment_grade['earned']}}</td>
         <td>{{assignment_grade['total']}}</td>
