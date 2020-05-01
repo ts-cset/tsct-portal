@@ -11,7 +11,7 @@ def test_grade_submission(client):
     response = client.get('/portal/assignments/1/1/view-assignment/1')
     assert b'Grade: B-' in response.data
     assert b'Points: 4.0' in response.data
-    assert b'Good Job!' in respons.data
+    assert b'Good Job!' in response.data
 
 def test_view_submission_grade_student(client):
     test_grade_submission(client)
@@ -22,4 +22,4 @@ def test_view_submission_grade_student(client):
     response = client.get('/portal/assignments/1/1/view-assignment/1')
     assert b'Grade: B-' in response.data
     assert b'Points: 4.0' in response.data
-    assert b'Good Job!' in respons.data
+    assert b'Good Job!' in response.data
