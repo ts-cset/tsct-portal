@@ -202,6 +202,7 @@ label input {
  * Assign
  */
 
+
 .assign-li {
   list-style: none;
 }
@@ -210,3 +211,47 @@ label input {
   font-size: 1.25em;
   text-decoration: underline;
 }
+
+/**
+ * Grade
+ */
+
+ .grade {
+   padding: 0;
+   margin: 0;
+   margin-bottom: .5em;
+   font-size: 1.5em;
+ }
+
+ .grade-input {
+   width: 3em;
+ }
+
+ .grade-row {
+   border-right: 1px solid gray;
+ }
+
+ .grade-title {
+   display: flex;
+   justify-content: center;
+   margin: 0; 
+ }
+
+/**
+ * Table
+ */
+
+ .table-whole {
+   border: 1px solid black;
+ }
+
+ .table-head {
+   padding: 0;
+   border: 1px solid red;
+ }
+
+ .table-headers {
+   border: 1px solid black;
+   margin: 0;
+   padding: 0;
+ }

@@ -16,7 +16,6 @@ def test_view_assignments(app, client, auth):
         # get it
         response = client.get('/assignments/1/A')
         assert b'homework' in response.data
-        assert b'application' in response.data
 
 
 # see all assignments of a session
