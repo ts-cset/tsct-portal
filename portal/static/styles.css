@@ -60,7 +60,7 @@ form {
   margin-bottom: 7.5%;
 }
 
-label {
+.login_label label {
   display: block;
   padding-bottom: 1rem;
 }
@@ -118,24 +118,34 @@ nav {
 */
 .grades form {
 margin: auto;
-width: 350px;
+width: 360px;
+
+
 }
 .grades input {
-  width: 200px;
+  width: 210px;
+
+
 }
 .grades p {
   display: inline;
+  font-size: 18px;
+  line-height: 2em;
+  margin-bottom: 32px;
+
 }
 .grades {
   margin: auto;
   display: block;
  margin-right: auto;
  margin-left: auto;
+
+
 }
-.submit {
+.submit_grade {
   display: block;
- margin-right: auto;
- margin-left: auto;
+ margin: auto;
+ padding: 0;
 }
 /**
 *flash styling
