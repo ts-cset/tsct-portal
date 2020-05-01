@@ -10,18 +10,22 @@ from portal.session import bp
 @login_required
 @admin
 def assignments():
+    """Display owned assignments to logged in teachers and allow deletion of assignments"""
     if request.method == 'POST':
 
         items = []
         error = None
 
+        # Collect and validate each checked item from form
         for item in request.form.getlist('id'):
             if validate(item, 'assignments'):
                 items.append(int(item))
             else:
+                # If any id fails validation, set an error and stop looping
                 error = 'Something went wrong.'
                 break
 
+        # If validation passes, delete selected items from DB
         if not error:
             with db.get_db() as con:
                 with con.cursor() as cur:
@@ -30,8 +34,10 @@ def assignments():
                         WHERE id = ANY(%s)
                     """, (items,))
         else:
+            # If validation fails, prepare an error to be shown to the user
             flash(error)
 
+    # Grab assignment information from the database
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute("""
@@ -49,9 +55,13 @@ def assignments():
 @login_required
 @admin
 def edit_assignments():
+    """Collect information on selected assignment to display edit form"""
     if request.method == 'POST':
+        # Get the requested assignment ID from the form
         assignment_id = request.form['edit']
+        # Check that the requested assignment belongs to the logged-in teacher
         if validate(assignment_id, 'assignments'):
+            # Get the assignment information from the database
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
@@ -61,6 +71,7 @@ def edit_assignments():
                     info = cur.fetchone()
             return render_template('layouts/teacher/assignments/edit-assignments.html', info=info)
         else:
+            # If validation fails, prepare an error to be shown to the user
             flash('Something went wrong')
 
     return redirect(url_for('teacher.assignments'))
@@ -69,17 +80,21 @@ def edit_assignments():
 @login_required
 @admin
 def submit_assignments():
+    """Finalize edits on an assignment and update the database"""
     if request.method == 'POST':
+        # Grab all the necessary form data
         name = request.form['name']
         desc = request.form['description']
         points = request.form['points']
         id = request.form['submit']
+        # Validate all of the submitted data
         if (
             validate(id, 'assignments') and
             validate_text(name, 50) and
             validate_text(desc, 300) and
             validate_number(points, 100000)
             ):
+            # If validation passes, update the database
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
@@ -88,6 +103,7 @@ def submit_assignments():
                         WHERE id = %s
                     """, (name, desc, points, id))
         else:
+            # If validation fails, prepare an error to be shown to the user
             flash('Something went wrong.')
 
     return redirect(url_for('teacher.assignments'))
@@ -96,18 +112,21 @@ def submit_assignments():
 @login_required
 @admin
 def create_assignments():
+    """Display a form for creating new assignments and create them using user input"""
     if request.method == 'POST':
+        # Collect the necessary form data
         name = request.form['name']
         desc = request.form['description']
         points = request.form['points']
         course = request.form['course']
-
+        # Validate the collected data
         if (
             validate_text(name, 50) and
             validate_text(desc, 300) and
             validate_number(points, 100000) and
             validate(course, 'courses')
             ):
+            # If validation succeeds, create a new record in the database
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
@@ -117,8 +136,10 @@ def create_assignments():
 
                     return redirect(url_for('teacher.assignments'))
         else:
+            # If validation fails, prepare an error to be shown to the user
             flash("Something went wrong.")
 
+    # Grab all of the logged in teacher's course information for select input
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute("""
@@ -133,9 +154,13 @@ def create_assignments():
 @login_required
 @admin
 def assign_work():
+    """Display all of the assignments that can be assigned to selected session"""
     if request.method == 'POST':
+        # Get the id for the target session from the form
         session_id = request.form['session_id']
+        # Confirm that the teacher owns the target session
         if validate(session_id, 'sessions'):
+            # On validation success, collect all valid assignments for target session
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
@@ -147,6 +172,7 @@ def assign_work():
                     assigns = cur.fetchall()
             return render_template('layouts/teacher/assignments/assign-work.html', assigns=assigns, session_id=session_id)
         else:
+            # If validation fails, prepare an error to be shown to the user
             flash('Something went wrong.')
 
     return redirect(url_for('teacher.sessions'))
@@ -155,22 +181,27 @@ def assign_work():
 @login_required
 @admin
 def assign_submit():
+    """Finalize assignment of assignments to a session with a due date"""
     if request.method == 'POST':
+        # Get all the necessary form data
         date = request.form['date']
         assign_id = request.form['assign_id']
         session_id = request.form['session_id']
 
+        # Validate all of the data
         if (
             validate(assign_id, 'assignments') and
             validate(session_id, 'sessions') and
             validate_date(date)
             ):
+            # If validation succeeds, add the new session assignment to the database
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("""
                         INSERT INTO session_assignments (session_id, assignment_id, due_date)
                         VALUES (%s, %s, %s)
                     """, (session_id, assign_id, date))
+                    # Add a default assignment grade for each student of 0
                     cur.execute("""
                         INSERT INTO assignment_grades(owner_id, assigned_id, grades)
                         VALUES((SELECT DISTINCT student_id FROM roster WHERE session_id = %s),
@@ -179,6 +210,7 @@ def assign_submit():
                         SELECT * FROM assignment_grades
                         """, ( session_id, session_id, assign_id ,0))
         else:
+            # If validation fails, prepare an error to be shown to the user
             flash('Something went wrong.')
     return redirect(url_for('teacher.sessions'))
 
@@ -186,6 +218,7 @@ def assign_submit():
 @login_required
 @admin
 def grade():
+    # TODO: add docstring / comments
     if request.method == 'POST':
         code = request.form['grade']
 
@@ -214,6 +247,7 @@ def grade():
 @login_required
 @admin
 def view_assignments():
+    # TODO: add docstring / comments
     if request.method == 'POST':
         code = request.form['view-grade']
         if validate(code, 'sessions'):
@@ -239,6 +273,7 @@ def view_assignments():
 @login_required
 @admin
 def grade_submission():
+    # TODO: add docstring / comments
     if request.method == 'POST':
         grade = request.form['grade']
         student_id = request.form['submission']
@@ -260,6 +295,7 @@ def grade_submission():
 @login_required
 @admin
 def assignment_grades():
+    # TODO: add docstring / comments
     if request.method == 'POST':
         assignment_id = request.form['assignment_id']
         with db.get_db() as con:
@@ -285,6 +321,7 @@ def assignment_grades():
 @login_required
 @admin
 def grade_view():
+    # TODO: add docstring / comments
     if request.method == 'POST':
         session = request.form['gradebook']
         with db.get_db() as con:
@@ -304,6 +341,7 @@ def grade_view():
 @login_required
 @admin
 def personal_grades():
+    # TODO: add docstring / comments
     if request.method == 'POST':
         student = request.form['student_id']
         session = request.form['session_id']
