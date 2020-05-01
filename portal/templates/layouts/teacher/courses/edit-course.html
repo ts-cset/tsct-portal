@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+{% include 'layouts/teacher-nav.html' %}
+
+{% block title %}Edit {{ course['course_name'] }}{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="code">Course Code
+      <input type="number" name="code" value="{{ course['course_code']}}" required/>
+    </label>
+    <label for="name">Course Name
+      <input type="text" name="name" value="{{ course['course_name'] }}" required/>
+    </label>
+      <select name="major">
+        <option value="CSET" {{"selected" if course['major'] == 'CSET'}}>CSET</option>
+        <option value="GEN" {{"selected" if course['major'] == 'GEN'}}>GEN</option>
+        <option value="ARCH" {{"selected" if course['major'] == 'ARCH'}}>ARCH</option>
+        <option value="MASN" {{"selected" if course['major'] == 'MASN'}}>MASN</option>
+      </select>
+    <label for="description">Course description
+      <input type="text" name="description" value="{{ course['description'] }}" required/>
+    </label>
+    <input type="submit" />
+  </form>
+{% endblock %}

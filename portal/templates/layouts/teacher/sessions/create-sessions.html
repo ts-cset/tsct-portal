@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% include 'layouts/teacher-nav.html' %}
 
 {% block title %}Create a Session{% endblock %}
 
@@ -9,7 +10,7 @@
       {% for student in students %}
         <li>
           <label class="checkbox">
-                <input type="checkbox" name="{{ student['id'] }}" value="{{ student['id'] }}">
+                <input type="checkbox" name="id" value="{{ student['id'] }}">
                 <!--Since checkboxes can't be styled, this span becomes the checkbox-->
                 <span class="fakeCheckbox"></span>
           </label>
@@ -27,7 +28,7 @@
       {% for student in roster %}
         <li>
           <label class="checkbox">
-                <input type="checkbox" name="{{ student['id'] }}" value="{{ student['id'] }}">
+                <input type="checkbox" name="id" value="{{ student['id'] }}">
                 <!--Since checkboxes can't be styled, this span becomes the checkbox-->
                 <span class="fakeCheckbox"></span>
           </label>
@@ -49,10 +50,10 @@
     <label for="session_name">Session Code:</label>
     <input type="text" name="session_name" maxlength="1" size="2">
     <!-- Sets a meeting place for the session -->
-    <label for="session_name">Location:</label>
+    <label for="meeting_place">Location:</label>
     <input type="text" name="meeting_place" maxlength="10">
     <!-- Sets time for the session -->
-    <label for="session_name">Time:</label>
+    <label for="meeting_time">Time:</label>
     <input type="text" name="meeting_time" maxlength="11">
     <!-- Create the session -->
     <button type="submit">Create Session:</button>
