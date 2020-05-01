@@ -86,10 +86,38 @@ def view_student_gradebook():
             WHERE roster.student_id =  %s """,
                 (user_id,))
     courses = cur.fetchall()
+
+    for course in courses:
+
+        cur.execute("""
+            SELECT * FROM grades
+            JOIN assignments ON assignments.assignment_id = grades.assignment_id
+            WHERE student_id = %s AND points_received IS NOT NULL
+            AND session_id = %s
+            """, (user_id, course['session_id']))
+
+        course_grade = cur.fetchall()
+
+        points_received = 0
+        total_points = 0
+
+        # calculate the points for the grade
+        for grade in course_grade:
+
+            total_points = total_points + grade['total_points']
+            points_received = points_received + grade['points_received']
+
+        # if there's no assignments, students still have %100 grade
+        if total_points == 0:
+            current_grade = 100
+        else:
+            current_grade = round((points_received / total_points), 2) * 100
+
     cur.close()
     con.close()
 
-    return render_template("/layouts/gradebook/student_view.html", grades=grades, courses=courses)
+    return render_template("/layouts/gradebook/student_view.html",
+                           current_grade=current_grade, courses=courses)
 
 
 @bp.route("/student/gradebook/course/<int:course_id>/session/<int:session_id>", methods=['GET', 'POST'])
