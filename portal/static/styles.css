@@ -450,3 +450,21 @@ button.teacherAssignments {
     outline-color: #ccc;
     margin: .5vw;
 }
+
+/*** Student Styling ***/
+
+section#grade {
+    border: 1vw inset #a6093d;
+    outline-style: double;
+    padding: 1vw;
+    margin: 1vw;
+    outline-color: #ccc;
+}
+
+section {
+    background-color: #a6083d;
+    color: white;
+    border: 1vw groove #ccc;
+    padding: 1rem 1.5rem;
+    margin: 1rem;
+}
