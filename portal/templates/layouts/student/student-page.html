@@ -1,0 +1,36 @@
+<!-- This page is the first page a student user sees when they login -->
+{% extends "layouts/base.html" %}
+{% include "layouts/student-nav.html" %}
+
+{% block title %}TSCT student{% endblock %}
+
+{% block content %}
+
+  <section>
+    <!-- Greets user -->
+    <h2>Hello <span class="greetingname">{{ g.user['first_name']}}!</span></h2>
+  </section>
+
+  <!-- Shows scheduling for classes -->
+  <section class="studentHome" id="schedule">
+    {% if g.user %}
+    <h2>Schedule:</h2>
+      <ul class="studentHome">
+        {% for scheduling in courses %}
+          <li class="studentHome">
+            {{ scheduling['course_name'] }}
+            {{ scheduling['course_code'] }},
+            {{ scheduling['session_name'] }},
+            {{ scheduling['meeting_days'] }},
+            {{ scheduling['meeting_time'] }},
+            {{ scheduling['meeting_place'] }}
+            <form method="post">
+              <button class="studentHome" type="submit" name="session_id" value="{{ scheduling['id'] }}" formaction="{{ url_for('student.assignments') }}">Assignments</button>
+              <button class="studentHome" type="submit" name="session_id" value="{{ scheduling['id'] }}" formaction="{{ url_for('student.grades') }}">Grade</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </section>
+{% endblock %}

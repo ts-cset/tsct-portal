@@ -1,0 +1,23 @@
+{% extends 'layouts/base.html' %}
+{% include 'layouts/teacher-nav.html' %}
+
+{% block title %}Assignments{% endblock %}
+
+
+{% block content %}
+<form method='post' action="{{ url_for('teacher.grade_submission') }}">
+{% for information in informations %}
+    <h2>{{ information['first_name']}}--{{information['last_name']}}</h2>
+    <h3>Assignment name</h3>
+    <h3>{{ information['name'] }}</h3>
+    <p>{{ information['description'] }}</p>
+    <label>Grade
+      <input type='number' name='grade'>/{{ information['points'] }}</input>
+    </label>
+    <input type="hidden" name="assignment_id" value="{{ information['work_id'] }}">
+    <button type="submit" value="{{ information['id'] }}" name="submission">Submit grades</button>
+{% endfor %}
+</form>
+
+
+{% endblock %}

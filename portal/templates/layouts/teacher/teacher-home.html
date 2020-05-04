@@ -1,0 +1,10 @@
+{% extends 'layouts/base.html' %}
+{% include 'layouts/teacher-nav.html' %}
+
+{% block title %}Welcome, Teacher{% endblock %}
+
+{% block content %}
+  <a href="{{ url_for('teacher.courses') }}">Manage Courses</a>
+  <a href="{{ url_for('teacher.sessions') }}">Manage Sessions</a>
+  <a href="{{ url_for('teacher.assignments') }}">Manage Assignments</a>
+{% endblock %}

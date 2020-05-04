@@ -1,6 +1,6 @@
 # TSCT Portal
 
-[![Build Status](https://travis-ci.org/ts-cset/180-project-structure.svg?branch=master)](https://travis-ci.org/ts-cset/180-project-structure)
+[![Build Status](https://travis-ci.org/Steve-D-Eckles/tsct-portal.svg?branch=master)](https://travis-ci.org/Steve-D-Eckles/tsct-portal)
 
 The unofficial learning management system for Thaddeus Stevens College of Technology built on Python, Flask, and PostgreSQL.
 
@@ -71,4 +71,3 @@ $ open htmlcov/index.html
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 If you've forked this repo, you can deploy your code by clicking the button above. On the following screen, leave the name blank and it will be generated for you.
-

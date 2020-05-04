@@ -1,0 +1,34 @@
+{% extends "layouts/base.html" %}
+{% include 'layouts/teacher-nav.html' %}
+
+{% block title %}Course Selection{% endblock %}
+
+{% block content %}
+    <section class="classSec">
+      <form method="post">
+        <ul class="courseList">
+          {% for course in courses %}
+            <li class="course">
+              <label class="checkbox">
+                <input type="checkbox" name="id" value="{{ course['id'] }}"/>
+                <input type="checkbox" value="{{ course['id'] }}" name="{{ course['id'] }}"/>
+                <!--Since checkboxes can't be styled, this span becomes the checkbox-->
+                <span class="fakeCheckbox"></span>
+              </label>
+              <h2>{{ course['major'] }}</h2>
+              <p>{{ course['course_name'] }}</p>
+              <p>{{ course['description'] }}</p>
+              <button formaction="{{ url_for('teacher.make_session') }}" type="submit" name="course_id" value="{{ course['id'] }}">Create Session</button>
+              <a href="{{ url_for('teacher.course_edit', id=course['id']) }}">Edit</a>
+            </li>
+          {% endfor %}
+        </ul>
+        {% if courses %}
+          <button type="submit" class="deleteCourse">Delete Selected</button>
+        {% else %}
+          <p>No courses to show</p>
+        {% endif %}
+      </form>
+    </section>
+    <a href="{{ url_for('teacher.create') }}">Create a Course</a>
+{% endblock %}

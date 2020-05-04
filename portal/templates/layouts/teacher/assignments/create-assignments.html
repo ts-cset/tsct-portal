@@ -1,0 +1,26 @@
+{% extends "layouts/base.html" %}
+{% include 'layouts/teacher-nav.html' %}
+
+{% block title %}Assignment Creation{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="name">Assignment Name
+      <input type="text" name="name">
+    </label>
+    <label>Course
+      <select name="course">
+        {% for course in courses %}
+          <option value="{{ course['id'] }} {{ "selected" if course[id] == 1 }}">{{ course['major'] }}{{ course['course_code'] }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Description
+      <textarea name="description" rows="5" cols="40"></textarea>
+    </label>
+    <label>Points
+      <input type="number" name="points" max="99999" min="1">
+    </label>
+    <button type="submit" name="submit">Create</button>
+  </form>
+{% endblock %}

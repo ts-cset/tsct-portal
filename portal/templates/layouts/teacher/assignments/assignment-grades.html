@@ -1,0 +1,29 @@
+{% extends "layouts/base.html" %}
+{% include 'layouts/teacher-nav.html' %}
+
+{% block title %}Student Grades for Assignment{% endblock %}
+
+{% block content %}
+
+  <!-- Shows scheduling for classes -->
+  <section>
+    {% if g.user %}
+    <h2>{{ assignment_name['name'] }}</h2>
+      <table>
+        <thead>
+          <tr>
+            <th colspan="2">Student Assignment Grades</th>
+          </tr>
+        </thead>
+      <tbody>
+          {% for student in assignment %}
+            <tr>
+              <td>{{ student['last_name'] }}, {{ student['first_name'] }}</td>
+              <td>{{ student['grades'] }}/{{ student['points'] }}</td>
+            </tr>
+          {% endfor %}
+      </tbody>
+      </table>
+    {% endif %}
+  </section>
+{% endblock %}

@@ -1,7 +1,8 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, Blueprint, request, redirect, url_for, g, flash, session
 
+from . import db
 
 def create_app(test_config=None):
     """Factory to configure and return a Flask application.
@@ -44,10 +45,11 @@ def create_app(test_config=None):
 
     # Register Routes
     # ---------------
-    @app.route('/')
-    def index():
-        return render_template('index.html')
+    from . import auth, student, teacher, assignment
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(student.bp)
+    app.register_blueprint(teacher.bp)
+    app.register_blueprint(assignment.bp)
 
     # Return application object to be used by a WSGI server, like gunicorn
     return app
-

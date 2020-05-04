@@ -1,0 +1,19 @@
+{% extends 'layouts/base.html' %}
+{% include 'layouts/teacher-nav.html' %}
+
+{% block title %} Assignments for {{ assignments[0]['course_name'] }} {% endblock %}
+
+{% block content %}
+<form method='post'>
+  <h1>List of assignments</h1>
+  {% for assignment in assignments %}
+  <h3>{{ assignment['name'] }}</h3>
+    <label>{{ assignment['description'] }}</label>
+    <div>{{ assignment['points'] }} Points</div>
+  <button type='submit' formaction="{{ url_for('teacher.grade') }}" name='grade' value="{{ assignment['id'] }}">Grade</button>
+  {% endfor %}
+  </form>
+
+
+
+{% endblock %}
