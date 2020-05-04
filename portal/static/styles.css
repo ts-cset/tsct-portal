@@ -30,7 +30,7 @@
    border-style: double;
    border: #929292;
    display: flex;
-   flex-direction: row;
+   flex-direction: column;
    align-items: center;
  }
  
@@ -49,16 +49,25 @@
      font-weight: 400;
      } 
      header h1,footer h2 ,footer address {
-       padding-left: 20px;
+       padding-left: 1vw;
        color: white;
        text-align:center;
-       width: 40%; 
+       width: 40%;
      }
  
      a[href^="tel:"] {
        color: white;
        text-decoration: none;
      }
+ }
+
+ nav {
+   display: flex;
+   flex-direction: row;
+   right: 2.5vw;
+   position: absolute;
+   top: 3.5vw;
+   float: right;
  }
  
  .flash {
@@ -138,9 +147,9 @@
  main a, .deleteCourse {
    background-color: #a6083d;
    color: white;
-   border: 1px solid #a6083d;
-   padding: 1rem 1.5rem;
-   margin: 1rem;
+   border: 1vw ridge #ccc;
+   padding: .5vw;
+   margin: 2vw 2vw;
    text-decoration: none;
    text-transform: uppercase;
  }
@@ -253,7 +262,7 @@
  
  .course button, .createSession button, .editSession button, .submitCourse {
    display: block;
-   margin: 1vw 1vw;
+   margin: 2vw 2vw;
    background-color: white;
    color: #a6083d;
    border: 1vw double #736b6b;
@@ -420,3 +429,19 @@
    color: #a6083d;
  }
   
+/*** Teacher Assignment styling ***/
+ 
+ul.teacherAssignments {
+    list-style-type: none;
+    margin: 1vw;
+    padding: 1vw;
+    border: 1vw double #a6093d;
+    outline-style: ridge;
+    outline-color: #ccc;
+}
+
+button.teacherAssignments {
+    border: 1vw double #a6093d;
+    outline-color: #ccc;
+    margin: .5vw;
+}
