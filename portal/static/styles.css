@@ -363,20 +363,25 @@
  .manageSessions {
    background-color: #a6083d;
    color: white;
-   border: 5px solid #ccc;
+   padding: 1vw;
+   margin: 1vw;
+   border: 2vw ridge #ccc;
    outline-style: inset;
    outline-color: #736b6b;
  }
  
  .manageSession {
-   margin: 1rem;
-   list-style-type: square;
+   margin: 1vw;
+   list-style-type: none;
+   padding: 1vw;
  }
  
  .manageSession button {
+   outline-style: groove;
+   outline-color: #ccc;
    background-color: white;
    color: #a6083d;
-   border: 1px solid white;
+   border: .5vw double #a6093d;
    text-decoration: none;
    text-transform: uppercase;
    margin-left: .5rem;
